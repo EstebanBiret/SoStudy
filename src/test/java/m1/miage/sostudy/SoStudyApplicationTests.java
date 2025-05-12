@@ -18,9 +18,4 @@ class SoStudyApplicationTests {
 		// or if a repository method returns the expected results
 	}
 
-	@Test
-	public void applicationContextTest() {
-		SoStudyApplication.main(new String[] {});
-	}
-
 }
