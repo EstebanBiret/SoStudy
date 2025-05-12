@@ -14,5 +14,5 @@
 - 📋 **Organisation Kanban** :  
   [Voir le Kanban GitHub](https://github.com/users/EstebanBiret/projects/6/views/1)
 
-- 🎨 **Figma** :
+- 🎨 **Figma** :  
   [Voir le Figma](https://www.figma.com/design/KRBjK7Laxs0rU8Vn5zHDmb/Untitled?node-id=0-1&t=f5O5uSsJ3pU7vAxe-1)
