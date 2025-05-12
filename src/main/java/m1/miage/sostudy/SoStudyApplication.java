@@ -1,4 +1,4 @@
-package m1.miage.so_study;
+package m1.miage.sostudy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package m1.miage.so_study;
+package m1.miage.sostudy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +16,11 @@ class SoStudyApplicationTests {
 		// and verify interactions with those objects
 		// For example, you can test if a service method is called with the correct parameters
 		// or if a repository method returns the expected results
+	}
+
+	@Test
+	public void applicationContextTest() {
+		SoStudyApplication.main(new String[] {});
 	}
 
 }
