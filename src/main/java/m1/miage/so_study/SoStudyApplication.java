@@ -1,4 +1,4 @@
-package m1.miage.SoStudy;
+package m1.miage.so_study;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,6 +9,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SoStudyApplication {
 
+	/**
+	 * Start the application
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SoStudyApplication.class, args);
 	}
