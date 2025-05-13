@@ -33,10 +33,11 @@
 | /user/delete                  | POST    | UserController     | Supprimer le compte utilisateur                         |                         |
 | /user/follow/{pseudo}        | POST    | UserController     | Suivre un utilisateur                                   | pseudo                  |
 | /user/unfollow/{pseudo}      | POST    | UserController     | Ne plus suivre un utilisateur                           | pseudo                  |
-| /messages                     | GET     | MessageController  | Liste des conversations                                 |                         |
-| /messages/new                 | GET     | MessageController  | Formulaire de nouvelle conversation                     |                         |
-| /messages/new                 | POST    | MessageController  | Création de conversation                                | Formulaire              |
-| /messages/{id}               | GET     | MessageController  | Détail d’une conversation                               | id                      |
+| /channels                     | GET     | ChannelController  | Liste des conversations                                 |                         |
+| /channels/new                 | GET     | ChannelController  | Formulaire de nouvelle conversation                     |                         |
+| /channels/new                 | POST    | ChannelController  | Création de conversation                                | Formulaire              |
+| /channels/{idChannel}               | GET     | ChannelController  | Détail d’une conversation                         | id                      |
+| /message/{idChannel}/send               | POST     | MessageController  | Envoyer un message dans une conversation    | id                      |
 | /community                    | GET     | CommunityController| Posts des communautés suivies                           |                         |
 | /community/new                | GET     | CommunityController| Formulaire de création de communauté                    |                         |
 | /community/new                | POST    | CommunityController| Traite la création de communauté                        | Formulaire              |
