@@ -71,6 +71,18 @@ public class Post {
     private List<User> reposts = new ArrayList<>();
 
     /**
+     * The list of reactions to the post
+     */
+    @Transient
+    private List<UserPostReaction> reactions = new ArrayList<>();
+
+    /**
+     * The formatted date of the post
+     */
+    @Transient
+    private String formattedDate;
+
+    /**
      * Default constructor
      */
     public Post() {}
@@ -201,6 +213,30 @@ public class Post {
      * @param user the user to remove
      */
     public void removeRepost(User user) {this.reposts.remove(user);}
+
+    /**
+     * Getter for the list of reactions to the post
+     * @return the list of reactions to the post
+     */
+    public List<UserPostReaction> getReactions() {return reactions;}
+
+    /**
+     * Setter for the list of reactions to the post
+     * @param reactions the list of reactions to the post
+     */
+    public void setReactions(List<UserPostReaction> reactions) {this.reactions = reactions;}
+
+    /**
+     * Getter for the formatted date of the post
+     * @return the formatted date of the post
+     */
+    public String getFormattedDate() {return formattedDate;}
+
+    /**
+     * Setter for the formatted date of the post
+     * @param formattedDate the formatted date of the post
+     */
+    public void setFormattedDate(String formattedDate) {this.formattedDate = formattedDate;}
 
     /**
      * Redefinition of the equals method

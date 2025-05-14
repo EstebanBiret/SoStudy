@@ -9,8 +9,38 @@
 <body>
     <div th:replace="navbar :: navbar(${currentUri})"></div>
 
-    <!-- Le reste de ta page -->
+    <!-- Section des posts -->
+    <div class="container">
+        <div class="posts-container">
+            <div th:each="post : ${posts}" class="post-card">
+                <div class="post-header">
+                    <!-- <img th:src="@{/images/user/default.png}" alt="Avatar" class="post-avatar"> -->
+                    <div class="post-user-info">
+                        <h3 th:text="${post.user.firstName} + ' ' + ${post.user.name}">Nom Utilisateur</h3>
+                        <p th:text="${post.formattedDate}">Date de publication</p>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p th:text="${post.postContent}">Contenu du post</p>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction-buttons">
+                        <button class="reaction-btn">Like</button>
+                        <button class="reaction-btn">Love</button>
+                        <button class="reaction-btn">Laugh</button>
+                        <button class="reaction-btn">Cry</button>
+                        <button class="reaction-btn">Angry</button>
+                    </div>
+                    <div class="post-stats">
+                        <span th:text="${post.reactions.size()}">0</span> réactions
+                        <span th:text="${post.comments.size()}">0</span> commentaires
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Le reste de ta page -->
     
 </body>
 </html>

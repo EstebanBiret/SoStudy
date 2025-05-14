@@ -192,6 +192,21 @@ public class DataInitializer implements CommandLineRunner {
         post2 = postRepository.save(post2);
         post3 = postRepository.save(post3);
         post4 = postRepository.save(post4);
+
+        // Création de nouveaux posts pour user2
+        Post user2Post1 = new Post();
+        user2Post1.setPostPublicationDate("2025-05-15");
+        user2Post1.setPostContent("Je viens de terminer un projet Spring Boot avec JWT. Je partage mon expérience !");
+        user2Post1.setUser(user2);
+        user2Post1.setCommunity(community2);
+        user2Post1 = postRepository.save(user2Post1);
+
+        Post user2Post2 = new Post();
+        user2Post2.setPostPublicationDate("2025-05-14");
+        user2Post2.setPostContent("J'ai découvert une nouvelle bibliothèque Spring pour gérer les websockets. C'est super utile !");
+        user2Post2.setUser(user2);
+        user2Post2.setCommunity(community2);
+        user2Post2 = postRepository.save(user2Post2);
         
         // Création des posts repostés
         Post repost1 = new Post();
@@ -202,7 +217,44 @@ public class DataInitializer implements CommandLineRunner {
         repost1.setCommentFather(post2);
 
         // Ajouter le repost à la liste de reposts de l'utilisateur
-        user3.getRepostedPosts().add(repost1);
+
+        // Création de nouveaux posts pour l'utilisateur 2
+        Post post5 = new Post();
+        post5.setPostPublicationDate("2025-01-06");
+        post5.setPostContent("Nouveau tutoriel sur Spring Boot disponible !");
+        post5.setUser(user2);
+        post5.setCommunity(community1);
+
+        Post post6 = new Post();
+        post6.setPostPublicationDate("2025-01-07");
+        post6.setPostContent("J'ai terminé mon projet JavaFX, besoin de feedback !");
+        post6.setUser(user2);
+        post6.setCommunity(community1);
+
+        Post post7 = new Post();
+        post7.setPostPublicationDate("2025-01-08");
+        post7.setPostContent("Besoin d'aide avec Hibernate et JPA");
+        post7.setUser(user2);
+        post7.setCommunity(community2);
+
+        Post post8 = new Post();
+        post8.setPostPublicationDate("2025-01-09");
+        post8.setPostContent("J'ai créé une nouvelle application web avec Spring !");
+        post8.setUser(user2);
+        post8.setCommunity(community1);
+
+        Post post9 = new Post();
+        post9.setPostPublicationDate("2025-01-10");
+        post9.setPostContent("Besoin de conseils pour l'optimisation des requêtes SQL");
+        post9.setUser(user2);
+        post9.setCommunity(community2);
+
+        // Sauvegarde des nouveaux posts
+        post5 = postRepository.save(post5);
+        post6 = postRepository.save(post6);
+        post7 = postRepository.save(post7);
+        post8 = postRepository.save(post8);
+        post9 = postRepository.save(post9);
 
         // Sauvegarde du repost
         repost1 = postRepository.save(repost1);
