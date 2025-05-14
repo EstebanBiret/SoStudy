@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Erreur</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+      }
+      .error-container {
+          background-color: #f5c6cb;
+          border: 1px solid #f1b0b7;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0,0,0,0.2);
+          text-align: center;
+      }
+      .error-container h1 {
+          font-size: 2em;
+          margin-bottom: 10px;
+      }
+      .error-container p {
+          margin: 0;
+          font-size: 1.2em;
+      }
+      .error-container a {
+          margin-top: 20px;
+          display: inline-block;
+          text-decoration: none;
+          background-color: #721c24;
+          color: white;
+          padding: 10px 20px;
+          border-radius: 5px;
+      }
+      .error-container a:hover {
+          background-color: #a71d2a;
+      }
+  </style>
+</head>
+  <body>
+    <div class="error-container">
+      <h1>Une erreur est survenue</h1>
+      <p th:text="${message}">Ressource introuvable ou opération invalide.</p>
+      <a href="/">Retour à l'accueil</a>
+    </div>
+  </body>
+</html>
