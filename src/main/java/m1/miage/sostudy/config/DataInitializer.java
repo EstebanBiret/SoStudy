@@ -82,14 +82,9 @@ public class DataInitializer implements CommandLineRunner {
         // Création des channels
         Channel channel1 = new Channel("Developpement Java", "images/channel/java.png");
         channel1.setCreator(user1);
-        channel1.getUsers().add(user1);
-        channel1.getUsers().add(user2);
-        channel1.getUsers().add(user3);
         
         Channel channel2 = new Channel("Spring Framework", "images/channel/spring.png");
         channel2.setCreator(user2);
-        channel2.getUsers().add(user1);
-        channel2.getUsers().add(user2);
         
         // Sauvegarde des channels
         channel1 = channelRepository.save(channel1);
@@ -110,20 +105,63 @@ public class DataInitializer implements CommandLineRunner {
         // Création des communautés
         Community community1 = new Community("Java Developers", "2025-01-01", "images/community/java.png", "Communauté des développeurs Java");
         Community community2 = new Community("Spring Framework", "2025-02-01", "images/community/spring.png", "Communauté des développeurs Spring");
-        
-        // Sauvegarde des communautés
+
         community1.setUserCreator(user1);
         community2.setUserCreator(user2);
-        
+
+        // Ajout des membres aux communautés, avec vérification pour éviter les doublons
+        if (!user2.getSubscribedCommunities().contains(community1)) {
+            user2.getSubscribedCommunities().add(community1);
+        }
+        if (!user3.getSubscribedCommunities().contains(community1)) {
+            user3.getSubscribedCommunities().add(community1);
+        }
+        if (!user1.getSubscribedCommunities().contains(community2)) {
+            user1.getSubscribedCommunities().add(community2);
+        }
+        if (!user3.getSubscribedCommunities().contains(community2)) {
+            user3.getSubscribedCommunities().add(community2);
+        }
+
+        // Sauvegarde des communautés avec leurs membres
         community1 = communityRepository.save(community1);
         community2 = communityRepository.save(community2);
+
+        // Sauvegarde des utilisateurs avec leurs communautés
+        userRepository.save(user1);
+        userRepository.save(user2);
+        userRepository.save(user3);
+
+        // Création d'un événement
+        Event event1 = new Event();
+        event1.setEventName("Meetup Java");
+        event1.setEventPublicationDate("2025-01-01");
+        event1.setEventContent("Rencontre des développeurs Java de la région");
+        event1.setEventBeginningDate("2025-01-15");
+        event1.setEventEndDate("2025-01-15 17:00");
+        event1.setEventPlace("Paris, France");
+        event1.setUserCreator(user1);
         
-        // Ajout des membres aux communautés
-        community1.getUsersMembers().add(user2);
-        community1.getUsersMembers().add(user3);
-        community2.getUsersMembers().add(user1);
-        community2.getUsersMembers().add(user3);
+        // Ajout des utilisateurs intéressés par l'événement
+        event1.addUserInterested(user2);
+        event1.addUserInterested(user3);
+        event1 = eventRepository.save(event1);
         
+        // Création d'un autre événement
+        Event event2 = new Event();
+        event2.setEventName("Atelier Spring Security");
+        event2.setEventPublicationDate("2025-01-02");
+        event2.setEventContent("Formation pratique sur la sécurisation des applications Spring");
+        event2.setEventBeginningDate("2025-01-20");
+        event2.setEventEndDate("2025-01-20 18:00");
+        event2.setEventPlace("Lyon, France");
+        event2.setUserCreator(user2);
+        
+        // Ajout des utilisateurs intéressés par le deuxième événement
+        event2.addUserInterested(user1);
+        event2.addUserInterested(user3);
+        event2 = eventRepository.save(event2);
+
         // Création des posts
         Post post1 = new Post();
         post1.setPostPublicationDate("2025-01-01");
@@ -137,17 +175,68 @@ public class DataInitializer implements CommandLineRunner {
         post2.setUser(user2);
         post2.setCommunity(community2);
         
-        // Sauvegarde des posts
+        Post post3 = new Post();
+        post3.setPostPublicationDate("2025-01-03");
+        post3.setPostContent("Quelqu'un peut m'aider avec les annotations Spring ? Je galère avec @Autowired.");
+        post3.setUser(user3);
+        post3.setCommunity(community2);
+        
+        Post post4 = new Post();
+        post4.setPostPublicationDate("2025-01-04");
+        post4.setPostContent("Je partage mon code source d'une application JavaFX. Feedback bienvenu !");
+        post4.setUser(user1);
+        post4.setCommunity(community1);
+        
+        // Sauvegarde des posts originaux
         post1 = postRepository.save(post1);
         post2 = postRepository.save(post2);
+        post3 = postRepository.save(post3);
+        post4 = postRepository.save(post4);
         
+        // Création des posts repostés
+        Post repost1 = new Post();
+        repost1.setPostPublicationDate("2025-01-05");
+        repost1.setPostContent("J'ai trouvé ce tutoriel super utile !");
+        repost1.setUser(user3);
+        repost1.setCommunity(community2);
+        repost1.setCommentFather(post2);
+
+        // Ajouter le repost à la liste de reposts de l'utilisateur
+        user3.getRepostedPosts().add(repost1);
+
+        // Sauvegarde du repost
+        repost1 = postRepository.save(repost1);
+
+        Post repost2 = new Post();
+        repost2.setPostPublicationDate("2025-01-06");
+        repost2.setPostContent("Je partage ce post car je rencontre les mêmes problèmes avec Spring");
+        repost2.setUser(user1);
+        repost2.setCommunity(community2);
+        repost2.setCommentFather(post3);
+
+        // Ajouter le repost à la liste de reposts de l'utilisateur
+        user1.getRepostedPosts().add(repost2);
+
+        // Sauvegarde du repost
+        repost2 = postRepository.save(repost2);
+
+        // Sauvegarder les utilisateurs avec leurs reposts
+        userRepository.save(user3);
+        userRepository.save(user1);
+
         // Création des réactions
         Reaction reaction1 = new Reaction(ReactionType.LIKE);
         Reaction reaction2 = new Reaction(ReactionType.LOVE);
+        Reaction reaction3 = new Reaction(ReactionType.LAUGH);
+        Reaction reaction4 = new Reaction(ReactionType.CRY);
+        Reaction reaction5 = new Reaction(ReactionType.ANGRY);
         
         // Sauvegarde des réactions
         reaction1 = reactionRepository.save(reaction1);
         reaction2 = reactionRepository.save(reaction2);
+        reaction3 = reactionRepository.save(reaction3);
+        reaction4 = reactionRepository.save(reaction4);
+        reaction5 = reactionRepository.save(reaction5);
         
         // Création des UserPostReactions
         UserPostReaction upr1 = new UserPostReaction();
@@ -172,19 +261,6 @@ public class DataInitializer implements CommandLineRunner {
         userPostReactionRepository.save(upr1);
         userPostReactionRepository.save(upr2);
         
-        // Création d'un événement
-        Event event1 = new Event();
-        event1.setEventName("Meetup Java");
-        event1.setEventPublicationDate("2025-01-01");
-        event1.setEventContent("Rencontre des développeurs Java de la région");
-        event1.setEventBeginningDate("2025-01-15");
-        event1.setEventEndDate("2025-01-15 17:00");
-        event1.setEventPlace("Paris, France");
-        event1.setUserCreator(user1);
-        
-        // Sauvegarde de l'événement
-        event1 = eventRepository.save(event1);
-        
         // Création d'un message
         Message message1 = new Message();
         message1.setContent("Bonjour ! Je viens de rejoindre la communauté.");
@@ -195,6 +271,14 @@ public class DataInitializer implements CommandLineRunner {
         // Sauvegarde du message
         message1 = messageRepository.save(message1);
         
+        // Followers et following
+        user1.addFollowers(user2);
+        user1.addFollowing(user2);
+        user2.addFollowers(user1);
+        user2.addFollowing(user1);
+        userRepository.save(user1);
+        userRepository.save(user2);
+
         System.out.println("Données initiales créées avec succès !");
     }
 }
