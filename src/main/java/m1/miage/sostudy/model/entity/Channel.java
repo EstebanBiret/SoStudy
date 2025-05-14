@@ -2,6 +2,8 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -29,7 +31,25 @@ public class Channel {
      */
     private String urlChannelPicture;
 
-    // TO DO : ADD USER CREATORS AND LIST OF USER IN THE CHANNEL
+    /**
+     * List of users in the channel
+     */
+    @ManyToMany(mappedBy = "subscribedChannels")
+    private List<User> users = new ArrayList<>();
+
+    /**
+     * Creator of the channel
+     */
+    @ManyToOne
+    @JoinColumn(name = "idUser")
+    private User creator;
+
+
+    /**
+     * List of messages in the channel
+     */
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    private List<Message> messages = new ArrayList<>();
 
     /**
      * Empty constructor of the Channel class
@@ -88,6 +108,70 @@ public class Channel {
     }
 
     /**
+     * Getter for the list of users in the channel
+     * @return the list of users in the channel
+     */
+    public List<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Method to add a user to the channel
+     * @param user the user to add
+     */
+    public void addUser(User user) {
+        this.users.add(user);
+    }
+
+    /**
+     * Method to remove a user from the channel
+     * @param user the user to remove
+     */
+    public void removeUser(User user) {
+        this.users.remove(user);
+    }
+
+    /**
+     * Getter for the creator of the channel
+     * @return the creator of the channel
+     */
+    public User getCreator() {
+        return creator;
+    }
+
+    /**
+     * Setter for the creator of the channel
+     * @param creator the creator of the channel
+     */
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * Getter for the list of messages in the channel
+     * @return the list of messages in the channel
+     */
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    /**
+     * Method to add a message to the channel
+     * @param message the message to add
+     */
+    public void addMessage(Message message) {
+        this.messages.add(message);
+    }
+
+    /**
+     * Method to remove a message from the channel
+     * @param message the message to remove
+     */
+    public void removeMessage(Message message) {
+        this.messages.remove(message);
+    }
+
+    /**
      * Override of the equals method
      * @param o the object to compare with
      * @return true if the two channels are equal, false otherwise
@@ -97,7 +181,15 @@ public class Channel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Channel channel = (Channel) o;
-        return channelId == channel.channelId && Objects.equals(channelName, channel.channelName) && Objects.equals(urlChannelPicture, channel.urlChannelPicture);
+        return channelId == channel.channelId && Objects.equals(channelName, channel.channelName) && Objects.equals(urlChannelPicture, channel.urlChannelPicture) && Objects.equals(users, channel.users) && Objects.equals(creator, channel.creator) && Objects.equals(messages, channel.messages);
     }
 
+    /**
+     * Override of the hashCode method
+     * @return the hash code of the channel
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(channelId, channelName, urlChannelPicture, users, creator, messages);
+    }
 }

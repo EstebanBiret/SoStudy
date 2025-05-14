@@ -3,6 +3,8 @@ package m1.miage.sostudy.model.entity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -95,5 +97,53 @@ class ChannelTest {
         assertNotEquals(channel1, channel2);
     }
 
+    @Test
+    void testAddAndRemoveUser() {
+        User user1 = new User();
+        User user2 = new User();
 
+        user1.setIdUser(1);
+        user2.setIdUser(2);
+
+        channel.addUser(user1);
+        channel.addUser(user2);
+
+
+        assertEquals(2, channel.getUsers().size());
+        assertTrue(channel.getUsers().contains(user1));
+        assertTrue(channel.getUsers().contains(user2));
+
+        channel.removeUser(user1);
+        assertEquals(1, channel.getUsers().size());
+        assertFalse(channel.getUsers().contains(user1));
+    }
+
+    @Test
+    void testSetAndGetCreator() {
+        User creator = new User();
+        channel.setCreator(creator);
+
+        assertEquals(creator, channel.getCreator());
+    }
+
+    @Test
+    void testAddAndRemoveMessage() {
+        Message message1 = new Message();
+        Message message2 = new Message();
+
+        message1.setMessageId(1);
+        message2.setMessageId(2);
+
+        channel.addMessage(message1);
+        channel.addMessage(message2);
+
+        List<Message> messages = channel.getMessages();
+        assertEquals(2, messages.size());
+        assertTrue(messages.contains(message1));
+        assertTrue(messages.contains(message2));
+
+        channel.removeMessage(message1);
+        assertEquals(1, channel.getMessages().size());
+        assertFalse(channel.getMessages().contains(message1));
+    }
 }

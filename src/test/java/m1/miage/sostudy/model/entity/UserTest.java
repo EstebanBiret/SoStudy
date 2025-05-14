@@ -196,7 +196,7 @@ class UserTest {
     @Test
     void testEqualsAndHashCode() {
         User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio");
-        otherUser.setBioUser("pas de bio");
+        otherUser.setIdUser(user.getIdUser()+1);
         assertNotEquals(user, otherUser);
     }
 }
