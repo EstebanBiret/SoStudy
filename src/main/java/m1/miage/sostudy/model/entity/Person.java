@@ -70,19 +70,6 @@ public abstract class Person {
     public Person() {};
 
     /**
-     * Abstract method to register a person
-     * @param email the email address of the person
-     * @param password the password of the person
-     * @return true if the registration is successful, false otherwise
-     */
-    public abstract boolean seConnecter(String email, String password);
-
-    /**
-     * Method to register a person
-     */
-    public abstract void seDeconnecter();
-
-    /**
      * Getter for the name of the person
      * @return the name of the person
      */

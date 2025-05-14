@@ -40,28 +40,6 @@ public class Admin extends Person {
     }
 
     /**
-     * Method to connect the admin
-     * @param email the email address of the person
-     * @param password the password of the person
-     * @return true if the connection is successful, false otherwise
-     */
-    @Override
-    public boolean seConnecter(String email, String password) {
-        if(this.getEmail().equals(email) && this.getPassword().equals(password)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Method to disconnect the admin
-     */
-    @Override
-    public void seDeconnecter() {
-        //ToDo : implement the method
-    }
-
-    /**
      * Method to delete a user
      * @param idUser the id of the user to delete
      * @return the user if the deletion is successful, null otherwise

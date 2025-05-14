@@ -7,7 +7,7 @@ import org.springframework.util.Assert;
 /**
  * Class testing the Admin class
  */
-public class AdminTest {
+class AdminTest {
     private static final int ID_ADMIN = 1;
     private static final String NAME_ADMIN = "nameAdmin";
     private static final String FIRST_NAME_ADMIN = "firstNameAdmin";
@@ -49,23 +49,26 @@ public class AdminTest {
     }
 
     /**
-     * test the seConnecter method
+     * test the deleteUser method
      */
     @Test
-    void testSeConnecter() {
-        final String email = "emailAdmin";
-        final String password = "passwordAdmin";
-        final boolean expected = true;
-        final boolean actual = ADMIN.seConnecter(email, password);
-        Assertions.assertEquals(expected, actual);
+    void testDeleteUser() {
+        //ToDo : implement the test
     }
 
     /**
-     * test the seDeconnecter method
+     * test the deletePost method
      */
     @Test
-    void testSeDeconnecter() {
-        // ToDo : implement the test
-        Assert.isTrue(true, "ToDo : implement the test");
+    void testDeletePost() {
+        //ToDo : implement the test
+    }
+
+    /**
+     * test the sendGlobalMessage method
+     */
+    @Test
+    void testSendGlobalMessage() {
+        //ToDo : implement the test
     }
 }
