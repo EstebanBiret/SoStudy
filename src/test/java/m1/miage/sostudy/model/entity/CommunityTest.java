@@ -1,5 +1,7 @@
 package m1.miage.sostudy.model.entity;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -108,6 +110,52 @@ class CommunityTest {
         final String actual = COMMUNITY.getCommunityName();
         Assertions.assertEquals(expected,  actual);
     }
+
+    /**
+     * test the getUserCreator method
+     */
+    @Test
+    void testGetUserCreator() {
+        final User expected = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "urlImage", "bio");
+        COMMUNITY.setUserCreator(expected);
+        final User actual = COMMUNITY.getUserCreator();
+        Assertions.assertEquals(expected,  actual);
+    }
+
+    /**
+     * test the getUsersMembers method
+     */
+    @Test
+    void testGetUsersMembers() {
+        final User expected = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "urlImage", "bio");
+        List<User> users = List.of(expected);
+        COMMUNITY.setUsersMembers(users);
+        final User actual = COMMUNITY.getUsersMembers().get(0);
+        Assertions.assertEquals(expected,  actual);
+    }
+
+    /**
+     * test the setUserMembers method and addUserMember method
+     */
+    @Test
+    void testSetUserMembers() {
+        final List<User> expected = List.of(new User("name", "firstName", "email", "password", "login", "dateOfBirth", "urlImage", "bio"));
+        COMMUNITY.setUsersMembers(expected);
+        final List<User> actual = COMMUNITY.getUsersMembers();
+        Assertions.assertEquals(expected,  actual);
+    }
+
+    /**
+     * test the setPost method and getPost method 
+     */
+    /*@Test
+    void testSetPost() {
+        final Post expected = new Post("date", "conetent", "mediaUrl");
+        List<Post> posts = List.of(expected);
+        COMMUNITY.setPosts(posts);
+        final List<Post> actual = COMMUNITY.getPosts();
+        Assertions.assertEquals(expected, actual.get(0));
+    }*/
 
     /**
      * test the setUrlCommunityPicture method
