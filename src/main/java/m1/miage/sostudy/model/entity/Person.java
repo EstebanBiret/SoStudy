@@ -64,6 +64,10 @@ public abstract class Person {
         this.urlProfilePicture = urlProfilePicture;
     }
 
+    /**
+     * Default constructor of the Person class
+     */
+    public Person() {};
 
     /**
      * Abstract method to register a person
