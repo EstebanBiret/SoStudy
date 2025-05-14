@@ -2,7 +2,6 @@ package m1.miage.sostudy.model.entity;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.Assert;
 
 /**
  * Class testing the Admin class

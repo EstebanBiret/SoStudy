@@ -50,7 +50,7 @@ public class Admin extends Person {
     }
 
     /**
-     * Method to delete a psot
+     * Method to delete a post
      * @param idPost the id of the post to delete
      * @return true if the deletion is successful, false otherwise
      */

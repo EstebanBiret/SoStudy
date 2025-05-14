@@ -5,14 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository for the Community entity
+ * Repository interface for Community entity.
  */
 @Repository
-public interface CommunityRepo extends JpaRepository<Community, Integer> {
+public interface CommunityRepository extends JpaRepository<Community, Integer> {
+
     /**
      * Find a community by its id
      * @param id the id of the community
      * @return the community
      */
     Community findById(int id);
+    
 }
