@@ -55,6 +55,7 @@ public class DataInitializer implements CommandLineRunner {
         user1.setPseudo("jeandupont");
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
+        user1.setPersonImagePath("images/users_images/1.jpeg");
         
         User user2 = new User();
         user2.setName("Martin");
@@ -64,6 +65,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setPseudo("mariecode");
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
+        user2.setPersonImagePath("images/users_images/2.jpeg");
         
         User user3 = new User();
         user3.setName("Leroy");
@@ -73,6 +75,7 @@ public class DataInitializer implements CommandLineRunner {
         user3.setPseudo("devpierre");
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
+        user3.setPersonImagePath("images/users_images/3.jpeg");
         
         // Sauvegarde des utilisateurs
         user1 = userRepository.save(user1);

@@ -27,9 +27,9 @@
                 <img th:unless="${currentUri == '/post/publish'}" th:src="@{/images/logos/publish-grey.svg}" alt="Publier">
             </a>
 
-            <a th:href="@{/profile}" class="nav-item">
-                <img th:if="${currentUri == '/profile'}" th:src="@{/images/logos/user-active.svg}" alt="Profil">
-                <img th:unless="${currentUri == '/profile'}" th:src="@{/images/logos/user-grey.svg}" alt="Profil">
+            <a th:href="@{/user/{pseudo}(pseudo=${session.user.pseudo})}" class="nav-item">
+                <img th:if="${currentUri == '/user/{pseudo}(pseudo=${session.user.pseudo})'}" th:src="@{/images/logos/user-active.svg}" alt="Profil">
+                <img th:unless="${currentUri == '/user/{pseudo}(pseudo=${session.user.pseudo})'}" th:src="@{/images/logos/user-grey.svg}" alt="Profil">
             </a>
         </div>
     </nav>

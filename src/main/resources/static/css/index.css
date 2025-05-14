@@ -43,6 +43,15 @@ body {
     color: #333;
 }
 
+.post-user-info h3 a {
+    text-decoration: none;
+    color: #333;
+}
+
+.post-user-info h3 a:hover {
+    color: #ce29e4;
+}
+
 .post-user-info p {
     margin: 0;
     font-size: 0.9em;

@@ -14,9 +14,11 @@
         <div class="posts-container">
             <div th:each="post : ${posts}" class="post-card">
                 <div class="post-header">
-                    <!-- <img th:src="@{/images/user/default.png}" alt="Avatar" class="post-avatar"> -->
+                    <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
                     <div class="post-user-info">
-                        <h3 th:text="${post.user.firstName} + ' ' + ${post.user.name}">Nom Utilisateur</h3>
+                        <h3>
+                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.firstName + ' ' + post.user.name}"></a>
+                        </h3>
                         <p th:text="${post.formattedDate}">Date de publication</p>
                     </div>
                 </div>
