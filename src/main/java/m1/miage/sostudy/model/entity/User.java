@@ -30,8 +30,8 @@ public class User extends Person {
      */
     @ManyToMany
     @JoinTable(name = "following",
-            joinColumns = @JoinColumn(name = "idUser_following"),
-            inverseJoinColumns = @JoinColumn(name = "idUser_followed"))
+            joinColumns = @JoinColumn(name = "id_user_following"),
+            inverseJoinColumns = @JoinColumn(name = "id_user_followed"))
     private List<User> following = new ArrayList<>();
 
     /**
@@ -80,15 +80,15 @@ public class User extends Person {
      */
     @ManyToMany
     @JoinTable(name = "subscribed_communities",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idCommunity"))
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_community"))
     private List<Community> subscribedCommunities = new ArrayList<>();
 
     /**
      * List of the communities that the user is creator of.
      */
     @OneToMany
-    @JoinColumn(name = "idCommunity")
+    @JoinColumn(name = "communityId")
     private List<Community> createdCommunities = new ArrayList<>();
 
     /**
@@ -96,15 +96,15 @@ public class User extends Person {
      */
     @ManyToMany
     @JoinTable(name = "subscribed_events",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idEvent"))
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_event"))
     private List<Event> subscribedEvents = new ArrayList<>();
 
     /**
      * List of the events that the user is creator of.
      */
     @OneToMany
-    @JoinColumn(name = "idEvent")
+    @JoinColumn(name = "eventId")
     private List<Event> createdEvents = new ArrayList<>();
 
     /**
@@ -115,11 +115,9 @@ public class User extends Person {
     private List<Message> sentMessages = new ArrayList<>();
 
     /**
-     * List of the messages that the user has received.
+     * Default constructor for the User class.
      */
-    public User() {
-        super();
-    }
+    public User() {super();}
 
     /**
      * Constructor for the User class.
