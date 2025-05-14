@@ -29,21 +29,27 @@ public class User extends Person {
      * List of the users that the user is following.
      */
     @ManyToMany
-    @JoinColumn(name = "idUser")
+    @JoinTable(name = "following",
+            joinColumns = @JoinColumn(name = "idUser_following"),
+            inverseJoinColumns = @JoinColumn(name = "idUser_followed"))
     private List<User> following = new ArrayList();
 
     /**
      * List of the users that are following the user.
      */
     @ManyToMany
-    @JoinColumn(name = "idUser")
+    @JoinTable(name = "followers",
+            joinColumns = @JoinColumn(name = "idUser_followed"),
+            inverseJoinColumns = @JoinColumn(name = "idUser_following"))
     private List<User> followers = new ArrayList();
 
     /**
      * List of the channels that the user is subscribed to.
      */
     @ManyToMany
-    @JoinColumn(name = "idChannel")
+    @JoinTable(name = "channel_suscribed",
+            joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idChannel"))
     private List<Channel> subscribedChannels = new ArrayList();
 
     /**
@@ -64,14 +70,18 @@ public class User extends Person {
      * List of the posts that the user has reposted.
      */
     @ManyToMany
-    @JoinColumn(name = "postId")
+    @JoinTable(name = "reposted_posts",
+            joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idChannel"))
     private List<Post> repostedPosts = new ArrayList();
 
     /**
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany
-    @JoinColumn(name = "idCommunity")
+    @JoinTable(name = "subscribed_communities",
+            joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idCommunity"))
     private List<Community> subscribedCommunities = new ArrayList();
 
     /**
@@ -85,7 +95,9 @@ public class User extends Person {
      * List of the events that the user is subscribed to.
      */
     @ManyToMany
-    @JoinColumn(name = "idEvent")
+    @JoinTable(name = "subscribed_events",
+            joinColumns = @JoinColumn(name = "idUser"),
+            inverseJoinColumns = @JoinColumn(name = "idEvent"))
     private List<Event> subscribedEvents = new ArrayList();
 
     /**
