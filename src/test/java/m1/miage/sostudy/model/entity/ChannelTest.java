@@ -31,7 +31,7 @@ class ChannelTest {
     void testEmptyConstructor() {
         assertNotNull(channel);
         assertNull(channel.getChannelName());
-        assertNull(channel.getUrlChannelPicture());
+        assertNull(channel.getChannelImagePath());
         assertEquals(0, channel.getChannelId());
     }
 
@@ -43,7 +43,7 @@ class ChannelTest {
         Channel channel = new Channel("Gaming", "http://example.com/pic.png");
 
         assertEquals("Gaming", channel.getChannelName());
-        assertEquals("http://example.com/pic.png", channel.getUrlChannelPicture());
+        assertEquals("http://example.com/pic.png", channel.getChannelImagePath());
     }
 
     /**
@@ -56,12 +56,12 @@ class ChannelTest {
     }
 
     /**
-     * Tests the getUrlChannelPicture method.
+     * Tests the getChannelImagePath method.
      */
     @Test
-    void testGetAndSetUrlChannelPicture() {
-        channel.setUrlChannelPicture("http://example.com/science.png");
-        assertEquals("http://example.com/science.png", channel.getUrlChannelPicture());
+    void testGetAndSetChannelImagePath() {
+        channel.setChannelImagePath("http://example.com/science.png");
+        assertEquals("http://example.com/science.png", channel.getChannelImagePath());
     }
 
     /**

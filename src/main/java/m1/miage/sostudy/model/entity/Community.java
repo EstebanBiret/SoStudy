@@ -30,7 +30,7 @@ public class Community {
     private String communityCreationDate;
 
     /**
-     * URL of the community picture
+     * Path of the image of the community
      */
     private String communityImagePath;
 
@@ -140,8 +140,8 @@ public class Community {
     /**
      * Getters and Setters
      */
-    public void setCommunityImagePath(String urlCommunityPicture) {
-        this.communityImagePath = urlCommunityPicture;
+    public void setCommunityImagePath(String communityImagePath) {
+        this.communityImagePath = communityImagePath;
     }
 
     /**

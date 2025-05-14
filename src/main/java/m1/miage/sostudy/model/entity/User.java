@@ -128,11 +128,11 @@ public class User extends Person {
      * @param password            Password of the user.
      * @param pseudo              Pseudo of the user.
      * @param birthDate           Birth date of the user.
-     * @param urlProfilePicture   URL of the profile picture of the user.
+     * @param personImagePath   Path of the image of the profile picture of the user.
      * @param bioUser             Biography of the user.
      */
-    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture, String bioUser) {
-        super(name, firstName, email, password,pseudo, birthDate, urlProfilePicture);
+    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath, String bioUser) {
+        super(name, firstName, email, password,pseudo, birthDate, personImagePath);
         this.bioUser = bioUser;
     }
 

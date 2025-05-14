@@ -27,9 +27,9 @@ public class Channel {
     private String channelName;
 
     /**
-     * Description of the channel
+     * Path of the image of the channel
      */
-    private String urlChannelPicture;
+    private String channelImagePath;
 
     /**
      * List of users in the channel
@@ -60,11 +60,11 @@ public class Channel {
     /**
      * Constructor of the Channel class
      * @param channelName
-     * @param urlChannelPicture
+     * @param channelImagePath
      */
-    public Channel(String channelName, String urlChannelPicture) {
+    public Channel(String channelName, String channelImagePath) {
         this.channelName = channelName;
-        this.urlChannelPicture = urlChannelPicture;
+        this.channelImagePath = channelImagePath;
     }
 
     /**
@@ -92,19 +92,19 @@ public class Channel {
     }
 
     /**
-     * Getter for the url of the channel picture
-     * @return the url of the channel picture
+     * Getter for the path of the image of the channel
+     * @return the path of the image of the channel
      */
-    public String getUrlChannelPicture() {
-        return urlChannelPicture;
+    public String getChannelImagePath() {
+        return channelImagePath;
     }
 
     /**
-     * Setter for the url of the channel picture
-     * @param urlChannelPicture the url of the channel picture
+     * Setter for the path of the image of the channel
+     * @param channelImagePath the path of the image of the channel
      */
-    public void setUrlChannelPicture(String urlChannelPicture) {
-        this.urlChannelPicture = urlChannelPicture;
+    public void setChannelImagePath(String channelImagePath) {
+        this.channelImagePath = channelImagePath;
     }
 
     /**
@@ -181,7 +181,7 @@ public class Channel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Channel channel = (Channel) o;
-        return channelId == channel.channelId && Objects.equals(channelName, channel.channelName) && Objects.equals(urlChannelPicture, channel.urlChannelPicture) && Objects.equals(users, channel.users) && Objects.equals(creator, channel.creator) && Objects.equals(messages, channel.messages);
+        return channelId == channel.channelId && Objects.equals(channelName, channel.channelName) && Objects.equals(channelImagePath, channel.channelImagePath) && Objects.equals(users, channel.users) && Objects.equals(creator, channel.creator) && Objects.equals(messages, channel.messages);
     }
 
     /**
@@ -190,6 +190,6 @@ public class Channel {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(channelId, channelName, urlChannelPicture, users, creator, messages);
+        return Objects.hash(channelId, channelName, channelImagePath, users, creator, messages);
     }
 }

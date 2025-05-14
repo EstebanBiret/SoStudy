@@ -30,7 +30,7 @@ public class Post {
     private String postContent;
 
     /**
-     * The URL of the media of the post, can be null
+     * Path of the image of the post, can be null
      */
     private String postMediaPath;
 
@@ -80,7 +80,7 @@ public class Post {
      * 
      * @param postPublicationDate the publication date of the post
      * @param postContent the content of the post
-     * @param postMediaPath the URL of the media of the post, can be null
+     * @param postMediaPath the path of the image of the post, can be null
      */
     public Post(String postPublicationDate, String postContent, String postMediaPath) {
         this.postPublicationDate = postPublicationDate;
@@ -125,14 +125,14 @@ public class Post {
     public void setPostContent(String postContent) {this.postContent = postContent;}
 
     /**
-     * Getter for the media URL of the post
-     * @return the media URL of the post
+     * Getter for the media path of the post
+     * @return the media path of the post
      */
     public String getPostMediaPath() {return postMediaPath;}
 
     /**
-     * Setter for the media URL of the post
-     * @param postMediaPath the media URL of the post
+     * Setter for the media path of the post
+     * @param postMediaPath the media path of the post
      */
     public void setPostMediaPath(String postMediaPath) {this.postMediaPath = postMediaPath;}
 

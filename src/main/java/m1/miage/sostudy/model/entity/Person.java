@@ -41,9 +41,9 @@ public abstract class Person {
     private String birthDate;
 
     /**
-     * URL of the profile picture of the person
+     * Path of the image of the person
      */
-    private String urlProfilePicture;
+    private String personImagePath;
 
 
     /**
@@ -54,16 +54,16 @@ public abstract class Person {
      * @param password
      * @param pseudo
      * @param birthDate
-     * @param urlProfilePicture
+     * @param personImagePath
      */
-    public Person(String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture) {
+    public Person(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath) {
         this.name = name;
         this.firstName = firstName;
         this.email = email;
         this.password = password;
         this.pseudo = pseudo;
         this.birthDate = birthDate;
-        this.urlProfilePicture = urlProfilePicture;
+        this.personImagePath = personImagePath;
     }
 
     /**
@@ -169,19 +169,19 @@ public abstract class Person {
     }
 
     /**
-     * Getter for the URL of the profile picture of the person
-     * @return the URL of the profile picture of the person
+     * Getter for the path of the image of the person
+     * @return the path of the image of the person
      */
-    public String getUrlProfilePicture() {
-        return urlProfilePicture;
+    public String getPersonImagePath() {
+        return personImagePath;
     }
 
     /**
-     * Setter for the URL of the profile picture of the person
-     * @param urlProfilePicture the URL of the profile picture of the person
+     * Setter for the path of the image of the person
+     * @param personImagePath the path of the image of the person
      */
-    public void setUrlProfilePicture(String urlProfilePicture) {
-        this.urlProfilePicture = urlProfilePicture;
+    public void setPersonImagePath(String personImagePath) {
+        this.personImagePath = personImagePath;
     }
 
     /**
@@ -194,7 +194,7 @@ public abstract class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return Objects.equals(name, person.name) && Objects.equals(firstName, person.firstName) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(pseudo, person.pseudo) && Objects.equals(birthDate, person.birthDate) && Objects.equals(urlProfilePicture, person.urlProfilePicture);
+        return Objects.equals(name, person.name) && Objects.equals(firstName, person.firstName) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(pseudo, person.pseudo) && Objects.equals(birthDate, person.birthDate) && Objects.equals(personImagePath, person.personImagePath);
     }
 
     /**
@@ -203,6 +203,6 @@ public abstract class Person {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, firstName, email, password, pseudo, birthDate, urlProfilePicture);
+        return Objects.hash(name, firstName, email, password, pseudo, birthDate, personImagePath);
     }
 }
