@@ -19,13 +19,13 @@ public class PostTest {
     void testConstructorWithParameters() {
         String date = "2024-01-01";
         String content = "Hello world";
-        String mediaUrl = "http://example.com/media.png";
+        String mediaPath = "http://example.com/media.png";
 
-        Post post = new Post(date, content, mediaUrl);
+        Post post = new Post(date, content, mediaPath);
 
         assertEquals(date, post.getPostPublicationDate());
         assertEquals(content, post.getPostContent());
-        assertEquals(mediaUrl, post.getPostMediaPath());
+        assertEquals(mediaPath, post.getPostMediaPath());
     }
 
     /**

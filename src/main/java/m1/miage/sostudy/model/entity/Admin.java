@@ -31,11 +31,11 @@ public class Admin extends Person {
      * @param password password of the admin
      * @param pseudo pseudo of the admin
      * @param birthDate birthdate of the admin
-     * @param urlProfilePicture url of the profile picture of the admin
+     * @param personImagePath path of the image of the admin
      * @param idAdmin id of the admin
      */
-    public Admin(int idAdmin, String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture) {
-        super(name, firstName, email, password, pseudo, birthDate, urlProfilePicture);
+    public Admin(int idAdmin, String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath) {
+        super(name, firstName, email, password, pseudo, birthDate, personImagePath);
         this.idAdmin = idAdmin;
     }
 
@@ -109,6 +109,4 @@ public class Admin extends Person {
         return true;
     }
 
-    
-    
 }

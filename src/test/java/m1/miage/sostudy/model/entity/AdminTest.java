@@ -15,16 +15,16 @@ class AdminTest {
     private static final String PASSWORD_ADMIN = "passwordAdmin";
     private static final String PSEUDO_ADMIN = "pseudoAdmin";
     private static final String BIRTH_DATE_ADMIN = "birthDateAdmin";
-    private static final String URL_PROFILE_PICTURE_ADMIN = "urlProfilePictureAdmin";
-    private static final Admin ADMIN = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, URL_PROFILE_PICTURE_ADMIN);
+    private static final String PERSON_IMAGE_PATH_ADMIN = "personImagePathAdmin";
+    private static final Admin ADMIN = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, PERSON_IMAGE_PATH_ADMIN);
     
     /**
      * test the equals method
      */
     @Test
     void testEquals() {
-        final Admin admin1 = new Admin(ID_ADMIN,NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, URL_PROFILE_PICTURE_ADMIN);
-        final Admin admin2 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, URL_PROFILE_PICTURE_ADMIN);
+        final Admin admin1 = new Admin(ID_ADMIN,NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, PERSON_IMAGE_PATH_ADMIN);
+        final Admin admin2 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, PERSON_IMAGE_PATH_ADMIN);
         Assertions.assertEquals(admin1, admin2);
     }
 
@@ -43,8 +43,8 @@ class AdminTest {
      */
     @Test
     void testHashCode() {
-        final Admin admin1 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, URL_PROFILE_PICTURE_ADMIN);
-        final Admin admin2 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, URL_PROFILE_PICTURE_ADMIN);
+        final Admin admin1 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, PERSON_IMAGE_PATH_ADMIN);
+        final Admin admin2 = new Admin(ID_ADMIN, NAME_ADMIN, FIRST_NAME_ADMIN, EMAIL_ADMIN, PASSWORD_ADMIN, PSEUDO_ADMIN, BIRTH_DATE_ADMIN, PERSON_IMAGE_PATH_ADMIN);
         Assertions.assertEquals(admin1.hashCode(), admin2.hashCode());
     }
 
