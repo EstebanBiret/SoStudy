@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for User entity.
- * This interface extends JpaRepository to provide CRUD operations for User entities.
  */
 @Repository
-public interface UserRepo extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 }
