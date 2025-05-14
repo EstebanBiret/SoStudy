@@ -2,6 +2,8 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 /**
  * Class representing a community
  */
@@ -36,11 +38,25 @@ public class Community {
      */
     private String communityDescription;
 
-    //ToDo : add the user who created the community
+    /**
+     * User who created the community
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User userCreator;
 
-    //ToDo : add the list of users who are members of the community
+    /**
+     * List of users who are members of the community
+     */
+    @ManyToMany
+    @JoinTable(name = "community_user", joinColumns = @JoinColumn(name = "id_community"), inverseJoinColumns = @JoinColumn(name = "id_user"))
+    private List<User> usersMembers;
 
-    //ToDo : add the list of post of this community
+    /**
+     * List of posts of the community
+     */
+    //@OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    //private List<Post> posts;
 
     /**
      * Constructor of the Community class
@@ -142,6 +158,79 @@ public class Community {
         this.communityDescription = descriptionCommunity;
     }
 
+    /**
+     * Getters and Setters
+     */
+    public User getUserCreator() {
+        return userCreator;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public void setUserCreator(User userCreator) {
+        this.userCreator = userCreator;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public List<User> getUsersMembers() {
+        return usersMembers;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public void setUsersMembers(List<User> usersMembers) {
+        this.usersMembers = usersMembers;
+    }
+
+    /**
+     * Add a user to the list of members of the community
+     * @param user the user to add
+     */
+    public void addUserMember(User user) {
+        this.usersMembers.add(user);
+    }
+
+    /**
+     * Remove a user from the list of members of the community
+     * @param user the user to remove
+     */
+    public void removeUserMember(User user) {
+        this.usersMembers.remove(user);
+    }
+
+    /**
+     * Getters and Setters
+     */
+    /*public List<Post> getPosts() {
+        return posts;
+    }*/
+
+    /**
+     * Getters and Setters
+     */
+    /*public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }*/
+
+    /**
+     * Add a post to the list of posts of the community
+     * @param post the post to add
+     */
+    /*public void addPost(Post post) {
+        this.posts.add(post);
+    }*/
+
+    /**
+     * Remove a post from the list of posts of the community
+     * @param post the post to remove
+     */
+    /*public void removePost(Post post) {
+        this.posts.remove(post);
+    }*/
 
     /**
      * Override the hashCode method
@@ -156,13 +245,16 @@ public class Community {
         result = prime * result + ((communityCreationDate == null) ? 0 : communityCreationDate.hashCode());
         result = prime * result + ((cmmunityImagePath == null) ? 0 : cmmunityImagePath.hashCode());
         result = prime * result + ((communityDescription == null) ? 0 : communityDescription.hashCode());
+        result = prime * result + ((userCreator == null) ? 0 : userCreator.hashCode());
+        result = prime * result + ((usersMembers == null) ? 0 : usersMembers.hashCode());
+        //result = prime * result + ((posts == null) ? 0 : posts.hashCode());
         return result;
     }
 
     /**
      * Override the equals method
      * @param obj the object to compare with
-     * @return true if the two objects are equal, false otherwise
+     * @return true if the objects are equal, false otherwise
      */
     @Override
     public boolean equals(Object obj) {
@@ -194,6 +286,16 @@ public class Community {
             if (other.communityDescription != null)
                 return false;
         } else if (!communityDescription.equals(other.communityDescription))
+            return false;
+        if (userCreator == null) {
+            if (other.userCreator != null)
+                return false;
+        } else if (!userCreator.equals(other.userCreator))
+            return false;
+        if (usersMembers == null) {
+            if (other.usersMembers != null)
+                return false;
+        } else if (!usersMembers.equals(other.usersMembers))
             return false;
         return true;
     }

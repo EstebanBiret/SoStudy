@@ -48,10 +48,19 @@ public class Event {
      */
     private String eventPlace;
 
-    //ToDo : add the user who created the event
+    /**
+     * User who created the event
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User userCreator;
 
-    //ToDo : add the list of users who are interested in the event
-
+    /**
+     * List of users who are interested in the event
+     */
+    @ManyToMany
+    @JoinTable(name = "event_user", joinColumns = @JoinColumn(name = "id_event"), inverseJoinColumns = @JoinColumn(name = "id_user"))
+    private java.util.List<User> usersInterested;
 
     /**
      * Constructor of the Event class
@@ -186,6 +195,53 @@ public class Event {
      */
     public void setEventPlace(String locationEvent) {
         this.eventPlace = locationEvent;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public User getUserCreator() {
+        return userCreator;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public void setUserCreator(User userCreator) {
+        this.userCreator = userCreator;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public java.util.List<User> getUsersInterested() {
+        return usersInterested;
+    }
+
+    /**
+     * Getters and Setters
+     */
+    public void setUsersInterested(java.util.List<User> usersInterested) {
+        this.usersInterested = usersInterested;
+    }
+
+    /**
+     * add a user to the list of users interested in the event
+     */
+    public void addUserInterested(User user) {
+        if (this.usersInterested == null) {
+            this.usersInterested = new java.util.ArrayList<>();
+        }
+        this.usersInterested.add(user);
+    }
+
+    /**
+     * remove a user from the list of users interested in the event
+     */
+    public void removeUserInterested(User user) {
+        if (this.usersInterested != null) {
+            this.usersInterested.remove(user);
+        }
     }
 
     /**

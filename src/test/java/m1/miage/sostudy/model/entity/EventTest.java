@@ -1,5 +1,7 @@
 package m1.miage.sostudy.model.entity;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -156,6 +158,42 @@ class EventTest {
         final String expected = "newSubjectEvent";
         EVENT.setEventName(expected);
         final String actual = EVENT.getEventName();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    /**
+     * test the getUserCreator method and setUserCreator method
+     */
+    @Test
+    void testGetUserCreator() {
+        final User user = new User();
+        EVENT.setUserCreator(user);
+        final User expected = user;
+        final User actual = EVENT.getUserCreator();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    /**
+     * test the getUsersInterested method and setUsersInterested method
+     */
+    @Test
+    void testGetUsersInterested() {
+        final User user = new User();
+        EVENT.setUsersInterested(List.of(user));
+        final List<User> expected = List.of(user);
+        final List<User> actual = EVENT.getUsersInterested();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    /**
+     * test the addUserInterested method
+     */
+    @Test
+    void testAddUsersInterested() {
+        final User user = new User();
+        EVENT.addUserInterested(user);
+        final List<User> expected = List.of(user);
+        final List<User> actual = EVENT.getUsersInterested();
         Assertions.assertEquals(expected, actual);
     }
 
