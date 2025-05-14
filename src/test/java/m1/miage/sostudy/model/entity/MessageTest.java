@@ -31,7 +31,7 @@ class MessageTest {
         assertNull(message.getContent());
         assertNull(message.getDateMessage());
         assertNull(message.getChannel());
-        assertEquals(0, message.getIdMessage()); // int par défaut
+        assertEquals(0, message.getMessageId()); // int par défaut
     }
 
     /**
@@ -49,7 +49,7 @@ class MessageTest {
      */
     @Test
     void testGetAndSetIdMessage() {
-        assertEquals(0, message.getIdMessage());
+        assertEquals(0, message.getMessageId());
     }
 
     /**

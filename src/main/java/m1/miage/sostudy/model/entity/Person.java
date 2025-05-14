@@ -64,19 +64,10 @@ public abstract class Person {
         this.urlProfilePicture = urlProfilePicture;
     }
 
-
     /**
-     * Abstract method to register a person
-     * @param email the email address of the person
-     * @param password the password of the person
-     * @return true if the registration is successful, false otherwise
+     * Default constructor of the Person class
      */
-    public abstract boolean seConnecter(String email, String password);
-
-    /**
-     * Method to register a person
-     */
-    public abstract void seDeconnecter();
+    public Person() {}
 
     /**
      * Getter for the name of the person

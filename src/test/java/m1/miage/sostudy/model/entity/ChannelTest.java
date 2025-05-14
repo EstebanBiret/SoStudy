@@ -30,7 +30,7 @@ class ChannelTest {
         assertNotNull(channel);
         assertNull(channel.getChannelName());
         assertNull(channel.getUrlChannelPicture());
-        assertEquals(0, channel.getIdChannel());
+        assertEquals(0, channel.getChannelId());
     }
 
     /**

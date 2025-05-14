@@ -17,7 +17,7 @@ public class Channel {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idChannel;
+    private int channelId;
 
     /**
      * Name of the channel
@@ -51,8 +51,8 @@ public class Channel {
      * Getter for the id of the channel
      * @return the id of the channel
      */
-    public int getIdChannel() {
-        return idChannel;
+    public int getChannelId() {
+        return channelId;
     }
 
     /**
@@ -97,7 +97,7 @@ public class Channel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Channel channel = (Channel) o;
-        return idChannel == channel.idChannel && Objects.equals(channelName, channel.channelName) && Objects.equals(urlChannelPicture, channel.urlChannelPicture);
+        return channelId == channel.channelId && Objects.equals(channelName, channel.channelName) && Objects.equals(urlChannelPicture, channel.urlChannelPicture);
     }
 
 }
