@@ -1,0 +1,40 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius:15px;
+}
+
+.logo {
+    height: 40px;
+}
+
+.search-bar {
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 20px;
+    background-color: #efeff3;
+}
+
+.navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-item {
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+
+    & img {
+        height: 40px;
+    }
+}
+
+#events-img {
+    height: 50px !important;
+}
