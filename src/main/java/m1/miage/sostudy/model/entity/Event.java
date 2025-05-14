@@ -208,7 +208,7 @@ public class Event {
 
     /**
      * Override the equals method
-     * @param obj
+     * @param obj the object to compare with
      * @return true if the event is equal to the object
      */
     @Override
