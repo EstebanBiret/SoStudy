@@ -67,6 +67,7 @@ public abstract class Person {
     /**
      * Default constructor of the Person class
      */
+
     public Person() {}
 
     /**

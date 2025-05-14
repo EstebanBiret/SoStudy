@@ -15,38 +15,38 @@ public class Event {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idEvent;
+    private int eventId;
 
 
     /**
-     * Subject of the event
+     * Name of the event
      */
-    private String subjectEvent;
-
-    /**
-     * Date of publication of the event
-     */
-    private String datePublicationEvent;
+    private String eventName;
 
     /**
      * Content of the event
      */
-    private String contentEvent;
+    private String eventContent;
+
+    /**
+     * Date of publication of the event
+     */
+    private String eventPublicationDate;
 
     /**
      * Date of start of the event
      */
-    private String dateStartEvent;
+    private String eventBeginningDate;
 
     /**
      * Date of end of the event
      */
-    private String dateEndEvent;
+    private String eventEndDate;
 
     /**
      * Location of the event
      */
-    private String locationEvent;
+    private String eventPlace;
 
     //ToDo : add the user who created the event
 
@@ -61,131 +61,131 @@ public class Event {
 
     /**
      * Constructor of the Event class
-     * @param subjectEvent
-     * @param datePublicationEvent
-     * @param contentEvent
-     * @param dateStartEvent
-     * @param dateEndEvent
-     * @param locationEvent
+     * @param eventName
+     * @param eventPublicationDate
+     * @param eventContent
+     * @param eventBeginningDate
+     * @param eventEndDate
+     * @param eventPlace
      */
-    public Event(String subjectEvent, String datePublicationEvent, String contentEvent, String dateStartEvent, String dateEndEvent, String locationEvent) {
-        this.subjectEvent = subjectEvent;
-        this.datePublicationEvent = datePublicationEvent;
-        this.contentEvent = contentEvent;
-        this.dateStartEvent = dateStartEvent;
-        this.dateEndEvent = dateEndEvent;
-        this.locationEvent = locationEvent;
+    public Event(String eventName, String eventPublicationDate, String eventContent, String eventBeginningDate, String eventEndDate, String eventPlace) {
+        this.eventName = eventName;
+        this.eventPublicationDate = eventPublicationDate;
+        this.eventContent = eventContent;
+        this.eventBeginningDate = eventBeginningDate;
+        this.eventEndDate = eventEndDate;
+        this.eventPlace = eventPlace;
     }
 
     /**
      * Constructor of the Event class
-     * @param idEvent
-     * @param subjectEvent
-     * @param datePublicationEvent
-     * @param contentEvent
-     * @param dateStartEvent
-     * @param dateEndEvent
-     * @param locationEvent
+     * @param eventId
+     * @param eventName
+     * @param eventPublicationDate
+     * @param eventContent
+     * @param eventBeginningDate
+     * @param eventEndDate
+     * @param eventPlace
      */
-    public Event(int idEvent, String subjectEvent, String datePublicationEvent, String contentEvent, String dateStartEvent, String dateEndEvent, String locationEvent) {
-        this.idEvent = idEvent;
-        this.subjectEvent = subjectEvent;
-        this.datePublicationEvent = datePublicationEvent;
-        this.contentEvent = contentEvent;
-        this.dateStartEvent = dateStartEvent;
-        this.dateEndEvent = dateEndEvent;
-        this.locationEvent = locationEvent;
+    public Event(int eventId, String eventName, String eventPublicationDate, String eventContent, String eventBeginningDate, String eventEndDate, String eventPlace) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventPublicationDate = eventPublicationDate;
+        this.eventContent = eventContent;
+        this.eventBeginningDate = eventBeginningDate;
+        this.eventEndDate = eventEndDate;
+        this.eventPlace = eventPlace;
     }
 
     /**
      * Getters and Setters
      */
-    public int getIdEvent() {
-        return idEvent;
+    public int getEventId() {
+        return eventId;
     }
 
     /**
      * Getters and Setters
      */
-    public String getSubjectEvent() {
-        return subjectEvent;
+    public String getEventName() {
+        return eventName;
     }
 
     /**
      * Getters and Setters
      */
-    public void setSubjectEvent(String subjectEvent) {
-        this.subjectEvent = subjectEvent;
+    public void setEventName(String subjectEvent) {
+        this.eventName = subjectEvent;
     }
 
     /**
      * Getters and Setters
      */
-    public String getDatePublicationEvent() {
-        return datePublicationEvent;
+    public String getEventPublicationDate() {
+        return eventPublicationDate;
     }
 
     /**
      * Getters and Setters
      */
-    public void setDatePublicationEvent(String datePublicationEvent) {
-        this.datePublicationEvent = datePublicationEvent;
+    public void setEventPublicationDate(String datePublicationEvent) {
+        this.eventPublicationDate = datePublicationEvent;
     }
 
     /**
      * Getters and Setters
      */
-    public String getContentEvent() {
-        return contentEvent;
+    public String getEventContent() {
+        return eventContent;
     }
 
     /**
      * Getters and Setters
      */
-    public void setContentEvent(String contentEvent) {
-        this.contentEvent = contentEvent;
+    public void setEventContent(String contentEvent) {
+        this.eventContent = contentEvent;
     }
 
     /**
      * Getters and Setters
      */
-    public String getDateStartEvent() {
-        return dateStartEvent;
+    public String getEventBeginningDate() {
+        return eventBeginningDate;
     }
 
     /**
      * Getters and Setters
      */
-    public void setDateStartEvent(String dateStartEvent) {
-        this.dateStartEvent = dateStartEvent;
+    public void setEventBeginningDate(String dateStartEvent) {
+        this.eventBeginningDate = dateStartEvent;
     }
 
     /**
      * Getters and Setters
      */
-    public String getDateEndEvent() {
-        return dateEndEvent;
+    public String getEventEndDate() {
+        return eventEndDate;
     }
 
     /**
      * Getters and Setters
      */
-    public void setDateEndEvent(String dateEndEvent) {
-        this.dateEndEvent = dateEndEvent;
+    public void setEventEndDate(String dateEndEvent) {
+        this.eventEndDate = dateEndEvent;
     }
 
     /**
      * Getters and Setters
      */
-    public String getLocationEvent() {
-        return locationEvent;
+    public String getEventPlace() {
+        return eventPlace;
     }
 
     /**
      * Getters and Setters
      */
-    public void setLocationEvent(String locationEvent) {
-        this.locationEvent = locationEvent;
+    public void setEventPlace(String locationEvent) {
+        this.eventPlace = locationEvent;
     }
 
     /**
@@ -196,19 +196,19 @@ public class Event {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idEvent;
-        result = prime * result + ((subjectEvent == null) ? 0 : subjectEvent.hashCode());
-        result = prime * result + ((datePublicationEvent == null) ? 0 : datePublicationEvent.hashCode());
-        result = prime * result + ((contentEvent == null) ? 0 : contentEvent.hashCode());
-        result = prime * result + ((dateStartEvent == null) ? 0 : dateStartEvent.hashCode());
-        result = prime * result + ((dateEndEvent == null) ? 0 : dateEndEvent.hashCode());
-        result = prime * result + ((locationEvent == null) ? 0 : locationEvent.hashCode());
+        result = prime * result + eventId;
+        result = prime * result + ((eventName == null) ? 0 : eventName.hashCode());
+        result = prime * result + ((eventPublicationDate == null) ? 0 : eventPublicationDate.hashCode());
+        result = prime * result + ((eventContent == null) ? 0 : eventContent.hashCode());
+        result = prime * result + ((eventBeginningDate == null) ? 0 : eventBeginningDate.hashCode());
+        result = prime * result + ((eventEndDate == null) ? 0 : eventEndDate.hashCode());
+        result = prime * result + ((eventPlace == null) ? 0 : eventPlace.hashCode());
         return result;
     }
 
     /**
      * Override the equals method
-     * @param obj
+     * @param obj the object to compare with
      * @return true if the event is equal to the object
      */
     @Override
@@ -220,37 +220,37 @@ public class Event {
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        if (idEvent != other.idEvent)
+        if (eventId != other.eventId)
             return false;
-        if (subjectEvent == null) {
-            if (other.subjectEvent != null)
+        if (eventName == null) {
+            if (other.eventName != null)
                 return false;
-        } else if (!subjectEvent.equals(other.subjectEvent))
+        } else if (!eventName.equals(other.eventName))
             return false;
-        if (datePublicationEvent == null) {
-            if (other.datePublicationEvent != null)
+        if (eventPublicationDate == null) {
+            if (other.eventPublicationDate != null)
                 return false;
-        } else if (!datePublicationEvent.equals(other.datePublicationEvent))
+        } else if (!eventPublicationDate.equals(other.eventPublicationDate))
             return false;
-        if (contentEvent == null) {
-            if (other.contentEvent != null)
+        if (eventContent == null) {
+            if (other.eventContent != null)
                 return false;
-        } else if (!contentEvent.equals(other.contentEvent))
+        } else if (!eventContent.equals(other.eventContent))
             return false;
-        if (dateStartEvent == null) {
-            if (other.dateStartEvent != null)
+        if (eventBeginningDate == null) {
+            if (other.eventBeginningDate != null)
                 return false;
-        } else if (!dateStartEvent.equals(other.dateStartEvent))
+        } else if (!eventBeginningDate.equals(other.eventBeginningDate))
             return false;
-        if (dateEndEvent == null) {
-            if (other.dateEndEvent != null)
+        if (eventEndDate == null) {
+            if (other.eventEndDate != null)
                 return false;
-        } else if (!dateEndEvent.equals(other.dateEndEvent))
+        } else if (!eventEndDate.equals(other.eventEndDate))
             return false;
-        if (locationEvent == null) {
-            if (other.locationEvent != null)
+        if (eventPlace == null) {
+            if (other.eventPlace != null)
                 return false;
-        } else if (!locationEvent.equals(other.locationEvent))
+        } else if (!eventPlace.equals(other.eventPlace))
             return false;
         return true;
     }

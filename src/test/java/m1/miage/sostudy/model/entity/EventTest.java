@@ -19,121 +19,121 @@ class EventTest {
     private static final Event EVENT = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
 
     /**
-     * test the getContentEvent method
+     * test the getEventContent method
      */
     @Test
     void testGetContentEvent() {
         final String expected = CONTENT_EVENT;
-        final String actual = EVENT.getContentEvent();
+        final String actual = EVENT.getEventContent();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the getDateEndEvent method
+     * test the getEventEndDate method
      */
     @Test
     void testGetDateEndEvent() {
         final Event ev = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
         final String expected = DATE_END_EVENT;
-        final String actual = ev.getDateEndEvent();
+        final String actual = ev.getEventEndDate();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the getDatePublicationEvent method
+     * test the getEventPublicationDate method
      */
     @Test
     void testGetDatePublicationEvent() {
         final Event ev = new Event(SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
         final String expected = DATE_PUBLICATION_EVENT;
-        final String actual = ev.getDatePublicationEvent();
+        final String actual = ev.getEventPublicationDate();
         Assertions.assertEquals(expected, actual);
     }
 
 
     /**
-     * test the getDateStartEvent method
+     * test the getEventBeginningDate method
      */
     @Test
     void testGetDateStartEvent() {
         final Event ev = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
         final String expected = DATE_START_EVENT;
-        final String actual = ev.getDateStartEvent();
+        final String actual = ev.getEventBeginningDate();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the getIdEvent method
+     * test the getEventId method
      */
     @Test
     void testGetIdEvent() {
         final int expected = ID_EVENT;
-        final int actual = EVENT.getIdEvent();
+        final int actual = EVENT.getEventId();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the getLocationEvent method
+     * test the getEventPlace method
      */
     @Test
     void testGetLocationEvent() {
         final Event ev = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
         final String expected = LOCATION_EVENT;
-        final String actual = ev.getLocationEvent();
+        final String actual = ev.getEventPlace();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the getSubjectEvent method
+     * test the getEventName method
      */
     @Test
     void testGetSubjectEvent() {
         final String expected = SUBJECT_EVENT;
-        final String actual = EVENT.getSubjectEvent();
+        final String actual = EVENT.getEventName();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the setContentEvent method
+     * test the setEventContent method
      */
     @Test
     void testSetContentEvent() {
         final String expected = "newContentEvent";
-        EVENT.setContentEvent(expected);
-        final String actual = EVENT.getContentEvent();
+        EVENT.setEventContent(expected);
+        final String actual = EVENT.getEventContent();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the setDateEndEvent method
+     * test the setEventEndDate method
      */
     @Test
     void testSetDateEndEvent() {
         final String expected = "newDateEndEvent";
-        EVENT.setDateEndEvent(expected);
-        final String actual = EVENT.getDateEndEvent();
+        EVENT.setEventEndDate(expected);
+        final String actual = EVENT.getEventEndDate();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the setDatePublicationEvent method
+     * test the setEventPublicationDate method
      */
     @Test
     void testSetDatePublicationEvent() {
         final String expected = "newDatePublicationEvent";
-        EVENT.setDatePublicationEvent(expected);
-        final String actual = EVENT.getDatePublicationEvent();
+        EVENT.setEventPublicationDate(expected);
+        final String actual = EVENT.getEventPublicationDate();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the setDateStartEvent method
+     * test the setEventBeginningDate method
      */
     @Test
     void testSetDateStartEvent() {
         final String expected = "newDateStartEvent";
-        EVENT.setDateStartEvent(expected);
-        final String actual = EVENT.getDateStartEvent();
+        EVENT.setEventBeginningDate(expected);
+        final String actual = EVENT.getEventBeginningDate();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -143,19 +143,19 @@ class EventTest {
     @Test
     void testSetLocationEvent() {
         final String expected = "newLocationEvent";
-        EVENT.setLocationEvent(expected);
-        final String actual = EVENT.getLocationEvent();
+        EVENT.setEventPlace(expected);
+        final String actual = EVENT.getEventPlace();
         Assertions.assertEquals(expected, actual);
     }
 
     /**
-     * test the setSubjectEvent method
+     * test the setEventName method
      */
     @Test
     void testSetSubjectEvent() {
         final String expected = "newSubjectEvent";
-        EVENT.setSubjectEvent(expected);
-        final String actual = EVENT.getSubjectEvent();
+        EVENT.setEventName(expected);
+        final String actual = EVENT.getEventName();
         Assertions.assertEquals(expected, actual);
     }
 

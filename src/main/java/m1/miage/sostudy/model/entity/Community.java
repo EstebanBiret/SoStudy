@@ -14,27 +14,27 @@ public class Community {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idCommunity;
+    private int communityId;
 
     /**
      * Name of the community
      */
-    private String nameCommunity;
+    private String communityName;
 
     /**
      * Date of creation of the community
      */
-    private String dateCreationCommunity;
+    private String communityCreationDate;
 
     /**
      * URL of the community picture
      */
-    private String urlCommunityPicture;
+    private String cmmunityImagePath;
 
     /**
      * Description of the community
      */
-    private String descriptionCommunity;
+    private String communityDescription;
 
     //ToDo : add the user who created the community
 
@@ -50,96 +50,96 @@ public class Community {
     }
     /**
      * Constructor of the Community class
-     * @param nameCommunity
-     * @param dateCreationCommunity
-     * @param urlCommunityPicture
-     * @param descriptionCommunity
+     * @param communityName
+     * @param communityCreationDate
+     * @param cmmunityImagePath
+     * @param communityDescription
      */
-    public Community(String nameCommunity, String dateCreationCommunity, String urlCommunityPicture, String descriptionCommunity) {
-        this.nameCommunity = nameCommunity;
-        this.dateCreationCommunity = dateCreationCommunity;
-        this.urlCommunityPicture = urlCommunityPicture;
-        this.descriptionCommunity = descriptionCommunity;
+    public Community(String communityName, String communityCreationDate, String cmmunityImagePath, String communityDescription) {
+        this.communityName = communityName;
+        this.communityCreationDate = communityCreationDate;
+        this.cmmunityImagePath = cmmunityImagePath;
+        this.communityDescription = communityDescription;
     }
 
     /**
      * Constructor of the Community class
-     * @param idCommunity
-     * @param nameCommunity
-     * @param dateCreationCommunity
-     * @param urlCommunityPicture
-     * @param descriptionCommunity
+     * @param communityId
+     * @param communityName
+     * @param communityCreationDate
+     * @param cmmunityImagePath
+     * @param communityDescription
      */
-    public Community(int idCommunity, String nameCommunity, String dateCreationCommunity, String urlCommunityPicture, String descriptionCommunity) {
-        this.idCommunity = idCommunity;
-        this.nameCommunity = nameCommunity;
-        this.dateCreationCommunity = dateCreationCommunity;
-        this.urlCommunityPicture = urlCommunityPicture;
-        this.descriptionCommunity = descriptionCommunity;
+    public Community(int communityId, String communityName, String communityCreationDate, String cmmunityImagePath, String communityDescription) {
+        this.communityId = communityId;
+        this.communityName = communityName;
+        this.communityCreationDate = communityCreationDate;
+        this.cmmunityImagePath = cmmunityImagePath;
+        this.communityDescription = communityDescription;
         
     }
 
     /**
      * Getters and Setters
      */
-    public int getIdCommunity() {
-        return idCommunity;
+    public int getCommunityId() {
+        return communityId;
     }
 
     /**
      * Getters and Setters
      */
-    public String getNameCommunity() {
-        return nameCommunity;
+    public String getCommunityName() {
+        return communityName;
     }
 
     /**
      * Getters and Setters
      */
-    public void setNameCommunity(String nameCommunity) {
-        this.nameCommunity = nameCommunity;
+    public void setCommunityName(String nameCommunity) {
+        this.communityName = nameCommunity;
     }
 
     /**
      * Getters and Setters
      */
-    public String getDateCreationCommunity() {
-        return this.dateCreationCommunity;
+    public String getCommunityCreationDate() {
+        return this.communityCreationDate;
     }
 
     /**
      * Getters and Setters
      */
-    public void setDateCreationCommunity(String dateCreationCommunity) {
-        this.dateCreationCommunity = dateCreationCommunity;
+    public void setCommunityCreationDate(String dateCreationCommunity) {
+        this.communityCreationDate = dateCreationCommunity;
     }
 
     /**
      * Getters and Setters
      */
-    public String getUrlCommunityPicture() {
-        return urlCommunityPicture;
+    public String getCmmunityImagePath() {
+        return cmmunityImagePath;
     }
 
     /**
      * Getters and Setters
      */
-    public void setUrlCommunityPicture(String urlCommunityPicture) {
-        this.urlCommunityPicture = urlCommunityPicture;
+    public void setCmmunityImagePath(String urlCommunityPicture) {
+        this.cmmunityImagePath = urlCommunityPicture;
     }
 
     /**
      * Getters and Setters
      */
-    public String getDescriptionCommunity() {
-        return descriptionCommunity;
+    public String getCommunityDescription() {
+        return communityDescription;
     }
 
     /**
      * Getters and Setters
      */
-    public void setDescriptionCommunity(String descriptionCommunity) {
-        this.descriptionCommunity = descriptionCommunity;
+    public void setCommunityDescription(String descriptionCommunity) {
+        this.communityDescription = descriptionCommunity;
     }
 
 
@@ -151,11 +151,11 @@ public class Community {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + idCommunity;
-        result = prime * result + ((nameCommunity == null) ? 0 : nameCommunity.hashCode());
-        result = prime * result + ((dateCreationCommunity == null) ? 0 : dateCreationCommunity.hashCode());
-        result = prime * result + ((urlCommunityPicture == null) ? 0 : urlCommunityPicture.hashCode());
-        result = prime * result + ((descriptionCommunity == null) ? 0 : descriptionCommunity.hashCode());
+        result = prime * result + communityId;
+        result = prime * result + ((communityName == null) ? 0 : communityName.hashCode());
+        result = prime * result + ((communityCreationDate == null) ? 0 : communityCreationDate.hashCode());
+        result = prime * result + ((cmmunityImagePath == null) ? 0 : cmmunityImagePath.hashCode());
+        result = prime * result + ((communityDescription == null) ? 0 : communityDescription.hashCode());
         return result;
     }
 
@@ -173,27 +173,27 @@ public class Community {
         if (getClass() != obj.getClass())
             return false;
         Community other = (Community) obj;
-        if (idCommunity != other.idCommunity)
+        if (communityId != other.communityId)
             return false;
-        if (nameCommunity == null) {
-            if (other.nameCommunity != null)
+        if (communityName == null) {
+            if (other.communityName != null)
                 return false;
-        } else if (!nameCommunity.equals(other.nameCommunity))
+        } else if (!communityName.equals(other.communityName))
             return false;
-        if (dateCreationCommunity == null) {
-            if (other.dateCreationCommunity != null)
+        if (communityCreationDate == null) {
+            if (other.communityCreationDate != null)
                 return false;
-        } else if (!dateCreationCommunity.equals(other.dateCreationCommunity))
+        } else if (!communityCreationDate.equals(other.communityCreationDate))
             return false;
-        if (urlCommunityPicture == null) {
-            if (other.urlCommunityPicture != null)
+        if (cmmunityImagePath == null) {
+            if (other.cmmunityImagePath != null)
                 return false;
-        } else if (!urlCommunityPicture.equals(other.urlCommunityPicture))
+        } else if (!cmmunityImagePath.equals(other.cmmunityImagePath))
             return false;
-        if (descriptionCommunity == null) {
-            if (other.descriptionCommunity != null)
+        if (communityDescription == null) {
+            if (other.communityDescription != null)
                 return false;
-        } else if (!descriptionCommunity.equals(other.descriptionCommunity))
+        } else if (!communityDescription.equals(other.communityDescription))
             return false;
         return true;
     }

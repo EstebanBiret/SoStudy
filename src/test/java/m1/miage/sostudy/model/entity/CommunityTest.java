@@ -32,7 +32,7 @@ class CommunityTest {
     void testGetDateCreationCommunity() {
         final Community com = new Community(ID_COMMUNITY, NAME_COMMUNITY, DATE_CREATION_COMMUNITY, URL_COMMUNITY_PICTURE, DESCRIPTION_COMMUNITY);
         final String expected = DATE_CREATION_COMMUNITY;
-        final String actual = com.getDateCreationCommunity();
+        final String actual = com.getCommunityCreationDate();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -42,7 +42,7 @@ class CommunityTest {
     @Test
     void testGetDescriptionCommunity() {
         final String expected = DESCRIPTION_COMMUNITY;
-        final String actual = COMMUNITY.getDescriptionCommunity();
+        final String actual = COMMUNITY.getCommunityDescription();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -52,7 +52,7 @@ class CommunityTest {
     @Test
     void testGetIdCommunity() {
         final int expected = ID_COMMUNITY;
-        final int actual = COMMUNITY.getIdCommunity();
+        final int actual = COMMUNITY.getCommunityId();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -62,7 +62,7 @@ class CommunityTest {
     @Test
     void testGetNameCommunity() {
         final String expected = NAME_COMMUNITY;
-        final String actual = COMMUNITY.getNameCommunity();
+        final String actual = COMMUNITY.getCommunityName();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -72,7 +72,7 @@ class CommunityTest {
     @Test
     void testGetUrlCommunityPicture() {
         final String expected = URL_COMMUNITY_PICTURE;
-        final String actual = COMMUNITY.getUrlCommunityPicture();
+        final String actual = COMMUNITY.getCmmunityImagePath();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -82,8 +82,8 @@ class CommunityTest {
     @Test
     void testSetDateCreationCommunity() {
         final String expected = "newDateCreationCommunity";
-        COMMUNITY.setDateCreationCommunity(expected);
-        final String actual = COMMUNITY.getDateCreationCommunity();
+        COMMUNITY.setCommunityCreationDate(expected);
+        final String actual = COMMUNITY.getCommunityCreationDate();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -93,8 +93,8 @@ class CommunityTest {
     @Test
     void testSetDescriptionCommunity() {
         final String expected = "newDescriptionCommunity";
-        COMMUNITY.setDescriptionCommunity(expected);
-        final String actual = COMMUNITY.getDescriptionCommunity();
+        COMMUNITY.setCommunityDescription(expected);
+        final String actual = COMMUNITY.getCommunityDescription();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -104,8 +104,8 @@ class CommunityTest {
     @Test
     void testSetNameCommunity() {
         final String expected = "newNameCommunity";
-        COMMUNITY.setNameCommunity(expected);
-        final String actual = COMMUNITY.getNameCommunity();
+        COMMUNITY.setCommunityName(expected);
+        final String actual = COMMUNITY.getCommunityName();
         Assertions.assertEquals(expected,  actual);
     }
 
@@ -115,8 +115,8 @@ class CommunityTest {
     @Test
     void testSetUrlCommunityPicture() {
         final String expected = "newUrlCommunityPicture";
-        COMMUNITY.setUrlCommunityPicture(expected);
-        final String actual = COMMUNITY.getUrlCommunityPicture();
+        COMMUNITY.setCmmunityImagePath(expected);
+        final String actual = COMMUNITY.getCmmunityImagePath();
         Assertions.assertEquals(expected,  actual);
     }
 
