@@ -24,10 +24,26 @@ public class Admin extends Person {
     }
 
     /**
+     * Constructor of the Admin class
+     * @param name name of the admin
+     * @param firstName first name of the admin
+     * @param email email address of the admin
+     * @param password password of the admin
+     * @param pseudo pseudo of the admin
+     * @param birthDate birthdate of the admin
+     * @param urlProfilePicture url of the profile picture of the admin
+     * @param idAdmin id of the admin
+     */
+    public Admin(int idAdmin, String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture) {
+        super(name, firstName, email, password, pseudo, birthDate, urlProfilePicture);
+        this.idAdmin = idAdmin;
+    }
+
+    /**
      * Method to connect the admin
      * @param email the email address of the person
      * @param password the password of the person
-     * @return
+     * @return true if the connection is successful, false otherwise
      */
     @Override
     public boolean seConnecter(String email, String password) {
@@ -46,19 +62,34 @@ public class Admin extends Person {
     }
 
     /**
-     * Constructor of the Admin class
-     * @param name
-     * @param firstName
-     * @param email
-     * @param password
-     * @param pseudo
-     * @param birthDate
-     * @param urlProfilePicture
-     * @param idAdmin
+     * Method to delete a user
+     * @param idUser the id of the user to delete
+     * @return the user if the deletion is successful, null otherwise
      */
-    public Admin(int idAdmin, String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture) {
-        super(name, firstName, email, password, pseudo, birthDate, urlProfilePicture);
-        this.idAdmin = idAdmin;
+    public User deleteUser(int idUser) {
+        //ToDo : implement the method
+        return null;
+    }
+
+    /**
+     * Method to delete a psot
+     * @param idPost the id of the post to delete
+     * @return true if the deletion is successful, false otherwise
+     */
+    public boolean deletePost(int idPost) {
+        //ToDo : implement the method
+        return false;
+    }
+
+
+    /**
+     * Method to send a message to all users
+     * @param message the message to send
+     * @return true if the message is sent, false otherwise
+     */
+    public boolean sendGlobalMessage(Message message) {
+        //ToDo : implement the method
+        return false;
     }
 
     /**
@@ -70,7 +101,6 @@ public class Admin extends Person {
     }
 
     /**
-     * @Override
      * Method hashCode
      * @return the hashCode of the admin
      */
@@ -83,7 +113,6 @@ public class Admin extends Person {
     }
 
     /**
-     * @Override
      * Method equals
      * @param obj the object to compare with
      * @return true if the two objects are equal, false otherwise
