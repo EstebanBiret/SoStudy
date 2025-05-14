@@ -14,7 +14,7 @@ public class Message {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int idMessage;
+    private int messageId;
 
     /**
      * Content of the message.
@@ -53,8 +53,8 @@ public class Message {
      * Getter for the message ID.
      * @return the ID of the message.
      */
-    public int getIdMessage() {
-        return idMessage;
+    public int getMessageId() {
+        return messageId;
     }
 
     /**
@@ -115,6 +115,6 @@ public class Message {
         if (this == o) return true;
         if (!(o instanceof Message)) return false;
         Message message = (Message) o;
-        return idMessage == message.idMessage && content.equals(message.content) && dateMessage.equals(message.dateMessage);
+        return messageId == message.messageId && content.equals(message.content) && dateMessage.equals(message.dateMessage);
     }
 }
