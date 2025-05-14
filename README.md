@@ -56,6 +56,7 @@
 | /event/join/{eventId}        | POST    | EventController    | Rejoindre un événement                                  | eventId                 |
 | /event/leave/{eventId}       | POST    | EventController    | Quitter un événement                                    | eventId                 |
 | /post/{id}                   | GET     | PostController     | Détails d’un post + commentaires et réactions           | id                      |
+| /post/publish                | GET    | PostController     | Formulaire de création d'un post                    |               |
 | /post/publish                | POST    | PostController     | Publier post, commentaire ou réponse                    | Formulaire              |
 | /post/edit/{postid}          | GET     | PostController     | Formulaire d’édition de post                            | postid                  |
 | /post/edit/{postid}          | POST    | PostController     | Sauvegarde des modifications du post                    | postid, Formulaire      |
