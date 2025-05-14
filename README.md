@@ -23,10 +23,10 @@
 |-------------------------------|---------|--------------------|---------------------------------------------------------|-------------------------|
 | /                             | GET     | IndexController     | Index de l'application, affiche le fil principal        |                         |
 | /user                         | GET     | UserController     | Affiche le compte utilisateur connecté                  |                         |
-| /user/login                   | GET     | AuthController     | Page de connexion                                       |                         |
-| /user/login                   | POST    | AuthController     | Traite la connexion                                     | Formulaire              |
-| /user/register                | POST    | AuthController     | Création de compte                                      | Formulaire              |
-| /user/logout                  | POST    | AuthController     | Déconnexion + suppression session                       |                         |
+| /auth/login                   | GET     | AuthController     | Page de connexion                                       |                         |
+| /auth/login                   | POST    | AuthController     | Traite la connexion                                     | Formulaire              |
+| /auth/register                | POST    | AuthController     | Création de compte                                      | Formulaire              |
+| /auth/logout                  | POST    | AuthController     | Déconnexion + suppression session                       |                         |
 | /user/{pseudo}               | GET     | UserController     | Profil d’un utilisateur donné                           | pseudo                  |
 | /user/edit                    | GET     | UserController     | Formulaire d’édition de profil                          |                         |
 | /user/edit                    | POST    | UserController     | Sauvegarde des modifications de profil                  | Formulaire              |
