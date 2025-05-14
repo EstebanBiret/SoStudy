@@ -2,6 +2,8 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 /**
  * Message entity class representing a message in the system.
  */
@@ -15,6 +17,13 @@ public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int messageId;
+
+    /**
+     * User who sent the message.
+     */
+    @ManyToOne
+    @JoinColumn(name = "idUser")
+    private User sender;
 
     /**
      * Content of the message.
@@ -55,6 +64,14 @@ public class Message {
      */
     public int getMessageId() {
         return messageId;
+    }
+
+    /**
+     * Setter for the message ID.
+     * @param messageId the new ID of the message.
+     */
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
     }
 
     /**
@@ -106,6 +123,22 @@ public class Message {
     }
 
     /**
+     * Getter for the user who sent the message.
+     * @return the user who sent the message.
+     */
+    public User getSender() {
+        return sender;
+    }
+
+    /**
+     * Setter for the user who sent the message.
+     * @param user the new user who sent the message.
+     */
+    public void setSender(User user) {
+        this.sender = user;
+    }
+
+    /**
      * Override of the equals method.
      * @param o the object to compare with.
      * @return true if the objects are equal, false otherwise.
@@ -113,8 +146,19 @@ public class Message {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Message)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return messageId == message.messageId && content.equals(message.content) && dateMessage.equals(message.dateMessage);
+        return messageId == message.messageId && Objects.equals(sender, message.sender) && Objects.equals(content, message.content) && Objects.equals(dateMessage, message.dateMessage) && Objects.equals(channel, message.channel);
     }
+
+    /**
+     * Override of the hashCode method.
+     * @return the hash code of the message.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageId, sender, content, dateMessage, channel);
+    }
+
+
 }

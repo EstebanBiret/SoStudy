@@ -70,6 +70,13 @@ class MessageTest {
         assertEquals("2025-05-13", message.getDateMessage());
     }
 
+    @Test
+    void testGetAndSetSender(){
+        User sender = new User();
+        message.setSender(sender);
+        assertEquals(sender, message.getSender());
+    }
+
     /**
      * Test de la méthode getChannel et setChannel
      */

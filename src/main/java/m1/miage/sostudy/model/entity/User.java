@@ -145,6 +145,13 @@ public class User extends Person {
     public int getIdUser() {
         return idUser;
     }
+    /**
+     * Setter for the user ID.
+     * @param idUser the new ID of the user.
+     */
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
 
     /**
      * Getter for the biography of the user.
@@ -435,9 +442,9 @@ public class User extends Person {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof User)) return false;
         User user = (User) o;
-        return idUser == user.idUser && Objects.equals(bioUser, user.bioUser) && Objects.equals(following, user.following) && Objects.equals(followers, user.followers) && Objects.equals(subscribedChannels, user.subscribedChannels) && Objects.equals(createdChannels, user.createdChannels) && Objects.equals(createdPosts, user.createdPosts) && Objects.equals(repostedPosts, user.repostedPosts) && Objects.equals(subscribedCommunities, user.subscribedCommunities) && Objects.equals(createdCommunities, user.createdCommunities) && Objects.equals(subscribedEvents, user.subscribedEvents) && Objects.equals(createdEvents, user.createdEvents) && Objects.equals(sentMessages, user.sentMessages);
+        return idUser == user.idUser;
     }
 
     /**
@@ -446,6 +453,6 @@ public class User extends Person {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(idUser, bioUser, following, followers, subscribedChannels, createdChannels, createdPosts, repostedPosts, subscribedCommunities, createdCommunities, subscribedEvents, createdEvents, sentMessages);
+        return Objects.hash(idUser);
     }
 }

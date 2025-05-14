@@ -2,6 +2,8 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.MappedSuperclass;
 
+import java.util.Objects;
+
 /**
  * Abstract class representing a person
  */
@@ -180,5 +182,27 @@ public abstract class Person {
      */
     public void setUrlProfilePicture(String urlProfilePicture) {
         this.urlProfilePicture = urlProfilePicture;
+    }
+
+    /**
+     * Method to compare two Person objects
+     * @param o the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(name, person.name) && Objects.equals(firstName, person.firstName) && Objects.equals(email, person.email) && Objects.equals(password, person.password) && Objects.equals(pseudo, person.pseudo) && Objects.equals(birthDate, person.birthDate) && Objects.equals(urlProfilePicture, person.urlProfilePicture);
+    }
+
+    /**
+     * Method to generate a hash code for the Person object
+     * @return the hash code of the Person object
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, firstName, email, password, pseudo, birthDate, urlProfilePicture);
     }
 }
