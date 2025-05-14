@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.ui.Model;
 
 import m1.miage.sostudy.model.entity.Post;
@@ -28,6 +31,12 @@ public class PostController {
         return "post";
     }
 
+    @GetMapping("/publish")
+    public String publishPost(HttpServletRequest request, Model model) {
+        model.addAttribute("currentUri", request.getRequestURI());
+        return "form_publish_post";
+    }
+
     /**
      * Publish a post
      * @param post the post to publish
@@ -35,7 +44,7 @@ public class PostController {
      */
     @PostMapping("/publish")
     public String publishPost(@ModelAttribute Post post) {
-        return "publish_post";
+        return "redirect:/post/" + post.getPostId();
     }
 
     /**
