@@ -2,7 +2,7 @@ package m1.miage.sostudy.controller;
 
 
 import m1.miage.sostudy.model.entity.User;
-import m1.miage.sostudy.repository.UserRepo;
+import m1.miage.sostudy.repository.UserRepository;
 import m1.miage.sostudy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,7 +30,7 @@ public class AuthController {
      * User repository for database operations.
      */
     @Autowired
-    private UserRepo userRepo;
+    private UserRepository userRepo;
 
     /**
      * Path for uploading files.
