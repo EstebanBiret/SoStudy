@@ -8,6 +8,8 @@ import m1.miage.sostudy.repository.*;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 
+import static m1.miage.sostudy.controller.AuthController.hashPassword;
+
 /**
  * DataInitializer class
  */
@@ -51,7 +53,7 @@ public class DataInitializer implements CommandLineRunner {
         user1.setName("Dupont");
         user1.setFirstName("Jean");
         user1.setEmail("jean.dupont@example.com");
-        user1.setPassword("password123");
+        user1.setPassword(hashPassword("password123"));
         user1.setPseudo("jeandupont");
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
@@ -61,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setName("Martin");
         user2.setFirstName("Marie");
         user2.setEmail("marie.martin@example.com");
-        user2.setPassword("password456");
+        user2.setPassword(hashPassword("password456"));
         user2.setPseudo("mariecode");
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
@@ -71,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
         user3.setName("Leroy");
         user3.setFirstName("Pierre");
         user3.setEmail("pierre.leroy@example.com");
-        user3.setPassword("password789");
+        user3.setPassword(hashPassword("password789"));
         user3.setPseudo("devpierre");
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
