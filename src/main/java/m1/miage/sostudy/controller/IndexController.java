@@ -101,7 +101,7 @@ public class IndexController {
             posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
         }
 
-        // Si l'utilisateur a des abonnements mais aucun post
+        //if user has following but they have no posts
         if (posts.isEmpty()) {
             model.addAttribute("posts", posts);
             model.addAttribute("user", user);

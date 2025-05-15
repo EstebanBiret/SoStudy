@@ -57,7 +57,7 @@ public class DataInitializer implements CommandLineRunner {
         user1.setPseudo("jeandupont");
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
-        user1.setPersonImagePath("images/profiles_pictures/1.jpeg");
+        user1.setPersonImagePath("/images/profiles_pictures/1.jpeg");
         
         User user2 = new User();
         user2.setName("Martin");
@@ -67,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setPseudo("mariecode");
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
-        user2.setPersonImagePath("images/profiles_pictures/2.jpeg");
+        user2.setPersonImagePath("/images/profiles_pictures/2.jpeg");
         
         User user3 = new User();
         user3.setName("Leroy");
@@ -77,7 +77,7 @@ public class DataInitializer implements CommandLineRunner {
         user3.setPseudo("devpierre");
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
-        user3.setPersonImagePath("images/profiles_pictures/3.jpeg");
+        user3.setPersonImagePath("/images/profiles_pictures/3.jpeg");
         
         // Sauvegarde des utilisateurs
         user1 = userRepository.save(user1);
@@ -85,10 +85,10 @@ public class DataInitializer implements CommandLineRunner {
         user3 = userRepository.save(user3);
 
         // Création des channels
-        Channel channel1 = new Channel("Developpement Java", "images/channel/java.png");
+        Channel channel1 = new Channel("Developpement Java", "/images/channel/java.png");
         channel1.setCreator(user1);
         
-        Channel channel2 = new Channel("Spring Framework", "images/channel/spring.png");
+        Channel channel2 = new Channel("Spring Framework", "/images/channel/spring.png");
         channel2.setCreator(user2);
         
         // Sauvegarde des channels
@@ -108,31 +108,32 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.save(user3);
         
         // Création des communautés
-        Community community1 = new Community("Java Developers", "2025-01-01", "images/community/java.png", "Communauté des développeurs Java");
-        Community community2 = new Community("Spring Framework", "2025-02-01", "images/community/spring.png", "Communauté des développeurs Spring");
+        Community community1 = new Community("Java Developers", "2025-01-01", " /images/community/java.png", "Communauté des développeurs Java");
+        Community community2 = new Community("Spring Framework", "2025-02-01", "/images/community/spring.png", "Communauté des développeurs Spring");
 
         community1.setUserCreator(user1);
         community2.setUserCreator(user2);
 
-        // Ajout des membres aux communautés, avec vérification pour éviter les doublons
-        if (!user2.getSubscribedCommunities().contains(community1)) {
-            user2.getSubscribedCommunities().add(community1);
-        }
-        if (!user3.getSubscribedCommunities().contains(community1)) {
-            user3.getSubscribedCommunities().add(community1);
-        }
-        if (!user1.getSubscribedCommunities().contains(community2)) {
-            user1.getSubscribedCommunities().add(community2);
-        }
-        if (!user3.getSubscribedCommunities().contains(community2)) {
-            user3.getSubscribedCommunities().add(community2);
-        }
+        // Ajout des membres aux communautés
+        community1.getUsersMembers().add(user1);
+        community1.getUsersMembers().add(user2);
+        community1.getUsersMembers().add(user3);
+        community2.getUsersMembers().add(user1);
+        community2.getUsersMembers().add(user2);
+        community2.getUsersMembers().add(user3);
 
         // Sauvegarde des communautés avec leurs membres
         community1 = communityRepository.save(community1);
         community2 = communityRepository.save(community2);
 
         // Sauvegarde des utilisateurs avec leurs communautés
+        user1.getSubscribedCommunities().add(community1);
+        user2.getSubscribedCommunities().add(community1);
+        user3.getSubscribedCommunities().add(community1);
+        user1.getSubscribedCommunities().add(community2);
+        user2.getSubscribedCommunities().add(community2);
+        user3.getSubscribedCommunities().add(community2);
+        
         userRepository.save(user1);
         userRepository.save(user2);
         userRepository.save(user3);
@@ -173,14 +174,14 @@ public class DataInitializer implements CommandLineRunner {
         post1.setPostContent("Bonjour à tous ! Je débute dans Java et j'ai besoin d'aide pour comprendre les interfaces.");
         post1.setUser(user1);
         post1.setCommunity(community1);
-        post1.setPostMediaPath("images/posts_images/nature.jpg");
+        post1.setPostMediaPath("/images/posts_images/nature.jpg");
 
         Post post2 = new Post();
         post2.setPostPublicationDate("2025-01-02");
         post2.setPostContent("Je viens de terminer un tutoriel sur Spring Boot et je partage mes notes ici.");
         post2.setUser(user2);
         post2.setCommunity(community2);
-        post2.setPostMediaPath("images/posts_images/dev.jpeg");
+        post2.setPostMediaPath("/images/posts_images/dev.jpeg");
         
         Post post3 = new Post();
         post3.setPostPublicationDate("2025-01-03");
@@ -209,7 +210,7 @@ public class DataInitializer implements CommandLineRunner {
         user4.setPseudo("emiliedupond");
         user4.setBirthDate("1998-03-15");
         user4.setBioUser("Débutante en programmation");
-        user4.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
+        user4.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
         user4 = userRepository.save(user4);
 
         // Création du 5ème utilisateur
@@ -221,7 +222,7 @@ public class DataInitializer implements CommandLineRunner {
         user5.setPseudo("thomasdev");
         user5.setBirthDate("1996-07-22");
         user5.setBioUser("Développeur Full Stack");
-        user5.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
+        user5.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
         user5 = userRepository.save(user5);
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5

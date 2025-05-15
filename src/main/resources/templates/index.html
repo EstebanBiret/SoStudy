@@ -46,7 +46,7 @@
                     <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
                     <div class="post-user-info">
                         <h3>
-                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.firstName + ' ' + post.user.name}"></a>
+                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
                         </h3>
                         <p th:text="${post.formattedDate}"></p>
                     </div>
