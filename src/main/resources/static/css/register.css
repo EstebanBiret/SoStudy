@@ -42,7 +42,7 @@ body {
     font-size: 16px;
     border-radius: 8px;
     border: 1px solid #ccc;
-    background-color: #f9f9f9;
+    background-color: #EFEFF3;
     box-sizing: border-box;
 }
 
@@ -100,8 +100,7 @@ body {
 }
 
 input[type="file"] {
-    background-color: transparent;
-    padding: 4px;
+    background-color: #EFEFF3;
 }
 
 @media (max-width: 480px) {
