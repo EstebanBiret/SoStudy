@@ -125,19 +125,18 @@ public class AuthController {
      * @param email the email address of the user
      * @param password the password of the user
      * @param birthdate the date of birth of the user
-     * @param bio the bio of the user
+     * @param bioUser the bio of the user
      * @param image the image of the user
      * @return a redirect to the login page
      */
     @PostMapping("/register")
-    public String registerUser(Model model, HttpSession session, @RequestParam("nom") String nom,
-                               @RequestParam("prenom") String prenom,
-                               @RequestParam("pseudo") String pseudo,
-                               @RequestParam("email") String email,
-                               @RequestParam("password") String password,
-                               @RequestParam("birthdate") String birthdate,
-                               @RequestParam("bioUser") String bio,
-                               @RequestParam("image") MultipartFile image)throws IOException {
+    public String registerUser(Model model, HttpSession session, @RequestParam String nom, @RequestParam String prenom,
+@RequestParam String pseudo,
+@RequestParam String email,
+@RequestParam String password,
+@RequestParam String birthdate,
+@RequestParam String bioUser,
+@RequestParam MultipartFile image) throws IOException {
 
         String fileName = null;
         if (!image.isEmpty()) {
@@ -163,7 +162,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
+        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bioUser);
         userRepo.save(user);
 
         session.setAttribute("user", user);

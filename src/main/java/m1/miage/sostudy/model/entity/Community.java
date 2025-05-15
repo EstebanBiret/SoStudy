@@ -96,14 +96,16 @@ public class Community {
     }
 
     /**
-     * Getters and Setters
+     * Get the id of the community
+     * @return the id of the community
      */
     public int getCommunityId() {
         return communityId;
     }
 
     /**
-     * Getters and Setters
+     * Get the name of the community
+     * @return the name of the community
      */
     public String getCommunityName() {
         return communityName;
@@ -266,7 +268,7 @@ public class Community {
 
     /**
      * Override the equals method
-     * @param obj the object to compare with
+     * @param o the object to compare with
      * @return true if the objects are equal, false otherwise
      */
     @Override

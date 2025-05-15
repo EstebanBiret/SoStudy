@@ -218,6 +218,7 @@ public class ChannelController {
     /**
      * Checks if the user already has a channel.
      * @param user the user to check
+     * @param user2 the other user to check
      * @return true if the user has a channel, false otherwise
      */
     public boolean hasACanalAlready(User user, User user2) {

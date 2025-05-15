@@ -72,6 +72,7 @@ public class UserController {
 
     /**
      * Displays the user profile page for a specific user identified by their pseudo.
+     * @param pseudo the pseudo of the user
      * @param model the model to be used in the view
      * @param session the HTTP session
      * @param request the HTTP request

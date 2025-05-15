@@ -255,7 +255,8 @@ public class Event {
 
     /**
      * remove a user from the list of users interested in the event
-         */
+     * @param user the user to remove from the list of users interested in the event
+     */
     public void removeUserInterested(User user) {
         if (this.usersInterested != null) {
             this.usersInterested.remove(user);
@@ -282,18 +283,18 @@ public class Event {
 
     /**
      * Override the equals method
-     * @param obj
+     * @param o the object to compare with
      * @return true if the events are equal, false otherwise
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-    if (obj == null || getClass() != obj.getClass()) {
+    if (o == null || getClass() != o.getClass()) {
         return false;
     }
-    Event other = (Event) obj;
+    Event other = (Event) o;
     return eventId == other.eventId &&
            Objects.equals(eventName, other.eventName) &&
            Objects.equals(eventPublicationDate, other.eventPublicationDate) &&

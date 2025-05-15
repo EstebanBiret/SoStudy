@@ -12,5 +12,11 @@ import java.util.List;
  */
 @Repository
 public interface UserPostReactionRepository extends JpaRepository<UserPostReaction, UserPostReactionID> {
+
+    /**
+     * Find all user post reactions by post id.
+     * @param postId the id of the post
+     * @return the list of user post reactions
+     */
     List<UserPostReaction> findByPost_PostId(Integer postId);
 }
