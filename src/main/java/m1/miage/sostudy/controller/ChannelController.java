@@ -140,8 +140,8 @@ public class ChannelController {
         }
 
         //todo régler soucis quand on créé un canal avec un user avec qui on est déjà en discussion et un autre nouveau, ça bloque sur celui avec qui on est déjà en discussion
-        //todo quand on vient de créer un canal, l'image du canal ne marche pas, mais marche quand on se déco-reco
-        //todo ajouter dans form quand c'est >2 un champ pour mettre l'image du canal
+        //todo quand on vient de créer un canal à 2, l'image du canal ne marche pas, mais marche quand on se déco-reco
+        //todo ajouter dans form quand c'est > 2 un champ pour mettre l'image du canal
 
         Channel channel = new Channel();
         channel.setChannelName(
@@ -153,7 +153,7 @@ public class ChannelController {
                         ? selectedUsers.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
-        channel.setChannelImagePath("default.png");
+        channel.setChannelImagePath("/images/channel/defaultChannelImage.png");
         channel.setCreator(sessionUser);
 
         channel = channelRepository.save(channel);

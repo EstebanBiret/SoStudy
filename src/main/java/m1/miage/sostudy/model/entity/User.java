@@ -67,15 +67,6 @@ public class User extends Person {
     private List<Post> createdPosts = new ArrayList<>();
 
     /**
-     * List of the posts that the user has reposted.
-     */
-    @ManyToMany
-    @JoinTable(name = "reposted_posts",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id"))
-    private List<Post> repostedPosts = new ArrayList<>();
-
-    /**
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany
@@ -289,30 +280,6 @@ public class User extends Person {
     }
 
     /**
-     * Getter for the list of posts that the user has reposted.
-     * @return the list of posts that the user has reposted.
-     */
-    public List<Post> getRepostedPosts() {
-        return repostedPosts;
-    }
-
-    /**
-     * Adds a post to the list of posts that the user has reposted.
-     * @param post the post to add to the list of posts that the user has reposted.
-     */
-    public void addRepostedPost(Post post) {
-        this.repostedPosts.add(post);
-    }
-
-    /**
-     * Removes a post from the list of posts that the user has reposted.
-     * @param post the post to remove from the list of posts that the user has reposted.
-     */
-    public void removeRepostedPost(Post post) {
-        this.repostedPosts.remove(post);
-    }
-
-    /**
      * Getter for the list of communities that the user is subscribed to.
      * @return the list of communities that the user is subscribed to.
      */
@@ -453,4 +420,5 @@ public class User extends Person {
     public int hashCode() {
         return Objects.hash(idUser);
     }
+    
 }

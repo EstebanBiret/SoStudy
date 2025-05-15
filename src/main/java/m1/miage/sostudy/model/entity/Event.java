@@ -2,6 +2,7 @@ package m1.miage.sostudy.model.entity;
 
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 /**
  * class representing an event
@@ -263,52 +264,25 @@ public class Event {
 
     /**
      * Override the equals method
-     * @param obj the object to compare with
-     * @return true if the event is equal to the object
+     * @param obj
+     * @return true if the events are equal, false otherwise
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Event other = (Event) obj;
-        if (eventId != other.eventId)
-            return false;
-        if (eventName == null) {
-            if (other.eventName != null)
-                return false;
-        } else if (!eventName.equals(other.eventName))
-            return false;
-        if (eventPublicationDate == null) {
-            if (other.eventPublicationDate != null)
-                return false;
-        } else if (!eventPublicationDate.equals(other.eventPublicationDate))
-            return false;
-        if (eventContent == null) {
-            if (other.eventContent != null)
-                return false;
-        } else if (!eventContent.equals(other.eventContent))
-            return false;
-        if (eventBeginningDate == null) {
-            if (other.eventBeginningDate != null)
-                return false;
-        } else if (!eventBeginningDate.equals(other.eventBeginningDate))
-            return false;
-        if (eventEndDate == null) {
-            if (other.eventEndDate != null)
-                return false;
-        } else if (!eventEndDate.equals(other.eventEndDate))
-            return false;
-        if (eventPlace == null) {
-            if (other.eventPlace != null)
-                return false;
-        } else if (!eventPlace.equals(other.eventPlace))
-            return false;
-        return true;
+        }
+    if (obj == null || getClass() != obj.getClass()) {
+        return false;
     }
-
+    Event other = (Event) obj;
+    return eventId == other.eventId &&
+           Objects.equals(eventName, other.eventName) &&
+           Objects.equals(eventPublicationDate, other.eventPublicationDate) &&
+           Objects.equals(eventContent, other.eventContent) &&
+           Objects.equals(eventBeginningDate, other.eventBeginningDate) &&
+           Objects.equals(eventEndDate, other.eventEndDate) &&
+           Objects.equals(eventPlace, other.eventPlace);
+    }
     
 }

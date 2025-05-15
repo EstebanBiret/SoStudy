@@ -257,46 +257,10 @@ public class Community {
      * @return true if the objects are equal, false otherwise
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Community other = (Community) obj;
-        if (communityId != other.communityId)
-            return false;
-        if (communityName == null) {
-            if (other.communityName != null)
-                return false;
-        } else if (!communityName.equals(other.communityName))
-            return false;
-        if (communityCreationDate == null) {
-            if (other.communityCreationDate != null)
-                return false;
-        } else if (!communityCreationDate.equals(other.communityCreationDate))
-            return false;
-        if (communityImagePath == null) {
-            if (other.communityImagePath != null)
-                return false;
-        } else if (!communityImagePath.equals(other.communityImagePath))
-            return false;
-        if (communityDescription == null) {
-            if (other.communityDescription != null)
-                return false;
-        } else if (!communityDescription.equals(other.communityDescription))
-            return false;
-        if (userCreator == null) {
-            if (other.userCreator != null)
-                return false;
-        } else if (!userCreator.equals(other.userCreator))
-            return false;
-        if (usersMembers == null) {
-            if (other.usersMembers != null)
-                return false;
-        } else if (!usersMembers.equals(other.usersMembers))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Community community = (Community) o;
+        return communityId == community.communityId;
     }
 }
