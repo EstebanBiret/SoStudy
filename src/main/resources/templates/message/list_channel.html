@@ -12,28 +12,48 @@
 </head>
 <body>
     <div th:replace="navbar :: navbar(${currentUri})"></div>
-    <form th:action="@{/channels/new}" method="get">
-        <div class="list-chan-box">
-            <input type="text" placeholder="Rechercher..." class="search-bar full">
+    <div class="full-chat-page">
+        <form th:action="@{/channels/new}" method="get">
+            <div class="list-chan-box">
+                <input type="text" placeholder="Rechercher..." class="search-bar full">
 
-            <ul class="full-card">
-                <li class="user-card" th:each="entry : ${lastMessageMap}">
-                    <a class="user-info">
-                        <img th:if="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${entry.key.channelImagePath}}" alt="User" class="user-photo">
-                        <img th:unless="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${profPic[entry.key]}}" alt="User" class="user-photo" />
-                        <div class="text-placeholder">
-                            <h3 class="user-name" th:text="${entry.key.getChannelName()}">Nom de l'utilisateur</h3>
-                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}">Description de l'utilisateur</p>
-                        </div>
-                    </a>
-                </li>
-            </ul>
+                <ul class="full-card">
+                    <li class="user-card" th:each="entry : ${lastMessageMap}">
+                        <a class="user-info">
+                            <img th:if="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${entry.key.channelImagePath}}" alt="User" class="user-photo">
+                            <img th:unless="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${profPic[entry.key]}}" alt="User" class="user-photo" />
+                            <div class="text-placeholder">
+                                <h3 class="user-name" th:text="${entry.key.getChannelName()}">Nom de l'utilisateur</h3>
+                                <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}">Description de l'utilisateur</p>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+                <button type="submit" class="new-conv">
+                    +
+                </button>
+            </div>
+        </form>
+
+        <div class="conv-box">
+            <div class="conv-header">
+                <h2 class="conv-name">Nom de la conversation</h2>
+                <button class="conv-settings">
+                    <img src="/images/logos/repost.png" alt="Settings" class="settings-icon">
+                </button>
+            </div>
+            <div class="messages">
+
+            </div>
+            <div class="message-input">
+                <input type="text" placeholder="Écrire un message..." class="message-text">
+                <button type="submit" class="send-button">
+                    <img src="/images/logos/publish-active.svg" alt="Send" class="send-icon">
+                </button>
+            </div>
         </div>
-
-
-        <button type="submit" class="new-conv">
-            +
-        </button>
-    </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </body>
 </html>
