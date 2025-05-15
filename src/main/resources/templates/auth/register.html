@@ -2,16 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SoStudy</title>
+    <title>SoStudy - Inscription</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/register.css}">
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
     <div class="form">
         <h1 class="title">Inscription</h1>
-
-
-
         <form id="registerForm" action="/auth/register" method="post" enctype="multipart/form-data">
 
             <div class="input-container ic1">
@@ -70,7 +67,10 @@
                 <label for="image" class="placeholder">Photo de profil</label>
             </div>
 
-            <button type="submit" class="submit">Confirmer</button>
+            <button type="submit" class="submit">Créer le compte</button>
+            <p class="register-link">
+                Déjà un compte ? <a href="/auth/login">Se connecter</a>
+            </p>
         </form>
     </div>
 </body>

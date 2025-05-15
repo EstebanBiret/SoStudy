@@ -70,7 +70,7 @@ public class AuthController {
         if (session.getAttribute("user") != null) {
             return"redirect:/";
         }
-        return "login.html"; // Return the name of the view (e.g., Thymeleaf template)
+        return "auth/login";
     }
 
     /**
@@ -92,12 +92,12 @@ public class AuthController {
             }else{
                 loginError = true;
                 model.addAttribute("loginError", loginError);
-                return "login.html";
+                return "auth/login";
             }
         }else {
             loginError = true;
             model.addAttribute("loginError", loginError);
-            return "login.html";
+            return "auth/login";
         }
     }
 
@@ -112,7 +112,7 @@ public class AuthController {
         if (session.getAttribute("user") != null) {
             return"redirect:/";
         }
-        return "register.html";
+        return "auth/register";
     }
 
     /**
@@ -152,7 +152,7 @@ public class AuthController {
             error = true;
         }
         if(error){
-            return "register.html";
+            return "auth/register";
         }
 
         User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
