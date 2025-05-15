@@ -85,7 +85,6 @@ public class AuthController {
     public String authenticate(Model model, HttpSession session, @RequestParam("email") String email, @RequestParam("password") String password) {
         boolean loginError = false;
         if (userRepo.findByEmail(email) != null) {
-            System.out.println("User found");
             User u = userRepo.findByEmail(email);
             if(checkPassword(password, u.getPassword())) {
                 session.setAttribute("user", u);
@@ -134,13 +133,13 @@ public class AuthController {
 
         String fileName = null;
         if (!image.isEmpty()) {
-            fileName = "/images/profiles_pictures/" + UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        }else{
+            fileName = "/images/profiles_pictures/" + rawFileName;
+        } else {
             fileName = "/images/profiles_pictures/defaultProfilePic.jpg";
-            Path filePath = Paths.get(UPLOAD_DIR, fileName);
         }
         boolean error = false;
         // Check if the email and pseudo already exist
