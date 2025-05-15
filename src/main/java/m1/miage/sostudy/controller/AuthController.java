@@ -119,6 +119,14 @@ public class AuthController {
      * Registers a new user.
      * @param model the model to be used in the view
      * @param session the HTTP session
+     * @param nom the name of the user
+     * @param prenom the first name of the user
+     * @param pseudo the pseudo of the user
+     * @param email the email address of the user
+     * @param password the password of the user
+     * @param birthdate the date of birth of the user
+     * @param bio the bio of the user
+     * @param image the image of the user
      * @return a redirect to the login page
      */
     @PostMapping("/register")

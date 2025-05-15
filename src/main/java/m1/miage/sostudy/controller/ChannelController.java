@@ -29,19 +29,30 @@ import java.util.stream.Collectors;
 @RequestMapping("/channels")
 public class ChannelController {
 
+    /**
+     * User repository for database operations.
+     */
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Channel repository for database operations.
+     */
     @Autowired
     private ChannelRepository channelRepository;
 
+    /**
+     * Message repository for database operations.
+     */
     @Autowired
     private MessageRepository messageRepository;
 
 
     /**
      * Displays the list of all channels.
-     *
+     * @param model the model to be used in the view
+     * @param request the HTTP request
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/")
@@ -91,7 +102,9 @@ public class ChannelController {
 
     /**
      * Displays the form to create a new channel.
-     *
+     * @param model the model to be used in the view
+     * @param request the HTTP request
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/new")
@@ -112,7 +125,12 @@ public class ChannelController {
 
     /**
      * Saves the new channel.
-     *
+     * @param selectedUsersCsv the list of selected users
+     * @param firstMessage the first message of the channel
+     * @param channelName the name of the channel
+     * @param session the HTTP session
+     * @param model the model to be used in the view
+     * @param redirectAttributes the redirect attributes
      * @return a redirect to the list of channels
      */
     @PostMapping("/new")
@@ -133,7 +151,7 @@ public class ChannelController {
 
         // Check if a private channel already exists between the users
         for (User user : selectedUsers) {
-            if (hasACanalAlreayd(sessionUser, user)) {
+            if (hasACanalAlready(sessionUser, user)) {
                 redirectAttributes.addFlashAttribute("error", "Un canal privé existe déjà entre vous et " + user.getPseudo());
                 return "redirect:/channels/new"; // Redirect to the list of channels if a private channel already exists
             }
@@ -202,7 +220,7 @@ public class ChannelController {
      * @param user the user to check
      * @return true if the user has a channel, false otherwise
      */
-    public boolean hasACanalAlreayd(User user, User user2) {
+    public boolean hasACanalAlready(User user, User user2) {
         List<Channel> existing = channelRepository.findPrivateChannelBetween(user.getIdUser(), user2.getIdUser());
         return !existing.isEmpty();
     }

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CommunityController {
 
     /**
-     * get all communities
+     * Get all communities
+     * @return the name of the view to be rendered
      */
     @RequestMapping("")
     public String getAllCommunities() {
@@ -21,7 +22,8 @@ public class CommunityController {
     }
 
     /**
-     * formular to create a community
+     * Formular to create a community
+     * @return the name of the view to be rendered
      */
     @GetMapping("/new")
     public String newCommunity() {
@@ -29,7 +31,8 @@ public class CommunityController {
     }
 
     /**
-     * create a new community
+     * Create a new community
+     * @return the name of the view to be rendered
      */
     @PostMapping("/new")
     public String createCommunity() {
@@ -37,7 +40,8 @@ public class CommunityController {
     }
 
     /**
-     * formular to edit a community
+     * Formular to edit a community
+     * @return the name of the view to be rendered
      */
     @GetMapping("/edit/{communityid}")
     public String editCommunity() {
@@ -45,7 +49,8 @@ public class CommunityController {
     }
 
     /**
-     * edit a community
+     * Edit a community
+     * @return the name of the view to be rendered
      */
     @PostMapping("/edit/{communityid}")
     public String updateCommunity() {
@@ -53,7 +58,8 @@ public class CommunityController {
     }
 
     /**
-     * delete a community
+     * Delete a community
+     * @return the name of the view to be rendered
      */
     @PostMapping("/delete/{communityid}")
     public String deleteCommunity() {
@@ -61,7 +67,8 @@ public class CommunityController {
     }
 
     /**
-     * join a community
+     * Join a community
+     * @return the name of the view to be rendered
      */
     @PostMapping("/join/{communityid}")
     public String joinCommunity() {
@@ -69,7 +76,8 @@ public class CommunityController {
     }
 
     /**
-     * leave a community
+     * Leave a community
+     * @return the name of the view to be rendered
      */
     @PostMapping("/leave/{communityid}")
     public String leaveCommunity() {
@@ -77,7 +85,8 @@ public class CommunityController {
     }
 
     /**
-     * get a community
+     * Get a community
+     * @return the name of the view to be rendered
      */
     @GetMapping("/{communityid}")
     public String getCommunity() {

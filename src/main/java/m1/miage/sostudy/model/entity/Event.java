@@ -70,12 +70,12 @@ public class Event {
 
     /**
      * Constructor of the Event class
-     * @param eventName
-     * @param eventPublicationDate
-     * @param eventContent
-     * @param eventBeginningDate
-     * @param eventEndDate
-     * @param eventPlace
+     * @param eventName the name of the event
+     * @param eventPublicationDate the date of publication of the event
+     * @param eventContent the content of the event
+     * @param eventBeginningDate the date of start of the event
+     * @param eventEndDate the date of end of the event
+     * @param eventPlace the location of the event
      */
     public Event(String eventName, String eventPublicationDate, String eventContent, String eventBeginningDate, String eventEndDate, String eventPlace) {
         this.eventName = eventName;
@@ -88,13 +88,13 @@ public class Event {
 
     /**
      * Constructor of the Event class
-     * @param eventId
-     * @param eventName
-     * @param eventPublicationDate
-     * @param eventContent
-     * @param eventBeginningDate
-     * @param eventEndDate
-     * @param eventPlace
+     * @param eventId the id of the event
+     * @param eventName the name of the event
+     * @param eventPublicationDate the date of publication of the event
+     * @param eventContent the content of the event
+     * @param eventBeginningDate the date of start of the event
+     * @param eventEndDate the date of end of the event
+     * @param eventPlace the location of the event
      */
     public Event(int eventId, String eventName, String eventPublicationDate, String eventContent, String eventBeginningDate, String eventEndDate, String eventPlace) {
         this.eventId = eventId;
@@ -107,119 +107,136 @@ public class Event {
     }
 
     /**
-     * Getters and Setters
+     * Get the id of the event
+     * @return the id of the event
      */
     public int getEventId() {
         return eventId;
     }
 
     /**
-     * Getters and Setters
+     * Get the name of the event
+     * @return the name of the event
      */
     public String getEventName() {
         return eventName;
     }
 
     /**
-     * Getters and Setters
+     * Set the name of the event
+     * @param eventName the name of the event
      */
-    public void setEventName(String subjectEvent) {
-        this.eventName = subjectEvent;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     /**
-     * Getters and Setters
+     * Get the date of publication of the event
+     * @return the date of publication of the event
      */
     public String getEventPublicationDate() {
         return eventPublicationDate;
     }
 
     /**
-     * Getters and Setters
+     * Set the date of publication of the event
+     * @param eventPublicationDate the date of publication of the event
      */
-    public void setEventPublicationDate(String datePublicationEvent) {
-        this.eventPublicationDate = datePublicationEvent;
+    public void setEventPublicationDate(String eventPublicationDate) {
+        this.eventPublicationDate = eventPublicationDate;
     }
 
     /**
-     * Getters and Setters
+     * Get the content of the event
+     * @return the content of the event
      */
     public String getEventContent() {
         return eventContent;
     }
 
     /**
-     * Getters and Setters
+     * Set the content of the event
+     * @param eventContent the content of the event
      */
-    public void setEventContent(String contentEvent) {
-        this.eventContent = contentEvent;
+    public void setEventContent(String eventContent) {
+        this.eventContent = eventContent;
     }
 
     /**
-     * Getters and Setters
+     * Get the date of start of the event
+     * @return the date of start of the event
      */
     public String getEventBeginningDate() {
         return eventBeginningDate;
     }
 
     /**
-     * Getters and Setters
+     * Set the date of start of the event
+     * @param eventBeginningDate the date of start of the event
      */
-    public void setEventBeginningDate(String dateStartEvent) {
-        this.eventBeginningDate = dateStartEvent;
+    public void setEventBeginningDate(String eventBeginningDate) {
+        this.eventBeginningDate = eventBeginningDate;
     }
 
     /**
-     * Getters and Setters
+     * Get the date of end of the event
+     * @return the date of end of the event
      */
     public String getEventEndDate() {
         return eventEndDate;
     }
 
     /**
-     * Getters and Setters
+     * Set the date of end of the event
+     * @param eventEndDate the date of end of the event
      */
-    public void setEventEndDate(String dateEndEvent) {
-        this.eventEndDate = dateEndEvent;
+    public void setEventEndDate(String eventEndDate) {
+        this.eventEndDate = eventEndDate;
     }
 
     /**
-     * Getters and Setters
+     * Get the location of the event
+     * @return the location of the event
      */
     public String getEventPlace() {
         return eventPlace;
     }
 
     /**
-     * Getters and Setters
+     * Set the location of the event
+     * @param eventPlace the location of the event
      */
-    public void setEventPlace(String locationEvent) {
-        this.eventPlace = locationEvent;
+    public void setEventPlace(String eventPlace) {
+        this.eventPlace = eventPlace;
     }
 
     /**
-     * Getters and Setters
+     * Get the user who created the event
+     * @return the user who created the event
      */
     public User getUserCreator() {
         return userCreator;
     }
 
     /**
-     * Getters and Setters
+     * Set the user who created the event
+     * @param userCreator the user who created the event
      */
     public void setUserCreator(User userCreator) {
         this.userCreator = userCreator;
     }
 
     /**
-     * Getters and Setters
+     * Get the list of users interested in the event
+     * @return the list of users interested in the event
      */
     public java.util.List<User> getUsersInterested() {
         return usersInterested;
     }
 
     /**
-     * Getters and Setters
+     * Set the list of users interested in the event
+     * @param usersInterested the list of users interested in the event
      */
     public void setUsersInterested(java.util.List<User> usersInterested) {
         this.usersInterested = usersInterested;
@@ -227,6 +244,7 @@ public class Event {
 
     /**
      * add a user to the list of users interested in the event
+     * @param user the user to add to the list of users interested in the event
      */
     public void addUserInterested(User user) {
         if (this.usersInterested == null) {
@@ -237,7 +255,7 @@ public class Event {
 
     /**
      * remove a user from the list of users interested in the event
-     */
+         */
     public void removeUserInterested(User user) {
         if (this.usersInterested != null) {
             this.usersInterested.remove(user);
