@@ -34,9 +34,23 @@ public class AuthController {
 
     /**
      * Default path.
-     */
-    @GetMapping("/")
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @return a redirect to the login page
+     * */
+    @GetMapping("")
     public String index(Model model, HttpSession session) {
+        return "redirect:/auth/login";
+    }
+
+    /**
+     * Default path.
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @return a redirect to the login page
+     * */
+    @GetMapping("/")
+    public String indexSecond(Model model, HttpSession session) {
         return "redirect:/auth/login";
     }
 
@@ -47,6 +61,8 @@ public class AuthController {
 
     /**
      * Displays the login page.
+     * @param model the model to be used in the view
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/login")
@@ -59,7 +75,10 @@ public class AuthController {
 
     /**
      * Authenticates the user.
-     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param email the email of the user
+     * @param password the password of the user
      * @return a redirect to the list of channels
      */
     @PostMapping("/login")
@@ -85,7 +104,8 @@ public class AuthController {
 
     /**
      * Displays the registration page.
-     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/register")
@@ -98,11 +118,12 @@ public class AuthController {
 
     /**
      * Registers a new user.
-     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
      * @return a redirect to the login page
      */
     @PostMapping("/register")
-    public String registerUser(Model model, @RequestParam("nom") String nom,
+    public String registerUser(Model model, HttpSession session, @RequestParam("nom") String nom,
                                @RequestParam("prenom") String prenom,
                                @RequestParam("pseudo") String pseudo,
                                @RequestParam("email") String email,
@@ -138,17 +159,19 @@ public class AuthController {
         User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
         userRepo.save(user);
 
+        session.setAttribute("user", user);
         return "redirect:/";
     }
 
     /**
      * Logs out the user.
-     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
      * @return a redirect to the login page
      */
     @PostMapping("/logout")
-    public String logout() {
-        // Logic to log out the user
+    public String logout(Model model, HttpSession session) {
+        session.removeAttribute("user");
         return "redirect:/auth/login"; // Redirect to the login page after logout
     }
 
