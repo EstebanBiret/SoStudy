@@ -67,3 +67,20 @@ body {
     max-width: 75px;
     height: auto;
 }
+
+.register-link {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.register-link a {
+    color: #6200ea;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+

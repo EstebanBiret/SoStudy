@@ -44,10 +44,8 @@ public class AuthController {
     @GetMapping("/login")
     public String login(Model model, HttpSession session) {
         if (session.getAttribute("user") != null) {
-            System.out.println("User already logged in");
             return"redirect:/";
         }
-        System.out.println("User not logged in");
         return "login.html"; // Return the name of the view (e.g., Thymeleaf template)
     }
 
@@ -83,7 +81,10 @@ public class AuthController {
      * @return the name of the view to be rendered
      */
     @GetMapping("/register")
-    public String register(Model model) {
+    public String register(Model model,HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            return"redirect:/";
+        }
         return "register.html";
     }
 
