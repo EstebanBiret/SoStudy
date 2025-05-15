@@ -1,0 +1,105 @@
+.centered-box {
+    width: 33.33vw;
+    height: 76vh;
+    margin: 0 auto;              /* centre horizontalement */
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;            /* scroll interne si contenu trop grand */
+    border-radius: 8px;
+    overflow-x: hidden;
+    overflow-y:auto ;
+}
+
+.full{
+    width: 94%;
+}
+
+.bottom{
+    position: fixed;
+    bottom: 20px;             /* Espace par rapport au bas */
+    left: 50%;                /* Position de départ au centre */
+    transform: translateX(-50%); /* Décalage de 50% de sa propre largeur pour être parfaitement centré */
+    z-index: 1000;            /* S'assure qu'il soit au-dessus */
+    padding: 0.75rem 1.5rem;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.bottom:hover {
+    background-color: #862fb3; /* Couleur de fond au survol */
+    transition: background-color 0.3s ease;
+}
+
+.bottom:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.full-card {
+    padding: 0;
+    width: 100%;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 94%;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+}
+.user-name {
+    margin : 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.user-description {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    background-color: #cbd5f1; /* fallback color if no image */
+}
+
+.text-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.line {
+    height: 10px;
+    border-radius: 5px;
+    background-color: #d3d3d3;
+}
+
+
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+}
+.checkbox:checked {
+    accent-color: #b226f8;
+}

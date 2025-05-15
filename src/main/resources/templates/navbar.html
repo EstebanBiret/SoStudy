@@ -12,24 +12,24 @@
                 <img th:unless="${currentUri == '/'}" th:src="@{/images/logos/home-grey.svg}" alt="Accueil" />
             </a>
 
-            <a th:href="@{/messages}" class="nav-item">
-                <img th:if="${currentUri == '/messages'}" th:src="@{/images/logos/message-active.svg}" alt="Messagerie">
-                <img th:unless="${currentUri == '/messages'}" th:src="@{/images/logos/message-grey.svg}" alt="Messagerie">
+            <a th:href="@{/channels/}" class="nav-item">
+                <img th:if="${currentUri.contains('/channels')}" th:src="@{/images/logos/message-active.svg}" alt="Messagerie">
+                <img th:unless="${currentUri.contains('/channels')}" th:src="@{/images/logos/message-grey.svg}" alt="Messagerie">
             </a>
 
             <a th:href="@{/events}" class="nav-item">
-                <img th:if="${currentUri == '/events'}" th:src="@{/images/logos/event-active.svg}" alt="Events">
+                <img th:if="${currentUri.contains('/events')}" th:src="@{/images/logos/event-active.svg}" alt="Events">
                 <img th:unless="${currentUri == '/events'}" th:src="@{/images/logos/event-grey.svg}" alt="Events" id="events-img">
             </a>
 
             <a th:href="@{/post/publish}" class="nav-item">
-                <img th:if="${currentUri == '/post/publish'}" th:src="@{/images/logos/publish-active.svg}" alt="Publier">
-                <img th:unless="${currentUri == '/post/publish'}" th:src="@{/images/logos/publish-grey.svg}" alt="Publier">
+                <img th:if="${currentUri.contains('/post/publish')}" th:src="@{/images/logos/publish-active.svg}" alt="Publier">
+                <img th:unless="${currentUri.contains('/post/publish')}" th:src="@{/images/logos/publish-grey.svg}" alt="Publier">
             </a>
 
             <a th:href="@{/profile}" class="nav-item">
-                <img th:if="${currentUri == '/profile'}" th:src="@{/images/logos/user-active.svg}" alt="Profil">
-                <img th:unless="${currentUri == '/profile'}" th:src="@{/images/logos/user-grey.svg}" alt="Profil">
+                <img th:if="${currentUri.contains('/profile')}" th:src="@{/images/logos/user-active.svg}" alt="Profil">
+                <img th:unless="${currentUri.contains('/profile')}" th:src="@{/images/logos/user-grey.svg}" alt="Profil">
             </a>
         </div>
     </nav>

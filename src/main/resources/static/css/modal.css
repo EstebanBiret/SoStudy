@@ -1,0 +1,122 @@
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: #fff;
+    border-radius: 12px;
+    width: 350px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.avatars {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 2px solid #fff;
+    object-fit: cover;
+    margin-left: -10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.avatar:first-child {
+    margin-left: 0;
+}
+
+h2 {
+    text-align: center;
+    font-size: 18px;
+    margin: 0;
+}
+
+p {
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin: 8px 0 20px;
+}
+
+.share-link {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.share-link input {
+    flex-grow: 1;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    outline: none;
+}
+
+.copy-icon {
+    background: #f3f4f6;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn.cancel {
+    background: #f9fafb;
+    color: #374151;
+}
+
+.btn.confirm {
+    background: #b226f8;
+    color: white;
+}
+
+a.btn {
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+h4 {
+    margin: 0;
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
