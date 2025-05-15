@@ -1,0 +1,42 @@
+.list-chan-box {
+    width: 20vw;
+    height: 76vh;
+    margin-left: 2rem;
+    margin-top: 2rem;
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;            /* scroll interne si contenu trop grand */
+    border-radius: 8px;
+    overflow-x: hidden;
+}
+
+.user-card:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+
+.new-conv {
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #b226f8;
+    color: white;
+    border: none;
+    font-size: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.1s ease, background-color 0.3s ease;
+
+}
+
+.new-conv:hover {
+    background-color: #862fb3;
+    cursor: pointer;
+    transform: scale(1.1) translateY(-2px);
+}
+

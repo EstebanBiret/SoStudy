@@ -5,14 +5,35 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/form_publish_post.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/list_channels.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/list_new_conv.css}">
+
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
     <div th:replace="navbar :: navbar(${currentUri})"></div>
     <form th:action="@{/channels/new}" method="get">
-        <div class="buttons">
-            <button type="submit" class="btn confirm">Envoyer</button>
+        <div class="list-chan-box">
+            <input type="text" placeholder="Rechercher..." class="search-bar full">
+
+            <ul class="full-card">
+                <li class="user-card" th:each="entry : ${lastMessageMap}">
+                    <a class="user-info">
+                        <img th:if="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${entry.key.channelImagePath}}" alt="User" class="user-photo">
+                        <img th:unless="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${profPic[entry.key]}}" alt="User" class="user-photo" />
+                        <div class="text-placeholder">
+                            <h3 class="user-name" th:text="${entry.key.getChannelName()}">Nom de l'utilisateur</h3>
+                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}">Description de l'utilisateur</p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
         </div>
+
+
+        <button type="submit" class="new-conv">
+            +
+        </button>
     </form>
 </body>
 </html>
