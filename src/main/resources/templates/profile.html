@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SoStudy</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/profile.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+    <div th:replace="navbar :: navbar(${currentUri})"></div>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img th:src="@{${userProfile.personImagePath}}" alt="Avatar" class="avatar">
+
+                <div class="profile-info">
+                    <h2 th:text="${userProfile.pseudo}"></h2>
+                    <p class="bio" th:text="${userProfile.bioUser}"></p>
+
+                    <div class="profile-stats">
+                        <p>
+                            <span th:text="${userProfile.sentMessages.size()}"></span>post(s)
+                            <span th:text="${userProfile.followers.size()}"></span>abonné(s)
+                            <span th:text="${userProfile.following.size()}"></span>abonnement(s)
+                        </p>
+                    </div>
+
+                </div>
+
+                <div th:if="${userProfile.pseudo == session.user.pseudo}" class="profile-actions">
+
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown()">
+                            <img src="/images/logos/setting.svg" alt="Paramètres">
+                        </button>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <form th:action="@{'/auth/logout'}" method="post">
+                                <button type="submit">Se déconnecter</button>
+                            </form>
+                            <form th:action="@{'/profile/update/' + ${userProfile.pseudo}}" method="post">
+                                <button type="submit">Modifier</button>
+                            </form>
+                            <form th:action="@{'/profile/delete/' + ${userProfile.pseudo}}" method="post">
+                                <button type="submit" onclick="return confirm('Supprimer ce profil ?')">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section des posts -->
+    <div class="container">
+        <div class="posts-container">
+            <div th:each="post : ${posts}" class="post-card">
+                <div th:if="${reposts.contains(post)}" class="repost-label">
+                    <span th:text="${userProfile.pseudo + ' a reposté'}"></span>
+                </div>
+                <div class="post-header">
+                    <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
+                    <div class="post-user-info">
+                        <h3>
+                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
+                        </h3>
+                        <p th:text="${post.formattedDate}"></p>
+                    </div>
+                    <button th:if="${post.user.pseudo != session.user.pseudo}" class="repost-btn">
+                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
+                        Reposter
+                    </button>
+                </div>
+                <div class="post-content">
+                    <p th:text="${post.postContent}">Contenu du post</p>
+                    <div th:if="${post.postMediaPath != null}" class="post-media">
+                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction-buttons">
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                            <span th:text="${post.likeCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                            <span th:text="${post.loveCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                            <span th:text="${post.laughCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                            <span th:text="${post.cryCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                            <span th:text="${post.angryCount}">0</span>
+                        </button>
+                    </div>
+                    <div class="post-stats">
+                        <span th:text="${post.reactions.size()}">0</span> réaction(s)
+                        <span th:text="${post.comments.size()}">0</span> commentaire(s)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    }
+
+    // Fermer le menu si on clique ailleurs
+    document.addEventListener("click", function(event) {
+        const dropdown = document.querySelector(".dropdown");
+        if (!dropdown.contains(event.target)) {
+            document.getElementById("dropdownMenu").style.display = "none";
+        }
+    });
+</script>
+
+</html>
