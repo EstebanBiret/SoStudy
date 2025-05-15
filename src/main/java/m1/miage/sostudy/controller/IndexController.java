@@ -55,7 +55,7 @@ public class IndexController {
      * @param postDate the date of the post
      * @return the formatted date of the post
      */
-    public String formatPostDate(LocalDate postDate) {
+    public static String formatPostDate(LocalDate postDate) {
         LocalDate today = LocalDate.now();
         if (postDate.isEqual(today)) {
             return "a posté aujourd'hui";

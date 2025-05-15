@@ -2,9 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="navbar(currentUri)">
     <nav class="navbar">
         <div class="navbar-left">
-            <img th:src="@{/images/logos/logo_all.png}" alt="Logo" class="logo nav-item">
+            <a th:href="@{/}">
+                <img th:src="@{/images/logos/logo_all.png}" alt="Logo" class="logo nav-item">
+            </a>
             <input type="text" placeholder="Rechercher..." class="search-bar nav-item">
         </div>
+
 
         <div class="navbar-right">
             <a th:href="@{/}" class="nav-item">
@@ -28,9 +31,10 @@
             </a>
 
             <a th:href="@{/user/{pseudo}(pseudo=${session.user.pseudo})}" class="nav-item">
-                <img th:if="${currentUri == '/user/{pseudo}(pseudo=${session.user.pseudo})'}" th:src="@{/images/logos/user-active.svg}" alt="Profil">
-                <img th:unless="${currentUri == '/user/{pseudo}(pseudo=${session.user.pseudo})'}" th:src="@{/images/logos/user-grey.svg}" alt="Profil">
-            </a>
+            <img th:if="${session.user.personImagePath != null}" th:src="@{${session.user.personImagePath}}" alt="Profil"
+                 style="width:40px; height: 40px; border-radius:50%; object-fit:cover;" />
+        </a>
+
         </div>
     </nav>
     <script th:src="@{/js/navbar.js}"></script>

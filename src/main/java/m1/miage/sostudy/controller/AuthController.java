@@ -134,12 +134,12 @@ public class AuthController {
 
         String fileName = null;
         if (!image.isEmpty()) {
-            fileName = "/images/progiles_pictures/" + UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            fileName = "/images/profiles_pictures/" + UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         }else{
-            fileName = "/images/progiles_pictures/defaultProfilePic.jpg";
+            fileName = "/images/profiles_pictures/defaultProfilePic.jpg";
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
         }
         boolean error = false;
