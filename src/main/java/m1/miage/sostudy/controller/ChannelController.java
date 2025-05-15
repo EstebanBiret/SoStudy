@@ -48,7 +48,7 @@ public class ChannelController {
     public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) {
         model.addAttribute("currentUri", request.getRequestURI());
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         List<Channel> chans = ((User) session.getAttribute("user")).getSubscribedChannels();
 
@@ -66,7 +66,7 @@ public class ChannelController {
                         .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
-                        .orElse("images/profiles_pictures/defaultProfilePic.png"));
+                        .orElse("/images/profiles_pictures/defaultProfilePic.png"));
             }
             Message lastMessage = channelRepository.findLastMessageByChannel(channel);
             lastMessageMap.put(channel, lastMessage);
@@ -89,7 +89,7 @@ public class ChannelController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         User userConnected = userRepository.findById(sessionUser.getIdUser())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
@@ -108,7 +108,7 @@ public class ChannelController {
     @PostMapping("/new")
     public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         List<Integer> selectedUserIds = Arrays.stream(selectedUsersCsv.split(","))
                 .map(Integer::parseInt)
@@ -129,6 +129,9 @@ public class ChannelController {
             }
         }
 
+        //todo régler soucis quand on créé un canal avec un user avec qui on est déjà en discussion et un autre nouveau, ça bloque sur celui avec qui on est déjà en discussion
+        //todo quand on vient de créer une conv, l'image de la conv ne marche pas, mais marche quand on se déco-reco
+
         Channel channel = new Channel();
         channel.setChannelName(
                 (selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))
@@ -136,7 +139,7 @@ public class ChannelController {
                         .map(User::getPseudo)
                         .collect(Collectors.joining(", "))
                         : selectedUsers.size() == 1
-                        ? selectedUsers.get(0).getPseudo()
+                        ? selectedUsers.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
         channel.setChannelImagePath("default.png");
