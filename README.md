@@ -31,6 +31,8 @@
 | /user/edit                    | GET     | UserController     | Formulaire d’édition de profil                          |                         |
 | /user/edit                    | POST    | UserController     | Sauvegarde des modifications de profil                  | Formulaire              |
 | /user/delete                  | POST    | UserController     | Supprimer le compte utilisateur                         |                         |
+| /user/search?pseudo={pseudo}  | GET    | UserController     | Rechercher un utilisateur par son pseudo    |                  pseudo       |
+| /user/search?pseudo={pseudo}  | POST    | UserController     | Rechercher un utilisateur par son pseudo    |               Formulaire          |
 | /user/follow/{pseudo}        | POST    | UserController     | Suivre un utilisateur                                   | pseudo                  |
 | /user/unfollow/{pseudo}      | POST    | UserController     | Ne plus suivre un utilisateur                           | pseudo                  |
 | /channels                     | GET     | ChannelController  | Liste des conversations                                 |                         |
