@@ -33,6 +33,14 @@ public class AuthController {
     private UserRepository userRepo;
 
     /**
+     * Default path.
+     */
+    @GetMapping("/")
+    public String index(Model model, HttpSession session) {
+        return "redirect:/auth/login";
+    }
+
+    /**
      * Path for uploading files.
      */
     private final String UPLOAD_DIR = "./src/main/resources/static/images/profiles_pictures/";
