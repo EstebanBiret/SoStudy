@@ -71,6 +71,36 @@ public class Post {
     private List<User> reposts = new ArrayList<>();
 
     /**
+     * The list of reactions to the post
+     */
+    @Transient
+    private List<UserPostReaction> reactions = new ArrayList<>();
+
+    /**
+     * The formatted date of the post
+     */
+    @Transient
+    private String formattedDate;
+
+    /**
+     * Counters for each type of reaction
+     */
+    @Transient
+    private long likeCount = 0;
+    
+    @Transient
+    private long loveCount = 0;
+    
+    @Transient
+    private long laughCount = 0;
+    
+    @Transient
+    private long cryCount = 0;
+    
+    @Transient
+    private long angryCount = 0;
+
+    /**
      * Default constructor
      */
     public Post() {}
@@ -201,6 +231,126 @@ public class Post {
      * @param user the user to remove
      */
     public void removeRepost(User user) {this.reposts.remove(user);}
+
+    /**
+     * Getter for the list of reactions to the post
+     * @return the list of reactions to the post
+     */
+    public List<UserPostReaction> getReactions() {return reactions;}
+
+    /**
+     * Setter for the list of reactions to the post
+     * @param reactions the list of reactions to the post
+     */
+    public void setReactions(List<UserPostReaction> reactions) {this.reactions = reactions;}
+
+    /**
+     * Gets the formatted date of the post
+     *
+     * @return the formatted date of the post
+     */
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    /**
+     * Sets the formatted date of the post
+     *
+     * @param formattedDate the formatted date of the post
+     */
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
+    }
+
+    /**
+     * Gets the count of like reactions
+     *
+     * @return the count of like reactions
+     */
+    public long getLikeCount() {
+        return likeCount;
+    }
+
+    /**
+     * Sets the count of like reactions
+     *
+     * @param likeCount the count of like reactions
+     */
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    /**
+     * Gets the count of love reactions
+     *
+     * @return the count of love reactions
+     */
+    public long getLoveCount() {
+        return loveCount;
+    }
+
+    /**
+     * Sets the count of love reactions
+     *
+     * @param loveCount the count of love reactions
+     */
+    public void setLoveCount(long loveCount) {
+        this.loveCount = loveCount;
+    }
+
+    /**
+     * Gets the count of laugh reactions
+     *
+     * @return the count of laugh reactions
+     */
+    public long getLaughCount() {
+        return laughCount;
+    }
+
+    /**
+     * Sets the count of laugh reactions
+     *
+     * @param laughCount the count of laugh reactions
+     */
+    public void setLaughCount(long laughCount) {
+        this.laughCount = laughCount;
+    }
+
+    /**
+     * Gets the count of cry reactions
+     *
+     * @return the count of cry reactions
+     */
+    public long getCryCount() {
+        return cryCount;
+    }
+
+    /**
+     * Sets the count of cry reactions
+     *
+     * @param cryCount the count of cry reactions
+     */
+    public void setCryCount(long cryCount) {
+        this.cryCount = cryCount;
+    }
+
+    /**
+     * Gets the count of angry reactions
+     *
+     * @return the count of angry reactions
+     */
+    public long getAngryCount() {
+        return angryCount;
+    }
+
+    /**
+     * Sets the count of angry reactions
+     *
+     * @param angryCount the count of angry reactions
+     */
+    public void setAngryCount(long angryCount) {
+        this.angryCount = angryCount;
+    }
 
     /**
      * Redefinition of the equals method

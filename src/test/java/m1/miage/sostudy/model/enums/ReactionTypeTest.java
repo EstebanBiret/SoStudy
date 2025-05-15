@@ -16,22 +16,22 @@ public class ReactionTypeTest {
     void testConstructorWithParameters() {
         // Test LIKE constant
         assertEquals(ReactionType.LIKE.getName(), "Like");
-        assertEquals(ReactionType.LIKE.getImagePath(), "src/main/resources/images/reactions/like.png");
+        assertEquals(ReactionType.LIKE.getImagePath(), "/images/reactions/like.png");
         
         // Test LOVE constant
         assertEquals(ReactionType.LOVE.getName(), "Love");
-        assertEquals(ReactionType.LOVE.getImagePath(), "src/main/resources/images/reactions/love.png");
+        assertEquals(ReactionType.LOVE.getImagePath(), "/images/reactions/love.png");
         
         // Test LAUGH constant
         assertEquals(ReactionType.LAUGH.getName(), "Laugh");
-        assertEquals(ReactionType.LAUGH.getImagePath(), "src/main/resources/images/reactions/laugh.png");
+        assertEquals(ReactionType.LAUGH.getImagePath(), "/images/reactions/laugh.png");
         
         // Test CRY constant
         assertEquals(ReactionType.CRY.getName(), " Cry");
-        assertEquals(ReactionType.CRY.getImagePath(), "src/main/resources/images/reactions/cry.png");
+        assertEquals(ReactionType.CRY.getImagePath(), "/images/reactions/cry.png");
         
         // Test ANGRY constant
         assertEquals(ReactionType.ANGRY.getName(), "Angry");
-        assertEquals(ReactionType.ANGRY.getImagePath(), "src/main/resources/images/reactions/angry.png");
+        assertEquals(ReactionType.ANGRY.getImagePath(), "/images/reactions/angry.png");
     }
 }
