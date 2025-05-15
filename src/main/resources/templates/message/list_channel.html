@@ -20,10 +20,11 @@
                 <li class="user-card" th:each="entry : ${lastMessageMap}">
                     <a class="user-info">
                         <img th:if="${entry.key.getUsers().size() > 2}" th:src="${entry.key.channelImagePath}" alt="User" class="user-photo">
-                        <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPic[entry.key]}" alt="User" class="user-photo" />
+                        <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPicMap[entry.key]}" alt="User" class="user-photo" />
                         <div class="text-placeholder">
-                            <h3 class="user-name" th:text="${entry.key.getChannelName()}">Nom de l'utilisateur</h3>
-                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}">Description de l'utilisateur</p>
+                            <h3 th:if="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${entry.key.getChannelName()}"></h3>
+                            <h3 th:unless="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${profPseudoMap[entry.key]}"></h3>
+                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}"></p>
                         </div>
                     </a>
                 </li>

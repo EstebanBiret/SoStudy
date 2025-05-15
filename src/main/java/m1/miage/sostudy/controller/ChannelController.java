@@ -58,23 +58,33 @@ public class ChannelController {
         }
 
         HashMap<Channel, Message> lastMessageMap = new HashMap<>();
-        HashMap<Channel, String> pathProfPicMap = new HashMap<>();
+        HashMap<Channel, String> profPicMap = new HashMap<>();
+        HashMap<Channel, String> profPseudoMap = new HashMap<>();
 
         for (Channel channel : chans) {
+
+            //have the path of the profile picture of the other user
             if (channel.getUsers().size() == 2) {
-                pathProfPicMap.put(channel, channel.getUsers().stream()
+                profPicMap.put(channel, channel.getUsers().stream()
                         .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
                         .orElse("/images/profiles_pictures/defaultProfilePic.png"));
+                //have the pseudo of the other user
+                profPseudoMap.put(channel, channel.getUsers().stream()
+                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .findFirst()
+                        .map(User::getPseudo)
+                        .orElse("Utilisateur anonyme"));
             }
+
             Message lastMessage = channelRepository.findLastMessageByChannel(channel);
             lastMessageMap.put(channel, lastMessage);
         }
 
-        model.addAttribute("profPic", pathProfPicMap);
+        model.addAttribute("profPicMap", profPicMap);
         model.addAttribute("lastMessageMap", lastMessageMap);
-
+        model.addAttribute("profPseudoMap", profPseudoMap);
 
         return "message/list_channel";
     }
@@ -130,7 +140,8 @@ public class ChannelController {
         }
 
         //todo régler soucis quand on créé un canal avec un user avec qui on est déjà en discussion et un autre nouveau, ça bloque sur celui avec qui on est déjà en discussion
-        //todo quand on vient de créer une conv, l'image de la conv ne marche pas, mais marche quand on se déco-reco
+        //todo quand on vient de créer un canal, l'image du canal ne marche pas, mais marche quand on se déco-reco
+        //todo ajouter dans form quand c'est >2 un champ pour mettre l'image du canal
 
         Channel channel = new Channel();
         channel.setChannelName(
