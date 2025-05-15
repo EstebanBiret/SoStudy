@@ -1,0 +1,370 @@
+body {
+    background-color: #efeff3;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+    gap: 10px;
+}
+
+.post-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-user-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.post-user-info h3 a {
+    text-decoration: none;
+    color: #333;
+}
+
+.post-user-info h3 a:hover {
+    color: #ce29e4;
+}
+
+.post-user-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.post-content {
+    margin-bottom: 15px;
+}
+
+.post-content p {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.post-media {
+    margin-top: 1rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-media-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.reaction-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.reaction-btn {
+    background: none;
+    border: 1px solid #e0e0e0;
+    color: #666;
+    font-size: 0.9em;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.reaction-btn span {
+    font-size: 1.1em;
+    color: #888;
+    font-weight: bold;
+}
+
+.reaction-btn:hover {
+    color: #007bff;
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.reaction-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.post-stats {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.post-stats span {
+    color: #333;
+    font-weight: bold;
+}
+
+.repost-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.repost-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.repost-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 20px;
+    background-color: #efeff3;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    max-width: 1150px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    position: relative;
+    flex-wrap: wrap;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.profile-info h2 {
+    margin: 0 0 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.bio {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+    white-space: pre-line;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #45a049;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #e53935;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.logout-btn {
+    background-color: #555;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #444;
+}
+
+/* Dropdown style */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.dropdown-toggle img {
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 28px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.dropdown-menu button:hover,
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.profile-stats {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.profile-stats p {
+    margin: 0;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.profile-stats span {
+    font-weight: bold;
+    color: #333;
+}
+
+.repost-label {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 8px;
+    font-style: italic;
+    padding-left: 4px;
+}
+
+
+
+
+
