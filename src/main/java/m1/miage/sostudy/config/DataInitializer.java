@@ -200,6 +200,34 @@ public class DataInitializer implements CommandLineRunner {
         post3 = postRepository.save(post3);
         post4 = postRepository.save(post4);
 
+        // Création du 4ème utilisateur
+        User user4 = new User();
+        user4.setName("Dupond");
+        user4.setFirstName("Emilie");
+        user4.setEmail("e@gmail.com");
+        user4.setPassword(hashPassword("e"));
+        user4.setPseudo("emiliedupond");
+        user4.setBirthDate("1998-03-15");
+        user4.setBioUser("Débutante en programmation");
+        user4.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
+        user4 = userRepository.save(user4);
+
+        // Création du 5ème utilisateur
+        User user5 = new User();
+        user5.setName("Lefevre");
+        user5.setFirstName("Thomas");
+        user5.setEmail("thomas.lefevre@example.com");
+        user5.setPassword(hashPassword("password1234"));
+        user5.setPseudo("thomasdev");
+        user5.setBirthDate("1996-07-22");
+        user5.setBioUser("Développeur Full Stack");
+        user5.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
+        user5 = userRepository.save(user5);
+
+        // Faire suivre l'utilisateur 4 par l'utilisateur 5
+        user4.getFollowing().add(user5);
+        userRepository.save(user4);
+
         // Création de nouveaux posts pour user2
         Post user2Post1 = new Post();
         user2Post1.setPostPublicationDate("2025-05-15");

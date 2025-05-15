@@ -10,6 +10,35 @@
     <div th:replace="navbar :: navbar(${currentUri})"></div>
 
     <!-- Section des posts -->
+    <div th:if="${following == 'empty'}">
+        <div class="no-following-container">
+            <div class="no-following-content">
+                <h2>Commencez à suivre des utilisateurs</h2>
+                <p>Pour voir des posts, commencez par suivre des utilisateurs qui partagent vos intérêts.</p>
+                <form th:action="@{/user/search}" method="get" class="search-form">
+                    <div class="search-input-group">
+                        <input type="text" placeholder="Rechercher un utilisateur..." name="pseudo" required>
+                        <button type="submit" class="search-btn">
+                            Rechercher
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${following == 'no_posts'}">
+        <div class="no-following-container">
+            <div class="no-following-content">
+                <h2>Aucun post de vos abonnements</h2>
+                <p>Vous suivez des utilisateurs mais ils n'ont pas encore posté de contenu. Soyez le premier à partager !</p>
+                <a th:href="@{/post/publish}" id="createPostBtn">
+                    Créer un post
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="posts-container">
             <div th:each="post : ${posts}" class="post-card">
@@ -64,7 +93,5 @@
         </div>
     </div>
 
-    <!-- Le reste de ta page -->
-    
 </body>
 </html>
