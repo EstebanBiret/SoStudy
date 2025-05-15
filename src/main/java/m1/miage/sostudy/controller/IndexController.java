@@ -78,12 +78,10 @@ public class IndexController {
      */
     @GetMapping("/")
     public String index(HttpServletRequest request, Model model, HttpSession session) {
-        model.addAttribute("currentUri", request.getRequestURI());
 
-        //TODO retirer quand flavien aura mis en place login logout register ------
-        User user = userRepository.findById(1).get();
-        session.setAttribute("user", user);
-        //-------------------------------------------------------------------------
+        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
 
         List<User> abonnements = user.getFollowing();
         List<Post> posts = new ArrayList<>();
@@ -92,18 +90,18 @@ public class IndexController {
             posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
         }
         
-        // Formatte les dates des posts
+        //format date
         for (Post post : posts) {
             LocalDate date = LocalDate.parse(post.getPostPublicationDate());
             post.setFormattedDate(formatPostDate(date));
         }
 
-        // Ajouter les réactions pour chaque post
+        // add reactions
         for (Post post : posts) {
             List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
             post.setReactions(reactions);
             
-            // Compter les réactions par type
+            // count reactions by type
             long likeCount = reactions.stream()
                 .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE)
                 .count();
@@ -120,7 +118,7 @@ public class IndexController {
                 .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
                 .count();
 
-            // Stocker les compteurs dans le post
+            // store counters in post
             post.setLikeCount(likeCount);
             post.setLoveCount(loveCount);
             post.setLaughCount(laughCount);
@@ -128,21 +126,17 @@ public class IndexController {
             post.setAngryCount(angryCount);
         }
 
-        // Tri des posts pour avoir les plus récents en premier
+        // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
             LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
-            return date2.compareTo(date1); 
+            return date2.compareTo(date1);
         });
         
         model.addAttribute("posts", posts);
         model.addAttribute("user", user);
+        model.addAttribute("currentUri", request.getRequestURI());
 
-        //--------------------
-
-        //if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        //--------------------
         return "index";
     }
 
