@@ -128,6 +128,7 @@ public class AuthController {
      * @param bioUser the bio of the user
      * @param image the image of the user
      * @return a redirect to the login page
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/register")
     public String registerUser(Model model, HttpSession session, @RequestParam String nom, @RequestParam String prenom,

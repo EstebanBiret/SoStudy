@@ -16,33 +16,65 @@ import static m1.miage.sostudy.controller.AuthController.hashPassword;
 @Component
 public class DataInitializer implements CommandLineRunner {
     
+    /**
+     * User repository for database operations
+     */
     @Autowired
     private UserRepository userRepository;
     
+    /**
+     * Community repository for database operations
+     */
     @Autowired
     private CommunityRepository communityRepository;
     
+    /**
+     * Post repository for database operations
+     */
     @Autowired
     private PostRepository postRepository;
     
+    /**
+     * Event repository for database operations
+     */
     @Autowired
     private EventRepository eventRepository;
     
+    /**
+     * Message repository for database operations
+     */
     @Autowired
     private MessageRepository messageRepository;
     
+    /**
+     * Reaction repository for database operations
+     */
     @Autowired
     private ReactionRepository reactionRepository;
     
+    /**
+     * UserPostReaction repository for database operations
+     */
     @Autowired
     private UserPostReactionRepository userPostReactionRepository;
     
+    /**
+     * Channel repository for database operations
+     */
     @Autowired
     private ChannelRepository channelRepository;
 
+    /**
+     * Repost repository for database operations
+     */
     @Autowired
     private RepostRepository repostRepository;
     
+    /**
+     * Run the data initializer
+     * @param args the arguments
+     * @throws Exception if an error occurs
+     */
     @Override
     public void run(String... args) throws Exception {
         // Vérifier si les données existent déjà

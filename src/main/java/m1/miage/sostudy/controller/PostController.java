@@ -99,6 +99,7 @@ public class PostController {
      * @param request the HttpServletRequest object
      * @param session the HttpSession object
      * @return the redirect URL
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/publish")
     public String publishPost(@ModelAttribute Post post,
