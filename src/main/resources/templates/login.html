@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SoStudy - Connexion</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+
+<div class="login-container">
+    <img src="/images/logos/logo_only.png" alt="SoStudy Logo" class="login-logo">
+
+    <h2>Connexion</h2>
+
+    <form action="/auth/login" method="post">
+        <input type="text" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Mot de passe" required>
+        <input type="submit" value="Se connecter">
+        <p class="register-link">
+            Pas encore de compte ? <a href="/auth/register">Créer un compte</a>
+        </p>
+
+
+        <div th:if="${loginError} == true" class="error-message">
+            Erreur : Adresse mail ou mot de passe incorrect
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

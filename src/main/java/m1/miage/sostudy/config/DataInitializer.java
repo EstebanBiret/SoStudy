@@ -8,6 +8,8 @@ import m1.miage.sostudy.repository.*;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 
+import static m1.miage.sostudy.controller.AuthController.hashPassword;
+
 /**
  * DataInitializer class
  */
@@ -51,28 +53,31 @@ public class DataInitializer implements CommandLineRunner {
         user1.setName("Dupont");
         user1.setFirstName("Jean");
         user1.setEmail("jean.dupont@example.com");
-        user1.setPassword("password123");
+        user1.setPassword(hashPassword("password123"));
         user1.setPseudo("jeandupont");
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
+        user1.setPersonImagePath("images/profiles_pictures/1.jpeg");
         
         User user2 = new User();
         user2.setName("Martin");
         user2.setFirstName("Marie");
         user2.setEmail("marie.martin@example.com");
-        user2.setPassword("password456");
+        user2.setPassword(hashPassword("password456"));
         user2.setPseudo("mariecode");
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
+        user2.setPersonImagePath("images/profiles_pictures/2.jpeg");
         
         User user3 = new User();
         user3.setName("Leroy");
         user3.setFirstName("Pierre");
         user3.setEmail("pierre.leroy@example.com");
-        user3.setPassword("password789");
+        user3.setPassword(hashPassword("password789"));
         user3.setPseudo("devpierre");
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
+        user3.setPersonImagePath("images/profiles_pictures/3.jpeg");
         
         // Sauvegarde des utilisateurs
         user1 = userRepository.save(user1);
@@ -168,12 +173,14 @@ public class DataInitializer implements CommandLineRunner {
         post1.setPostContent("Bonjour à tous ! Je débute dans Java et j'ai besoin d'aide pour comprendre les interfaces.");
         post1.setUser(user1);
         post1.setCommunity(community1);
-        
+        post1.setPostMediaPath("images/posts_images/nature.jpg");
+
         Post post2 = new Post();
         post2.setPostPublicationDate("2025-01-02");
         post2.setPostContent("Je viens de terminer un tutoriel sur Spring Boot et je partage mes notes ici.");
         post2.setUser(user2);
         post2.setCommunity(community2);
+        post2.setPostMediaPath("images/posts_images/dev.jpeg");
         
         Post post3 = new Post();
         post3.setPostPublicationDate("2025-01-03");
@@ -192,6 +199,21 @@ public class DataInitializer implements CommandLineRunner {
         post2 = postRepository.save(post2);
         post3 = postRepository.save(post3);
         post4 = postRepository.save(post4);
+
+        // Création de nouveaux posts pour user2
+        Post user2Post1 = new Post();
+        user2Post1.setPostPublicationDate("2025-05-15");
+        user2Post1.setPostContent("Je viens de terminer un projet Spring Boot avec JWT. Je partage mon expérience !");
+        user2Post1.setUser(user2);
+        user2Post1.setCommunity(community2);
+        user2Post1 = postRepository.save(user2Post1);
+
+        Post user2Post2 = new Post();
+        user2Post2.setPostPublicationDate("2025-05-14");
+        user2Post2.setPostContent("J'ai découvert une nouvelle bibliothèque Spring pour gérer les websockets. C'est super utile !");
+        user2Post2.setUser(user2);
+        user2Post2.setCommunity(community2);
+        user2Post2 = postRepository.save(user2Post2);
         
         // Création des posts repostés
         Post repost1 = new Post();
@@ -202,7 +224,44 @@ public class DataInitializer implements CommandLineRunner {
         repost1.setCommentFather(post2);
 
         // Ajouter le repost à la liste de reposts de l'utilisateur
-        user3.getRepostedPosts().add(repost1);
+
+        // Création de nouveaux posts pour l'utilisateur 2
+        Post post5 = new Post();
+        post5.setPostPublicationDate("2025-01-06");
+        post5.setPostContent("Nouveau tutoriel sur Spring Boot disponible !");
+        post5.setUser(user2);
+        post5.setCommunity(community1);
+
+        Post post6 = new Post();
+        post6.setPostPublicationDate("2025-01-07");
+        post6.setPostContent("J'ai terminé mon projet JavaFX, besoin de feedback !");
+        post6.setUser(user2);
+        post6.setCommunity(community1);
+
+        Post post7 = new Post();
+        post7.setPostPublicationDate("2025-01-08");
+        post7.setPostContent("Besoin d'aide avec Hibernate et JPA");
+        post7.setUser(user2);
+        post7.setCommunity(community2);
+
+        Post post8 = new Post();
+        post8.setPostPublicationDate("2025-01-09");
+        post8.setPostContent("J'ai créé une nouvelle application web avec Spring !");
+        post8.setUser(user2);
+        post8.setCommunity(community1);
+
+        Post post9 = new Post();
+        post9.setPostPublicationDate("2025-01-10");
+        post9.setPostContent("Besoin de conseils pour l'optimisation des requêtes SQL");
+        post9.setUser(user2);
+        post9.setCommunity(community2);
+
+        // Sauvegarde des nouveaux posts
+        post5 = postRepository.save(post5);
+        post6 = postRepository.save(post6);
+        post7 = postRepository.save(post7);
+        post8 = postRepository.save(post8);
+        post9 = postRepository.save(post9);
 
         // Sauvegarde du repost
         repost1 = postRepository.save(repost1);
@@ -256,11 +315,111 @@ public class DataInitializer implements CommandLineRunner {
         upr2.setUser(user2);
         upr2.setPost(post1);
         upr2.setReaction(reaction2);
+
+        UserPostReaction upr3 = new UserPostReaction();
+        upr3.setId(new UserPostReactionID());
+        upr3.getId().setUserId(user3.getIdUser());
+        upr3.getId().setPostId(post2.getPostId());
+        upr3.getId().setReactionId(reaction3.getReactionId());
+        upr3.setUser(user3);
+        upr3.setPost(post2);
+        upr3.setReaction(reaction3);
+
+        UserPostReaction upr4 = new UserPostReaction();
+        upr4.setId(new UserPostReactionID());
+        upr4.getId().setUserId(user1.getIdUser());
+        upr4.getId().setPostId(post2.getPostId());
+        upr4.getId().setReactionId(reaction4.getReactionId());
+        upr4.setUser(user1);
+        upr4.setPost(post2);
+        upr4.setReaction(reaction4);
+
+        UserPostReaction upr5 = new UserPostReaction();
+        upr5.setId(new UserPostReactionID());
+        upr5.getId().setUserId(user2.getIdUser());
+        upr5.getId().setPostId(post2.getPostId());
+        upr5.getId().setReactionId(reaction5.getReactionId());
+        upr5.setUser(user2);
+        upr5.setPost(post2);
+        upr5.setReaction(reaction5);
+
+        UserPostReaction upr6 = new UserPostReaction();
+        upr6.setId(new UserPostReactionID());
+        upr6.getId().setUserId(user3.getIdUser());
+        upr6.getId().setPostId(post2.getPostId());
+        upr6.getId().setReactionId(reaction1.getReactionId());
+        upr6.setUser(user3);
+        upr6.setPost(post2);
+        upr6.setReaction(reaction1);
+
+        UserPostReaction upr7 = new UserPostReaction();
+        upr7.setId(new UserPostReactionID());
+        upr7.getId().setUserId(user1.getIdUser());
+        upr7.getId().setPostId(post3.getPostId());
+        upr7.getId().setReactionId(reaction2.getReactionId());
+        upr7.setUser(user1);
+        upr7.setPost(post3);
+        upr7.setReaction(reaction2);
+
+        UserPostReaction upr8 = new UserPostReaction();
+        upr8.setId(new UserPostReactionID());
+        upr8.getId().setUserId(user2.getIdUser());
+        upr8.getId().setPostId(post3.getPostId());
+        upr8.getId().setReactionId(reaction3.getReactionId());
+        upr8.setUser(user2);
+        upr8.setPost(post3);
+        upr8.setReaction(reaction3);
+
+        UserPostReaction upr9 = new UserPostReaction();
+        upr9.setId(new UserPostReactionID());
+        upr9.getId().setUserId(user3.getIdUser());
+        upr9.getId().setPostId(post3.getPostId());
+        upr9.getId().setReactionId(reaction4.getReactionId());
+        upr9.setUser(user3);
+        upr9.setPost(post3);
+        upr9.setReaction(reaction4);
+
+        UserPostReaction upr10 = new UserPostReaction();
+        upr10.setId(new UserPostReactionID());
+        upr10.getId().setUserId(user1.getIdUser());
+        upr10.getId().setPostId(post9.getPostId());
+        upr10.getId().setReactionId(reaction5.getReactionId());
+        upr10.setUser(user1);
+        upr10.setPost(post9);
+        upr10.setReaction(reaction5);
+
+        UserPostReaction upr11 = new UserPostReaction();
+        upr11.setId(new UserPostReactionID());
+        upr11.getId().setUserId(user2.getIdUser());
+        upr11.getId().setPostId(post9.getPostId());
+        upr11.getId().setReactionId(reaction1.getReactionId());
+        upr11.setUser(user2);
+        upr11.setPost(post9);
+        upr11.setReaction(reaction1);
+
+        UserPostReaction upr12 = new UserPostReaction();
+        upr12.setId(new UserPostReactionID());
+        upr12.getId().setUserId(user3.getIdUser());
+        upr12.getId().setPostId(post9.getPostId());
+        upr12.getId().setReactionId(reaction2.getReactionId());
+        upr12.setUser(user3);
+        upr12.setPost(post9);
+        upr12.setReaction(reaction2);
         
         // Sauvegarde des UserPostReactions
         userPostReactionRepository.save(upr1);
         userPostReactionRepository.save(upr2);
-        
+        userPostReactionRepository.save(upr3);
+        userPostReactionRepository.save(upr4);
+        userPostReactionRepository.save(upr5);
+        userPostReactionRepository.save(upr6);
+        userPostReactionRepository.save(upr7);
+        userPostReactionRepository.save(upr8);
+        userPostReactionRepository.save(upr9);
+        userPostReactionRepository.save(upr10);
+        userPostReactionRepository.save(upr11);
+        userPostReactionRepository.save(upr12);
+
         // Création d'un message
         Message message1 = new Message();
         message1.setContent("Bonjour ! Je viens de rejoindre la communauté.");
@@ -274,6 +433,7 @@ public class DataInitializer implements CommandLineRunner {
         // Followers et following
         user1.addFollowers(user2);
         user1.addFollowing(user2);
+        user1.addFollowing(user3);
         user2.addFollowers(user1);
         user2.addFollowing(user1);
         userRepository.save(user1);
