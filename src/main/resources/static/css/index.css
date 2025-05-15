@@ -26,8 +26,9 @@ body {
 .post-header {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
+    position: relative;
+    gap: 10px;
 }
 
 .post-avatar {
@@ -68,6 +69,22 @@ body {
     line-height: 1.5;
 }
 
+.post-media {
+    margin-top: 1rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-media-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 .post-actions {
     display: flex;
     justify-content: space-between;
@@ -104,4 +121,31 @@ body {
 .post-stats span {
     color: #333;
     font-weight: bold;
+}
+
+.repost-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.repost-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.repost-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
 }

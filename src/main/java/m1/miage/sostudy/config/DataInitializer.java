@@ -171,12 +171,14 @@ public class DataInitializer implements CommandLineRunner {
         post1.setPostContent("Bonjour à tous ! Je débute dans Java et j'ai besoin d'aide pour comprendre les interfaces.");
         post1.setUser(user1);
         post1.setCommunity(community1);
+        post1.setPostMediaPath("images/posts_images/nature.jpg");
         
         Post post2 = new Post();
         post2.setPostPublicationDate("2025-01-02");
         post2.setPostContent("Je viens de terminer un tutoriel sur Spring Boot et je partage mes notes ici.");
         post2.setUser(user2);
         post2.setCommunity(community2);
+        post2.setPostMediaPath("images/posts_images/dev.jpeg");
         
         Post post3 = new Post();
         post3.setPostPublicationDate("2025-01-03");

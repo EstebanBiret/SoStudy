@@ -56,14 +56,14 @@ public class IndexController {
     public String formatPostDate(LocalDate postDate) {
         LocalDate today = LocalDate.now();
         if (postDate.isEqual(today)) {
-            return "Aujourd'hui";
+            return "a posté aujourd'hui";
         }
     
         long daysBetween = ChronoUnit.DAYS.between(postDate, today);
         if (daysBetween == 1) {
-            return "Il y a 1 jour";
+            return "a posté il y a 1 jour";
         } else {
-            return "Il y a " + daysBetween + " jours";
+            return "a posté il y a " + daysBetween + " jours";
         }
     }
 

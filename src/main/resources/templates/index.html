@@ -19,11 +19,18 @@
                         <h3>
                             <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.firstName + ' ' + post.user.name}"></a>
                         </h3>
-                        <p th:text="${post.formattedDate}">Date de publication</p>
+                        <p th:text="${post.formattedDate}"></p>
                     </div>
+                    <button class="repost-btn">
+                        <img th:src="@{/images/logos/repost.svg}" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                        Reposter
+                    </button>
                 </div>
                 <div class="post-content">
                     <p th:text="${post.postContent}">Contenu du post</p>
+                    <div th:if="${post.postMediaPath != null}" class="post-media">
+                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                    </div>
                 </div>
                 <div class="post-actions">
                     <div class="reaction-buttons">
