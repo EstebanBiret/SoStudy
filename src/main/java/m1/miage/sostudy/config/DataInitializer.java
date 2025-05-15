@@ -209,7 +209,7 @@ public class DataInitializer implements CommandLineRunner {
         user4.setPseudo("emiliedupond");
         user4.setBirthDate("1998-03-15");
         user4.setBioUser("Débutante en programmation");
-        user4.setPersonImagePath("images/profiles_pictures/4.jpeg");
+        user4.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
         user4 = userRepository.save(user4);
 
         // Création du 5ème utilisateur
@@ -221,7 +221,7 @@ public class DataInitializer implements CommandLineRunner {
         user5.setPseudo("thomasdev");
         user5.setBirthDate("1996-07-22");
         user5.setBioUser("Développeur Full Stack");
-        user5.setPersonImagePath("images/profiles_pictures/5.jpeg");
+        user5.setPersonImagePath("images/profiles_pictures/defaultProfilePic.jpg");
         user5 = userRepository.save(user5);
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5

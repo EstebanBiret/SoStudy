@@ -27,6 +27,18 @@
         </div>
     </div>
 
+    <div th:if="${following == 'no_posts'}">
+        <div class="no-following-container">
+            <div class="no-following-content">
+                <h2>Aucun post de vos abonnements</h2>
+                <p>Vous suivez des utilisateurs mais ils n'ont pas encore posté de contenu. Soyez le premier à partager !</p>
+                <a th:href="@{/post/publish}" id="createPostBtn">
+                    Créer un post
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="posts-container">
             <div th:each="post : ${posts}" class="post-card">

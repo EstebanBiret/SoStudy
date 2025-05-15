@@ -100,6 +100,15 @@ public class IndexController {
         for (User user2 : abonnements) {
             posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
         }
+
+        // Si l'utilisateur a des abonnements mais aucun post
+        if (posts.isEmpty()) {
+            model.addAttribute("posts", posts);
+            model.addAttribute("user", user);
+            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute("following", "no_posts");
+            return "index";
+        }
         
         //format date
         for (Post post : posts) {
