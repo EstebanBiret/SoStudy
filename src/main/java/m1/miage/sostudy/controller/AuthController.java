@@ -1,9 +1,9 @@
 package m1.miage.sostudy.controller;
 
 
+import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.repository.UserRepository;
-import m1.miage.sostudy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,13 +39,16 @@ public class AuthController {
 
     /**
      * Displays the login page.
-     *
      * @return the name of the view to be rendered
      */
     @GetMapping("/login")
-    public String login() {
-        // Logic to display the login page
-        return "login"; // Return the name of the view (e.g., Thymeleaf template)
+    public String login(Model model, HttpSession session) {
+        if (session.getAttribute("user") != null) {
+            System.out.println("User already logged in");
+            return"redirect:/";
+        }
+        System.out.println("User not logged in");
+        return "login.html"; // Return the name of the view (e.g., Thymeleaf template)
     }
 
     /**
@@ -54,9 +57,24 @@ public class AuthController {
      * @return a redirect to the list of channels
      */
     @PostMapping("/login")
-    public String authenticate() {
-        // Logic to authenticate the user
-        return "redirect:/channels/"; // Redirect to the list of channels after successful login
+    public String authenticate(Model model, HttpSession session, @RequestParam("email") String email, @RequestParam("password") String password) {
+        boolean loginError = false;
+        if (userRepo.findByEmail(email) != null) {
+            System.out.println("User found");
+            User u = userRepo.findByEmail(email);
+            if(checkPassword(password, u.getPassword())) {
+                session.setAttribute("user", u);
+                return "redirect:/";
+            }else{
+                loginError = true;
+                model.addAttribute("loginError", loginError);
+                return "login.html";
+            }
+        }else {
+            loginError = true;
+            model.addAttribute("loginError", loginError);
+            return "login.html";
+        }
     }
 
     /**
@@ -86,12 +104,12 @@ public class AuthController {
 
         String fileName = null;
         if (!image.isEmpty()) {
-            fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            fileName = "/images/progiles_pictures/" + UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         }else{
-            fileName = "defaultProfilePic.jpg";
+            fileName = "/images/progiles_pictures/defaultProfilePic.jpg";
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
         }
         boolean error = false;
@@ -111,7 +129,7 @@ public class AuthController {
         User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
         userRepo.save(user);
 
-        return "redirect:/"; // Redirect to the login page after successful registration
+        return "redirect:/";
     }
 
     /**
@@ -132,7 +150,7 @@ public class AuthController {
      * @param password the password to hash
      * @return the hashed password
      */
-    public String hashPassword(String password) {
+    public static String hashPassword(String password) {
         // Hash the password using BCrypt
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
