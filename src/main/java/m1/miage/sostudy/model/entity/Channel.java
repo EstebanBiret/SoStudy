@@ -34,7 +34,7 @@ public class Channel {
     /**
      * List of users in the channel
      */
-    @ManyToMany(mappedBy = "subscribedChannels")
+    @ManyToMany(mappedBy = "subscribedChannels",fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     /**

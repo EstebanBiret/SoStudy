@@ -2,13 +2,13 @@
     width: 33.33vw;
     height: 76vh;
     margin: 0 auto;              /* centre horizontalement */
+    margin-top: 2rem;          /* espace au-dessus */
     background-color: white;
     padding: 2rem;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     overflow-y: auto;            /* scroll interne si contenu trop grand */
     border-radius: 8px;
     overflow-x: hidden;
-    overflow-y:auto ;
 }
 
 .full{
@@ -46,6 +46,7 @@
 }
 
 .user-card {
+    margin-bottom: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -102,4 +103,55 @@
 }
 .checkbox:checked {
     accent-color: #b226f8;
+}
+
+
+
+.flash-message {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.3s ease-out;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.flash-message.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.flash-message.hide {
+    opacity: 0;
+    transform: translate(-50%, -20px); /* Vers le haut */
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
 }

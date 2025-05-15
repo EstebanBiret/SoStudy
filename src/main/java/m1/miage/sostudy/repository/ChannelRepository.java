@@ -1,6 +1,7 @@
 package m1.miage.sostudy.repository;
 
 import m1.miage.sostudy.model.entity.Channel;
+import m1.miage.sostudy.model.entity.Message;
 import m1.miage.sostudy.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,16 +33,27 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     Channel findById(int id);
 
     @Query("""
-    SELECT DISTINCT u FROM User u
-    JOIN u.subscribedChannels c
-    WHERE c IN (
-        SELECT c2 FROM Channel c2
-        JOIN c2.users u2
-        WHERE u2.idUser = :userId
-        GROUP BY c2
-        HAVING COUNT(u2) = 2
-    )
-    AND u.idUser != :userId
+    SELECT c FROM Channel c
+    JOIN c.users u
+    WHERE u.idUser IN (:userId, :user2Id)
+    GROUP BY c
+    HAVING COUNT(DISTINCT u.idUser) = 2 AND SIZE(c.users) = 2
 """)
-    List<User> findUsersSharingChannelOfTwoWith(@Param("userId") int userId);
+    List<Channel> findPrivateChannelBetween(@Param("userId") int userId, @Param("user2Id") int user2Id);
+
+    @Query("""
+    SELECT c FROM User u
+    JOIN u.subscribedChannels c
+    WHERE u.idUser = :userID
+""")
+    List<Channel> findByUsers(@Param("userID") int userID);
+
+    @Query("""
+    SELECT m FROM Message m
+    WHERE m.channel = :channel
+    ORDER BY m.dateMessage DESC
+    LIMIT 1
+    """)
+
+    Message findLastMessageByChannel(Channel channel);
 }

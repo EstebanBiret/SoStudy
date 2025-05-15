@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,14 +47,33 @@ public class ChannelController {
     @GetMapping("/")
     public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) {
         model.addAttribute("currentUri", request.getRequestURI());
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
 
-        userRepository.findById(1).ifPresent(user -> {
-            if (session.getAttribute("connectedUser") == null) {
-                session.setAttribute("connectedUser", user);
+        List<Channel> chans = ((User) session.getAttribute("user")).getSubscribedChannels();
+
+        if (chans.isEmpty()) {
+            model.addAttribute("NoChannel", "Vous n'avez pas encore de canal");
+            return "message/list_channel";
+        }
+
+        HashMap<Channel, Message> lastMessageMap = new HashMap<>();
+        HashMap<Channel, String> pathProfPicMap = new HashMap<>();
+
+        for (Channel channel : chans) {
+            if (channel.getUsers().size() == 2) {
+                pathProfPicMap.put(channel, channel.getUsers().stream()
+                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .findFirst()
+                        .map(User::getPersonImagePath)
+                        .orElse("images/profiles_pictures/defaultProfilePic.png"));
             }
-        });
+            Message lastMessage = channelRepository.findLastMessageByChannel(channel);
+            lastMessageMap.put(channel, lastMessage);
+        }
 
-        hasACanalAlreayd((User) session.getAttribute("connectedUser"));
+        model.addAttribute("profPic", pathProfPicMap);
+        model.addAttribute("lastMessageMap", lastMessageMap);
 
 
         return "message/list_channel";
@@ -71,14 +88,13 @@ public class ChannelController {
     public String createChannel(Model model, HttpServletRequest request, HttpSession session) {
         model.addAttribute("currentUri", request.getRequestURI());
 
-        User sessionUser = (User) session.getAttribute("connectedUser");
+        User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/login";
 
         User userConnected = userRepository.findById(sessionUser.getIdUser())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
 
         List<User> following = userConnected.getFollowing();
-        following.size();
 
         model.addAttribute("following", following);
         return "message/new_channel";
@@ -90,35 +106,55 @@ public class ChannelController {
      * @return a redirect to the list of channels
      */
     @PostMapping("/new")
-    public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session) {
+    public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        User sessionUser = (User) session.getAttribute("user");
+        if (sessionUser == null) return "redirect:/login";
+
         List<Integer> selectedUserIds = Arrays.stream(selectedUsersCsv.split(","))
                 .map(Integer::parseInt)
                 .toList();
 
         List<User> selectedUsers = new ArrayList<>();
-        Channel channel = new Channel();
-
         for (Integer id : selectedUserIds) {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
             selectedUsers.add(user);
+        }
+
+        // Check if a private channel already exists between the users
+        for (User user : selectedUsers) {
+            if (hasACanalAlreayd(sessionUser, user)) {
+                redirectAttributes.addFlashAttribute("error", "Un canal privé existe déjà entre vous et " + user.getPseudo());
+                return "redirect:/channels/new"; // Redirect to the list of channels if a private channel already exists
+            }
+        }
+
+        Channel channel = new Channel();
+        channel.setChannelName(
+                (selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))
+                        ? "Groupe de discussion de " + sessionUser.getPseudo()+", " + selectedUsers.stream()
+                        .map(User::getPseudo)
+                        .collect(Collectors.joining(", "))
+                        : selectedUsers.size() == 1
+                        ? selectedUsers.get(0).getPseudo()
+                        : channelName
+        );
+        channel.setChannelImagePath("default.png");
+        channel.setCreator(sessionUser);
+
+        channel = channelRepository.save(channel);
+
+        for (Integer id : selectedUserIds) {
+            User user = userRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+            user.getSubscribedChannels().add(channel);
+            userRepository.save(user);
+
             channel.addUser(user);
         }
 
-        User sessionUser = (User) session.getAttribute("connectedUser");
-        if (sessionUser == null) return "redirect:/login";
-
-        if ((selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))) {
-            channelName = "Groupe de discussion de " + selectedUsers.stream()
-                    .map(User::getPseudo)
-                    .collect(Collectors.joining(", "));
-        } else if (selectedUsers.size() == 1) {
-            channelName = selectedUsers.get(0).getPseudo();
-        }
-
-        channel.setChannelName(channelName);
-        channel.setChannelImagePath("default.png");
-        channel.setCreator(sessionUser);
+        sessionUser.getSubscribedChannels().add(channel);
+        userRepository.save(sessionUser);
 
         channel = channelRepository.save(channel);
 
@@ -132,7 +168,6 @@ public class ChannelController {
 
         channel.addMessage(message);
         channelRepository.save(channel);
-
 
         return "redirect:/channels/"; // Redirect to the list of channels after saving
     }
@@ -153,19 +188,9 @@ public class ChannelController {
      * @param user the user to check
      * @return true if the user has a channel, false otherwise
      */
-    public boolean hasACanalAlreayd(User user) {
-
-        List<User> listU = channelRepository.findUsersSharingChannelOfTwoWith(user.getIdUser());
-
-        if (listU.isEmpty()) {
-            System.out.println("No users found sharing channels with user ID: " + user.getIdUser());
-            return true;
-        }
-        for(User u : listU) {
-            System.out.println("User: " + u.getIdUser());
-        }
-
-        return false;
+    public boolean hasACanalAlreayd(User user, User user2) {
+        List<Channel> existing = channelRepository.findPrivateChannelBetween(user.getIdUser(), user2.getIdUser());
+        return !existing.isEmpty();
     }
 
 }

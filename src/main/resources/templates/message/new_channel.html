@@ -11,16 +11,25 @@
 </head>
 <body>
 <div th:replace="navbar :: navbar(${currentUri})"></div>
-<button onclick="openModal()">Ouvrir la modale</button>
 
+
+<div th:if="${error}" class="flash-message error" id="errorAlert">
+    <span th:text="${error}">Une erreur est survenue.</span>
+    <button class="close-btn" onclick="closeFlashMessage()">×</button>
+</div>
 
 <div class="centered-box">
     <input type="text" placeholder="Rechercher..." class="search-bar full">
 
     <ul class="full-card">
+
+        <li th:if="${following.isEmpty()}" style="list-style-type: none;">
+            <p class="no-user">Aucun utilisateur suivi.</p>
+        </li>
+
         <li class="user-card" th:each="user : ${following}">
             <div class="user-info">
-                <img src="https://via.placeholder.com/50x50" alt="User" class="user-photo">
+                <img th:src="${user.getPersonImagePath()}" alt="User" class="user-photo">
                 <div class="text-placeholder">
                     <h3 class="user-name" th:text="${user.getPseudo()}">Nom de l'utilisateur</h3>
                     <p class="user-description" th:text="${user.getBioUser()}">Description de l'utilisateur</p>
@@ -77,5 +86,6 @@
 </div>
 <script th:src="@{/js/modal.js}"></script>
 <script th:src="@{/js/new_conv.js}"></script>
+<script th:src="@{/js/flashMessage.js}"></script>
 </body>
 </html>
