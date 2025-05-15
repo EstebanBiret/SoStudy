@@ -79,11 +79,22 @@ public class IndexController {
     @GetMapping("/")
     public String index(HttpServletRequest request, Model model, HttpSession session) {
 
+        //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         User user = (User) session.getAttribute("user");
 
         List<User> abonnements = user.getFollowing();
+
+        //user has no following
+        if(abonnements.isEmpty()) {
+            model.addAttribute("posts", new ArrayList<>());
+            model.addAttribute("user", user);
+            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute("following", "empty");
+            return "index";
+        }
+        
         List<Post> posts = new ArrayList<>();
         
         for (User user2 : abonnements) {
