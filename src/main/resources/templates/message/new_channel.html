@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SoStudy</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/form_publish_post.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/modal.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/list_new_conv.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+<div th:replace="navbar :: navbar(${currentUri})"></div>
+<button onclick="openModal()">Ouvrir la modale</button>
+
+
+<div class="centered-box">
+    <input type="text" placeholder="Rechercher..." class="search-bar full">
+
+    <ul class="full-card">
+        <li class="user-card" th:each="user : ${following}">
+            <div class="user-info">
+                <img src="https://via.placeholder.com/50x50" alt="User" class="user-photo">
+                <div class="text-placeholder">
+                    <h3 class="user-name" th:text="${user.getPseudo()}">Nom de l'utilisateur</h3>
+                    <p class="user-description" th:text="${user.getBioUser()}">Description de l'utilisateur</p>
+                </div>
+            </div>
+            <input type="checkbox"
+                   class="checkbox"
+                   name="selectedUsers"
+                   th:value="${user.idUser}">
+        </li>
+    </ul>
+    <button class="btn confirm bottom" id="submitBtn" onclick="openModal()" disabled>Créer un canal de discussion</button>
+
+</div>
+
+
+
+<div class="modal-overlay" id="myModal">
+
+    <div class="modal" >
+        <div class="avatars">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="user1" class="avatar">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="user2" class="avatar">
+            <img src="https://randomuser.me/api/portraits/women/46.jpg" alt="user3" class="avatar">
+        </div>
+
+        <h2>Créer un nouveau canal de discussion</h2>
+        <p>Envoie un message pour démarrer la conversation !</p>
+
+        <form th:action="@{/channels/new}" method="post">
+
+            <div id="channelNameWrapper" style="display: none;">
+                <h4>Nom du channel</h4>
+                <div class="share-link">
+                    <input type="text" name="channelName" id="channelName" placeholder="Nom du groupe">
+                    <div class="copy-icon">💬</div>
+                </div>
+            </div>
+
+
+            <h4>Premier message</h4>
+            <div class="share-link">
+                <input type="text" id="firstMessage" name="firstMessage" placeholder="Premier Message" value="">
+                <div class="copy-icon">💬</div>
+            </div>
+            <input type="hidden" name="selectedUsers" id="selectedUsersInput">
+
+            <div class="buttons">
+                <button class="btn cancel" onclick="closeModal()">Annuler</button>
+                <input type="submit" class="btn confirm">
+            </div>
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/modal.js}"></script>
+<script th:src="@{/js/new_conv.js}"></script>
+</body>
+</html>
