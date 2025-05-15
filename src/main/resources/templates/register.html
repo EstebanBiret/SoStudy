@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SoStudy</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/register.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+    <div class="form">
+        <h1 class="title">S'inscrire</h1>
+
+
+
+        <form id="registerForm" action="/auth/register" method="post" enctype="multipart/form-data">
+
+            <div class="input-container ic1">
+                <input id="nom" class="input" type="text" name="nom" placeholder=" " required/>
+                <div class="cut"></div>
+                <label for="nom" class="placeholder">Nom</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="prenom" class="input" type="text" placeholder=" " name="prenom" required/>
+                <div class="cut"></div>
+                <label for="prenom" class="placeholder">Prenom</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="email" class="input" type="text" placeholder=" " name="email" required/>
+                <span id="emailCheck" class="error"></span>
+                <div class="cut"></div>
+                <label for="email" class="placeholder">Email</label>
+            </div>
+            <div th:if="${emailError} == true">
+                <p style="color:red;"> Erreur : Cette adresse mail est déjà utilisée</p>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="pseudo" class="input" type="text" placeholder=" " name="pseudo" required/>
+                <span id="pseudoCheck" class="error"></span>
+                <div class="cut"></div>
+                <label for="pseudo" class="placeholder">Pseudo</label>
+            </div>
+            <div th:if="${pseudoError} == true" class="error">
+                <p> Erreur : Ce pseudo est déjà utilisé</p>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="password" class="input" type="password" placeholder=" " name="password" required/>
+                <div class="cut"></div>
+                <label for="password" class="placeholder">Mot de passe</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="birthdate" class="input" type="date" placeholder=" " name="birthdate" required/>
+                <div class="cut"></div>
+                <label for="birthdate" class="placeholder">Date de naissance</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="bioUser" class="input" type="text" placeholder=" " name="bioUser"/>
+                <div class="cut"></div>
+                <label for="bioUser" class="placeholder">Bio</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="image" class="input" type="file" placeholder=" " name="image"/>
+                <div class="cut"></div>
+                <label for="image" class="placeholder">Photo de profil</label>
+            </div>
+
+            <button type="submit" class="submit">Confirmer</button>
+        </form>
+    </div>
+</body>
+<script src="/js/registerValidation.js"></script>
+</html>

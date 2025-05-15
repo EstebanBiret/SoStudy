@@ -1,10 +1,22 @@
 package m1.miage.sostudy.controller;
 
+
+import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.repository.UserRepo;
+import m1.miage.sostudy.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 
 /**
@@ -13,6 +25,17 @@ import org.mindrot.jbcrypt.BCrypt;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+
+    /**
+     * User repository for database operations.
+     */
+    @Autowired
+    private UserRepo userRepo;
+
+    /**
+     * Path for uploading files.
+     */
+    private final String UPLOAD_DIR = "./src/main/resources/static/images/profiles_pictures/";
 
     /**
      * Displays the login page.
@@ -42,9 +65,8 @@ public class AuthController {
      * @return the name of the view to be rendered
      */
     @GetMapping("/register")
-    public String register() {
-        // Logic to display the registration page
-        return "register"; // Return the name of the view (e.g., Thymeleaf template)
+    public String register(Model model) {
+        return "register.html";
     }
 
     /**
@@ -53,9 +75,43 @@ public class AuthController {
      * @return a redirect to the login page
      */
     @PostMapping("/register")
-    public String registerUser() {
-        // Logic to register the user
-        return "redirect:/auth/login"; // Redirect to the login page after successful registration
+    public String registerUser(Model model, @RequestParam("nom") String nom,
+                               @RequestParam("prenom") String prenom,
+                               @RequestParam("pseudo") String pseudo,
+                               @RequestParam("email") String email,
+                               @RequestParam("password") String password,
+                               @RequestParam("birthdate") String birthdate,
+                               @RequestParam("bioUser") String bio,
+                               @RequestParam("image") MultipartFile image)throws IOException {
+
+        String fileName = null;
+        if (!image.isEmpty()) {
+            fileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        }else{
+            fileName = "defaultProfilePic.jpg";
+            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+        }
+        boolean error = false;
+        // Check if the email and pseudo already exist
+        if (checkEmailExists(email)) {
+            model.addAttribute("emailError", true);
+            error = true;
+        }
+        if (checkPseudoExists(pseudo)) {
+            model.addAttribute("pseudoError", true);
+            error = true;
+        }
+        if(error){
+            return "register.html";
+        }
+
+        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
+        userRepo.save(user);
+
+        return "redirect:/"; // Redirect to the login page after successful registration
     }
 
     /**
@@ -92,4 +148,49 @@ public class AuthController {
         // Check if the password matches the hashed password
         return BCrypt.checkpw(password, hashed);
     }
+
+    /**
+     * Check if the email already exists in the database.
+     * @param email the email to check
+     * @return true if the email exists, false otherwise
+     */
+    public boolean checkEmailExists(String email) {
+        // Check if the email already exists in the database
+        return userRepo.findByEmail(email) != null;
+    }
+
+    /**
+     * Check if the pseudo already exists in the database.
+     * @param pseudo the pseudo to check
+     * @return true if the pseudo exists, false otherwise
+     */
+    public boolean checkPseudoExists(String pseudo) {
+        // Check if the pseudo already exists in the database
+        return userRepo.findByPseudo(pseudo) != null;
+    }
+
+    /**
+     * Check if the email is already taken.
+     * @param email the email to check
+     * @return true if the email is taken, false otherwise
+     */
+    @GetMapping("/check-email")
+    @ResponseBody
+    public boolean checkEmail(@RequestParam("email") String email) {
+        return !checkEmailExists(email); // true si email est libre
+    }
+
+
+    /**
+     * Check if the pseudo is already taken.
+     * @param pseudo the pseudo to check
+     * @return true if the pseudo is taken, false otherwise
+     */
+    @GetMapping("/check-pseudo")
+    @ResponseBody
+    public boolean checkPseudo(@RequestParam("pseudo") String pseudo) {
+        return !checkPseudoExists(pseudo); // true si pseudo est libre
+    }
+
+
 }

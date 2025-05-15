@@ -10,4 +10,22 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepo extends JpaRepository<User, Integer> {
+
+    /**
+     * Finds a User by their pseudo.
+     *
+     * @param pseudo the pseudo of the user
+     * @return the User entity if found, null otherwise
+     */
+    User findByPseudo(String pseudo);
+
+    /**
+     * Finds a User by their email.
+     *
+     * @param email the email of the user
+     * @return the User entity if found, null otherwise
+     */
+    User findByEmail(String email);
 }
+
+
