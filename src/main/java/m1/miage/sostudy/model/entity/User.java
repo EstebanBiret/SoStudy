@@ -28,7 +28,7 @@ public class User extends Person {
     /**
      * List of the users that the user is following.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "id_user_following"),
             inverseJoinColumns = @JoinColumn(name = "id_user_followed"))
@@ -37,7 +37,7 @@ public class User extends Person {
     /**
      * List of the users that are following the user.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "followers",
             joinColumns = @JoinColumn(name = "id_user_followed"),
             inverseJoinColumns = @JoinColumn(name = "id_user_following"))
@@ -46,7 +46,7 @@ public class User extends Person {
     /**
      * List of the channels that the user is subscribed to.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "channel_suscribed",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
