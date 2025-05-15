@@ -20,7 +20,6 @@ import m1.miage.sostudy.model.entity.Community;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.CommunityRepository;
-import m1.miage.sostudy.repository.UserRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +29,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,9 +43,6 @@ public class PostController {
     
     @Autowired
     private CommunityRepository communityRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * Path for uploading files.

@@ -15,7 +15,6 @@ import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
-import m1.miage.sostudy.repository.UserRepository;
 
 import org.springframework.ui.Model;
 
@@ -31,12 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-    
-    /**
-     * Autowired UserRepository
-     */
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * Autowired UserPostReactionRepository

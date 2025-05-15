@@ -2,7 +2,6 @@ package m1.miage.sostudy.repository;
 
 import m1.miage.sostudy.model.entity.Channel;
 import m1.miage.sostudy.model.entity.Message;
-import m1.miage.sostudy.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

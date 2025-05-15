@@ -8,7 +8,6 @@ import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 import m1.miage.sostudy.repository.UserRepository;
-import m1.miage.sostudy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,7 +52,7 @@ public class UserController {
             return"redirect:/auth/login";
         }
         model.addAttribute("currentUri", request.getRequestURI());
-        return "profile.html";
+        return "profile";
     }
 
     /**
@@ -71,17 +70,16 @@ public class UserController {
 
         User userProfile = userRepository.findByPseudo(pseudo);
         if (userProfile == null) {
-            System.out.println("User not found: " + pseudo);
             return "redirect:/";
         }
         model.addAttribute("userProfile", userProfile);
         model.addAttribute("currentUri", request.getRequestURI());
 
         List<Post> posts = new ArrayList<>();
-        for (Post post : userProfile.getCreatedPosts()) {
+        for (Post post : userRepository.findByPseudo(pseudo).getCreatedPosts()) {
             posts.add(post);
         }
-        for(Post post2 : userProfile.getRepostedPosts()) {
+        for(Post post2 : userRepository.findByPseudo(pseudo).getRepostedPosts()) {
             posts.add(post2);
         }
 
@@ -128,11 +126,11 @@ public class UserController {
             return date2.compareTo(date1);
         });
 
-        List<Post> reposts = userProfile.getRepostedPosts();
+        List<Post> reposts = userRepository.findByPseudo(pseudo).getRepostedPosts();
         model.addAttribute("reposts", reposts);
         model.addAttribute("posts", posts);
 
-        return "profile.html";
+        return "profile";
     }
 
     /**

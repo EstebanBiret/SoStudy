@@ -244,6 +244,7 @@ public class DataInitializer implements CommandLineRunner {
         user2Post2.setCommunity(community2);
         user2Post2 = postRepository.save(user2Post2);
         
+        //TODO modifier la façon des reposts ce ne sont pas des posts
         // Création des posts repostés
         Post repost1 = new Post();
         repost1.setPostPublicationDate("2025-01-05");
