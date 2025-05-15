@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  * Repository interface for Channel entity.
  */
 @Repository
-public interface ChannelRepo extends JpaRepository<Channel, Integer> {
+public interface ChannelRepository extends JpaRepository<Channel, Integer> {
 
     /**
      * Find a Channel by its channel name.
@@ -18,4 +18,11 @@ public interface ChannelRepo extends JpaRepository<Channel, Integer> {
      */
     Channel findByChannelName(String channelName);
 
+    /**
+     * Find a Channel by its id.
+     *
+     * @param id the id of the channel
+     * @return the Channel entity if found, otherwise null
+     */
+    Channel findById(int id);
 }

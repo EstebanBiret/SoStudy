@@ -19,13 +19,13 @@ public class PostTest {
     void testConstructorWithParameters() {
         String date = "2024-01-01";
         String content = "Hello world";
-        String mediaUrl = "http://example.com/media.png";
+        String mediaPath = "http://example.com/media.png";
 
-        Post post = new Post(date, content, mediaUrl);
+        Post post = new Post(date, content, mediaPath);
 
-        assertEquals(date, post.getPublicationDate());
-        assertEquals(content, post.getContent());
-        assertEquals(mediaUrl, post.getMediaURL());
+        assertEquals(date, post.getPostPublicationDate());
+        assertEquals(content, post.getPostContent());
+        assertEquals(mediaPath, post.getPostMediaPath());
     }
 
     /**
@@ -130,18 +130,18 @@ public class PostTest {
     @Test
     void testGetContent() {
         Post post = new Post();
-        post.setContent("content");
-        assertEquals(post.getContent(), "content");
+        post.setPostContent("content");
+        assertEquals(post.getPostContent(), "content");
     }
 
     /**
-     * Test the getMediaURL method
+     * Test the getMediaPath method
      */
     @Test
-    void testGetMediaURL() {
+    void testGetMediaPath() {
         Post post = new Post();
-        post.setMediaURL("mediaURL");
-        assertEquals(post.getMediaURL(), "mediaURL");
+        post.setPostMediaPath("mediaPath");
+        assertEquals(post.getPostMediaPath(), "mediaPath");
     }
 
     /**
@@ -160,8 +160,8 @@ public class PostTest {
     @Test
     void testGetPublicationDate() {
         Post post = new Post();
-        post.setPublicationDate("publicationDate");
-        assertEquals(post.getPublicationDate(), "publicationDate");
+        post.setPostPublicationDate("publicationDate");
+        assertEquals(post.getPostPublicationDate(), "publicationDate");
     }
 
     /**
@@ -192,18 +192,18 @@ public class PostTest {
     @Test
     void testSetContent() {
         Post post = new Post();
-        post.setContent("content");
-        assertEquals(post.getContent(), "content");
+        post.setPostContent("content");
+        assertEquals(post.getPostContent(), "content");
     }
 
     /**
-     * Test the setMediaURL method
+     * Test the setMediaPath method
      */
     @Test
-    void testSetMediaURL() {
+    void testSetMediaPath() {
         Post post = new Post();
-        post.setMediaURL("mediaURL");
-        assertEquals(post.getMediaURL(), "mediaURL");
+        post.setPostMediaPath("mediaPath");
+        assertEquals(post.getPostMediaPath(), "mediaPath");
     }
 
     /**
@@ -212,7 +212,52 @@ public class PostTest {
     @Test
     void testSetPublicationDate() {
         Post post = new Post();
-        post.setPublicationDate("publicationDate");
-        assertEquals(post.getPublicationDate(), "publicationDate");
+        post.setPostPublicationDate("publicationDate");
+        assertEquals(post.getPostPublicationDate(), "publicationDate");
+    }
+
+    /**
+     * Test the setCommunity method
+     */
+    @Test
+    void testSetCommunity() {
+        Post post = new Post();
+        Community community = new Community();
+        post.setCommunity(community);
+        assertEquals(post.getCommunity(), community);
+    }
+
+    /**
+     * Test the setUser method
+     */
+    @Test
+    void testSetUser() {
+        Post post = new Post();
+        User user = new User();
+        post.setUser(user);
+        assertEquals(post.getUser(), user);
+    }
+
+    /**
+     * Test the addRepost method
+     */
+    @Test
+    void testAddRepost() {
+        Post post = new Post();
+        User user = new User();
+        post.addRepost(user);
+        assertEquals(post.getReposts().size(), 1);
+    }
+
+    /**
+     * Test the removeRepost method
+     */
+    @Test
+    void testRemoveRepost() {
+        Post post = new Post();
+        User user = new User();
+        post.addRepost(user);
+        post.removeRepost(user);
+        assertEquals(post.getReposts().size(), 0);
     }
 }

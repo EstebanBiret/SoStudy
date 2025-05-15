@@ -30,96 +30,94 @@ public class User extends Person {
      */
     @ManyToMany
     @JoinTable(name = "following",
-            joinColumns = @JoinColumn(name = "idUser_following"),
-            inverseJoinColumns = @JoinColumn(name = "idUser_followed"))
-    private List<User> following = new ArrayList();
+            joinColumns = @JoinColumn(name = "id_user_following"),
+            inverseJoinColumns = @JoinColumn(name = "id_user_followed"))
+    private List<User> following = new ArrayList<>();
 
     /**
      * List of the users that are following the user.
      */
     @ManyToMany
     @JoinTable(name = "followers",
-            joinColumns = @JoinColumn(name = "idUser_followed"),
-            inverseJoinColumns = @JoinColumn(name = "idUser_following"))
-    private List<User> followers = new ArrayList();
+            joinColumns = @JoinColumn(name = "id_user_followed"),
+            inverseJoinColumns = @JoinColumn(name = "id_user_following"))
+    private List<User> followers = new ArrayList<>();
 
     /**
      * List of the channels that the user is subscribed to.
      */
     @ManyToMany
     @JoinTable(name = "channel_suscribed",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idChannel"))
-    private List<Channel> subscribedChannels = new ArrayList();
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+    private List<Channel> subscribedChannels = new ArrayList<>();
 
     /**
      * List of the channels that the user is creator of.
      */
     @OneToMany
     @JoinColumn(name = "channelId")
-    private List<Channel> createdChannels = new ArrayList();
+    private List<Channel> createdChannels = new ArrayList<>();
 
     /**
      * List of the posts that the user has created.
      */
     @OneToMany
     @JoinColumn(name = "postId")
-    private List<Post> createdPosts = new ArrayList();
+    private List<Post> createdPosts = new ArrayList<>();
 
     /**
      * List of the posts that the user has reposted.
      */
     @ManyToMany
     @JoinTable(name = "reposted_posts",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idChannel"))
-    private List<Post> repostedPosts = new ArrayList();
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private List<Post> repostedPosts = new ArrayList<>();
 
     /**
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany
     @JoinTable(name = "subscribed_communities",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idCommunity"))
-    private List<Community> subscribedCommunities = new ArrayList();
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_community"))
+    private List<Community> subscribedCommunities = new ArrayList<>();
 
     /**
      * List of the communities that the user is creator of.
      */
     @OneToMany
-    @JoinColumn(name = "idCommunity")
-    private List<Community> createdCommunities = new ArrayList();
+    @JoinColumn(name = "communityId")
+    private List<Community> createdCommunities = new ArrayList<>();
 
     /**
      * List of the events that the user is subscribed to.
      */
     @ManyToMany
     @JoinTable(name = "subscribed_events",
-            joinColumns = @JoinColumn(name = "idUser"),
-            inverseJoinColumns = @JoinColumn(name = "idEvent"))
-    private List<Event> subscribedEvents = new ArrayList();
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_event"))
+    private List<Event> subscribedEvents = new ArrayList<>();
 
     /**
      * List of the events that the user is creator of.
      */
     @OneToMany
-    @JoinColumn(name = "idEvent")
-    private List<Event> createdEvents = new ArrayList();
+    @JoinColumn(name = "eventId")
+    private List<Event> createdEvents = new ArrayList<>();
 
     /**
      * List of the messages that the user has sent.
      */
     @OneToMany
     @JoinColumn(name = "messageId")
-    private List<Message> sentMessages = new ArrayList();
+    private List<Message> sentMessages = new ArrayList<>();
 
     /**
-     * List of the messages that the user has received.
+     * Default constructor for the User class.
      */
-    public User() {
-        super();
-    }
+    public User() {super();}
 
     /**
      * Constructor for the User class.
@@ -130,11 +128,11 @@ public class User extends Person {
      * @param password            Password of the user.
      * @param pseudo              Pseudo of the user.
      * @param birthDate           Birth date of the user.
-     * @param urlProfilePicture   URL of the profile picture of the user.
+     * @param personImagePath   Path of the image of the profile picture of the user.
      * @param bioUser             Biography of the user.
      */
-    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String urlProfilePicture, String bioUser) {
-        super(name, firstName, email, password,pseudo, birthDate, urlProfilePicture);
+    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath, String bioUser) {
+        super(name, firstName, email, password,pseudo, birthDate, personImagePath);
         this.bioUser = bioUser;
     }
 

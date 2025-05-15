@@ -199,4 +199,14 @@ class UserTest {
         otherUser.setIdUser(user.getIdUser()+1);
         assertNotEquals(user, otherUser);
     }
+
+    /**
+     * Test hashcode method of the User class.
+     */
+    @Test
+    void testHashCode() {
+        User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio");
+        otherUser.setIdUser(user.getIdUser()+1);
+        assertNotEquals(user.hashCode(), otherUser.hashCode());
+    }
 }

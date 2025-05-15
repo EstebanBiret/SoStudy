@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface for Message entity.
- * This interface extends JpaRepository to provide CRUD operations for Message entities.
  */
 @Repository
-public interface MessageRepo extends JpaRepository<Message, Integer> {
-
+public interface MessageRepository extends JpaRepository<Message, Integer> {
 }

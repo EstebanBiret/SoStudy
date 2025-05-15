@@ -22,17 +22,17 @@ public class Post {
     /**
      * The publication date of the post
      */
-    private String publicationDate;
+    private String postPublicationDate;
 
     /**
      * The content of the post
      */
-    private String content;
+    private String postContent;
 
     /**
-     * The URL of the media of the post, can be null
+     * Path of the image of the post, can be null
      */
-    private String mediaURL;
+    private String postMediaPath;
 
     /**
      * The post that is commented (the actual post object is a comment), can be null
@@ -47,11 +47,28 @@ public class Post {
     @OneToMany(mappedBy = "commentFather", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> comments = new ArrayList<>();
 
-    /*TODO 
-        ajouter lien vers communauté 0..1
-        ajouter lien vers User 1
-        ajouter lien vers User 0..*
-    */
+    /**
+     * The community to which the post belongs
+     */
+    @ManyToOne
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    /**
+     * The user who created the post
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    /**
+     * The list of users who reposted the post
+     */
+    @ManyToMany
+    @JoinTable(name = "reposted_posts",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> reposts = new ArrayList<>();
 
     /**
      * Default constructor
@@ -61,14 +78,14 @@ public class Post {
     /**
      * Constructor with parameters
      * 
-     * @param publicationDate the publication date of the post
-     * @param content the content of the post
-     * @param mediaURL the URL of the media of the post, can be null
+     * @param postPublicationDate the publication date of the post
+     * @param postContent the content of the post
+     * @param postMediaPath the path of the image of the post, can be null
      */
-    public Post(String publicationDate, String content, String mediaURL) {
-        this.publicationDate = publicationDate;
-        this.content = content;
-        this.mediaURL = mediaURL;
+    public Post(String postPublicationDate, String postContent, String postMediaPath) {
+        this.postPublicationDate = postPublicationDate;
+        this.postContent = postContent;
+        this.postMediaPath = postMediaPath;
     }
 
     /**
@@ -87,37 +104,37 @@ public class Post {
      * Getter for the publication date of the post
      * @return the publication date of the post
      */
-    public String getPublicationDate() {return publicationDate;}
+    public String getPostPublicationDate() {return postPublicationDate;}
 
     /**
      * Setter for the publication date of the post
-     * @param publicationDate the publication date of the post
+     * @param postPublicationDate the publication date of the post
      */
-    public void setPublicationDate(String publicationDate) {this.publicationDate = publicationDate;}
+    public void setPostPublicationDate(String postPublicationDate) {this.postPublicationDate = postPublicationDate;}
 
     /**
      * Getter for the content of the post
      * @return the content of the post
      */
-    public String getContent() {return content;}
+    public String getPostContent() {return postContent;}
 
     /**
      * Setter for the content of the post
-     * @param content the content of the post
+     * @param postContent the content of the post
      */
-    public void setContent(String content) {this.content = content;}
+    public void setPostContent(String postContent) {this.postContent = postContent;}
 
     /**
-     * Getter for the media URL of the post
-     * @return the media URL of the post
+     * Getter for the media path of the post
+     * @return the media path of the post
      */
-    public String getMediaURL() {return mediaURL;}
+    public String getPostMediaPath() {return postMediaPath;}
 
     /**
-     * Setter for the media URL of the post
-     * @param mediaURL the media URL of the post
+     * Setter for the media path of the post
+     * @param postMediaPath the media path of the post
      */
-    public void setMediaURL(String mediaURL) {this.mediaURL = mediaURL;}
+    public void setPostMediaPath(String postMediaPath) {this.postMediaPath = postMediaPath;}
 
     /**
      * Getter for the comment father of the post
@@ -143,9 +160,47 @@ public class Post {
      */
     public void setComments(List<Post> comments) {this.comments = comments;}
 
-    /*
-     * TODO getters setters pour les nouveaux attributs
+    /**
+     * Getter for the community of the post
+     * @return the community of the post
      */
+    public Community getCommunity() {return community;}
+
+    /**
+     * Setter for the community of the post
+     * @param community the community of the post
+     */
+    public void setCommunity(Community community) {this.community = community;}
+
+    /**
+     * Getter for the user of the post
+     * @return the user of the post
+     */
+    public User getUser() {return user;}
+
+    /**
+     * Setter for the user of the post
+     * @param user the user of the post
+     */
+    public void setUser(User user) {this.user = user;}
+
+    /**
+     * Getter for the list of users who reposted the post
+     * @return the list of users who reposted the post
+     */
+    public List<User> getReposts() {return reposts;}
+
+    /**
+     * Add a user to the list of users who reposted the post
+     * @param user the user to add
+     */
+    public void addRepost(User user) {this.reposts.add(user);}
+
+    /**
+     * Remove a user from the list of users who reposted the post
+     * @param user the user to remove
+     */
+    public void removeRepost(User user) {this.reposts.remove(user);}
 
     /**
      * Redefinition of the equals method
@@ -170,5 +225,4 @@ public class Post {
      */
     @Override
     public int hashCode() {return postId == null ? 0 : postId.hashCode();}
-
 }

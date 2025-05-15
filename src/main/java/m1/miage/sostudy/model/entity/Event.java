@@ -17,7 +17,6 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int eventId;
 
-
     /**
      * Name of the event
      */
@@ -59,7 +58,7 @@ public class Event {
      * List of users who are interested in the event
      */
     @ManyToMany
-    @JoinTable(name = "event_user", joinColumns = @JoinColumn(name = "id_event"), inverseJoinColumns = @JoinColumn(name = "id_user"))
+    @JoinTable(name = "event_users", joinColumns = @JoinColumn(name = "id_event"), inverseJoinColumns = @JoinColumn(name = "id_user"))
     private java.util.List<User> usersInterested;
 
     /**

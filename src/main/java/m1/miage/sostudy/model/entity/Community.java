@@ -2,6 +2,7 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,9 +30,9 @@ public class Community {
     private String communityCreationDate;
 
     /**
-     * URL of the community picture
+     * Path of the image of the community
      */
-    private String cmmunityImagePath;
+    private String communityImagePath;
 
     /**
      * Description of the community
@@ -49,32 +50,31 @@ public class Community {
      * List of users who are members of the community
      */
     @ManyToMany
-    @JoinTable(name = "community_user", joinColumns = @JoinColumn(name = "id_community"), inverseJoinColumns = @JoinColumn(name = "id_user"))
-    private List<User> usersMembers;
+    @JoinTable(name = "community_users", joinColumns = @JoinColumn(name = "id_community"), inverseJoinColumns = @JoinColumn(name = "id_user"))
+    private List<User> usersMembers = new ArrayList<>();
 
     /**
      * List of posts of the community
      */
-    //@OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
-    //private List<Post> posts;
+    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
     /**
      * Constructor of the Community class
      */
-    public Community() {
+    public Community() {}
 
-    }
     /**
      * Constructor of the Community class
      * @param communityName
      * @param communityCreationDate
-     * @param cmmunityImagePath
+     * @param communityImagePath
      * @param communityDescription
      */
-    public Community(String communityName, String communityCreationDate, String cmmunityImagePath, String communityDescription) {
+    public Community(String communityName, String communityCreationDate, String communityImagePath, String communityDescription) {
         this.communityName = communityName;
         this.communityCreationDate = communityCreationDate;
-        this.cmmunityImagePath = cmmunityImagePath;
+        this.communityImagePath = communityImagePath;
         this.communityDescription = communityDescription;
     }
 
@@ -83,14 +83,14 @@ public class Community {
      * @param communityId
      * @param communityName
      * @param communityCreationDate
-     * @param cmmunityImagePath
+     * @param communityImagePath
      * @param communityDescription
      */
-    public Community(int communityId, String communityName, String communityCreationDate, String cmmunityImagePath, String communityDescription) {
+    public Community(int communityId, String communityName, String communityCreationDate, String communityImagePath, String communityDescription) {
         this.communityId = communityId;
         this.communityName = communityName;
         this.communityCreationDate = communityCreationDate;
-        this.cmmunityImagePath = cmmunityImagePath;
+        this.communityImagePath = communityImagePath;
         this.communityDescription = communityDescription;
         
     }
@@ -133,15 +133,15 @@ public class Community {
     /**
      * Getters and Setters
      */
-    public String getCmmunityImagePath() {
-        return cmmunityImagePath;
+    public String getCommunityImagePath() {
+        return communityImagePath;
     }
 
     /**
      * Getters and Setters
      */
-    public void setCmmunityImagePath(String urlCommunityPicture) {
-        this.cmmunityImagePath = urlCommunityPicture;
+    public void setCommunityImagePath(String communityImagePath) {
+        this.communityImagePath = communityImagePath;
     }
 
     /**
@@ -205,32 +205,32 @@ public class Community {
     /**
      * Getters and Setters
      */
-    /*public List<Post> getPosts() {
+    public List<Post> getPosts() {
         return posts;
-    }*/
+    }
 
     /**
      * Getters and Setters
      */
-    /*public void setPosts(List<Post> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
-    }*/
+    }
 
     /**
      * Add a post to the list of posts of the community
      * @param post the post to add
      */
-    /*public void addPost(Post post) {
+    public void addPost(Post post) {
         this.posts.add(post);
-    }*/
+    }
 
     /**
      * Remove a post from the list of posts of the community
      * @param post the post to remove
      */
-    /*public void removePost(Post post) {
+    public void removePost(Post post) {
         this.posts.remove(post);
-    }*/
+    }
 
     /**
      * Override the hashCode method
@@ -243,11 +243,11 @@ public class Community {
         result = prime * result + communityId;
         result = prime * result + ((communityName == null) ? 0 : communityName.hashCode());
         result = prime * result + ((communityCreationDate == null) ? 0 : communityCreationDate.hashCode());
-        result = prime * result + ((cmmunityImagePath == null) ? 0 : cmmunityImagePath.hashCode());
+        result = prime * result + ((communityImagePath == null) ? 0 : communityImagePath.hashCode());
         result = prime * result + ((communityDescription == null) ? 0 : communityDescription.hashCode());
         result = prime * result + ((userCreator == null) ? 0 : userCreator.hashCode());
         result = prime * result + ((usersMembers == null) ? 0 : usersMembers.hashCode());
-        //result = prime * result + ((posts == null) ? 0 : posts.hashCode());
+        result = prime * result + ((posts == null) ? 0 : posts.hashCode());
         return result;
     }
 
@@ -277,10 +277,10 @@ public class Community {
                 return false;
         } else if (!communityCreationDate.equals(other.communityCreationDate))
             return false;
-        if (cmmunityImagePath == null) {
-            if (other.cmmunityImagePath != null)
+        if (communityImagePath == null) {
+            if (other.communityImagePath != null)
                 return false;
-        } else if (!cmmunityImagePath.equals(other.cmmunityImagePath))
+        } else if (!communityImagePath.equals(other.communityImagePath))
             return false;
         if (communityDescription == null) {
             if (other.communityDescription != null)
