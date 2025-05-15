@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 import m1.miage.sostudy.repository.UserRepository;
@@ -81,8 +83,9 @@ public class IndexController {
         //TODO retirer quand flavien aura mis en place login logout register ------
         User user = userRepository.findById(1).get();
         session.setAttribute("user", user);
+        //-------------------------------------------------------------------------
 
-        List<User> abonnements = user.getFollowers();
+        List<User> abonnements = user.getFollowing();
         List<Post> posts = new ArrayList<>();
         
         for (User user2 : abonnements) {
@@ -97,7 +100,32 @@ public class IndexController {
 
         // Ajouter les réactions pour chaque post
         for (Post post : posts) {
-            post.setReactions(userPostReactionRepository.findByPost_PostId(post.getPostId()));
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            post.setReactions(reactions);
+            
+            // Compter les réactions par type
+            long likeCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE)
+                .count();
+            long loveCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE)
+                .count();
+            long laughCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH)
+                .count();
+            long cryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY)
+                .count();
+            long angryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
+                .count();
+
+            // Stocker les compteurs dans le post
+            post.setLikeCount(likeCount);
+            post.setLoveCount(loveCount);
+            post.setLaughCount(laughCount);
+            post.setCryCount(cryCount);
+            post.setAngryCount(angryCount);
         }
 
         // Tri des posts pour avoir les plus récents en premier
@@ -113,6 +141,8 @@ public class IndexController {
         //--------------------
 
         //if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        //--------------------
         return "index";
     }
 

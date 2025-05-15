@@ -4,11 +4,11 @@ package m1.miage.sostudy.model.enums;
  * Enum representing the type of reaction
  */
 public enum ReactionType {
-    LIKE("Like", "src/main/resources/images/reactions/like.png"),
-    LOVE("Love", "src/main/resources/images/reactions/love.png"),
-    LAUGH("Laugh", "src/main/resources/images/reactions/laugh.png"),
-    CRY(" Cry", "src/main/resources/images/reactions/cry.png"),
-    ANGRY("Angry", "src/main/resources/images/reactions/angry.png");
+    LIKE("Like", "/images/reactions/like.png"),
+    LOVE("Love", "/images/reactions/love.png"),
+    LAUGH("Laugh", "/images/reactions/laugh.png"),
+    CRY(" Cry", "/images/reactions/cry.png"),
+    ANGRY("Angry", "/images/reactions/angry.png");
 
     /**
      * The name of the reaction

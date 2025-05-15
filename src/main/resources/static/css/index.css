@@ -100,17 +100,36 @@ body {
 
 .reaction-btn {
     background: none;
-    border: none;
+    border: 1px solid #e0e0e0;
     color: #666;
     font-size: 0.9em;
     cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 5px;
-    transition: color 0.2s;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+    justify-content: center;
+}
+
+.reaction-btn span {
+    font-size: 1.1em;
+    color: #888;
+    font-weight: bold;
 }
 
 .reaction-btn:hover {
     color: #007bff;
+    border-color: #007bff;
+    transform: scale(1.05);
+}
+
+.reaction-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }
 
 .post-stats {
@@ -131,7 +150,7 @@ body {
     background-color: #f0f0f0;
     border: none;
     border-radius: 4px;
-    padding: 0.5rem 1rem;
+    padding: .8rem 1rem;
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.2s;

@@ -22,7 +22,7 @@
                         <p th:text="${post.formattedDate}"></p>
                     </div>
                     <button class="repost-btn">
-                        <img th:src="@{/images/logos/repost.svg}" alt="Repost" class="repost-icon" style="width: 20px; height: 20px;">
+                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
                         Reposter
                     </button>
                 </div>
@@ -34,15 +34,30 @@
                 </div>
                 <div class="post-actions">
                     <div class="reaction-buttons">
-                        <button class="reaction-btn">Like</button>
-                        <button class="reaction-btn">Love</button>
-                        <button class="reaction-btn">Laugh</button>
-                        <button class="reaction-btn">Cry</button>
-                        <button class="reaction-btn">Angry</button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                            <span th:text="${post.likeCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                            <span th:text="${post.loveCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                            <span th:text="${post.laughCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                            <span th:text="${post.cryCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                            <span th:text="${post.angryCount}">0</span>
+                        </button>
                     </div>
                     <div class="post-stats">
-                        <span th:text="${post.reactions.size()}">0</span> réactions
-                        <span th:text="${post.comments.size()}">0</span> commentaires
+                        <span th:text="${post.reactions.size()}">0</span> réaction(s)
+                        <span th:text="${post.comments.size()}">0</span> commentaire(s)
                     </div>
                 </div>
             </div>
