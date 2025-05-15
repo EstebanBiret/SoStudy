@@ -239,25 +239,145 @@ public class PostTest {
     }
 
     /**
-     * Test the addRepost method
+     * Test of getReactions method
      */
     @Test
-    void testAddRepost() {
+    void testGetReactions() {
         Post post = new Post();
-        User user = new User();
-        post.addRepost(user);
-        assertEquals(post.getReposts().size(), 1);
+        List<UserPostReaction> reactions = new ArrayList<>();
+        post.setReactions(reactions);
+        assertEquals(post.getReactions(), reactions);
     }
 
     /**
-     * Test the removeRepost method
+     * Test of setReactions method
      */
     @Test
-    void testRemoveRepost() {
+    void testSetReactions() {
         Post post = new Post();
-        User user = new User();
-        post.addRepost(user);
-        post.removeRepost(user);
-        assertEquals(post.getReposts().size(), 0);
+        List<UserPostReaction> reactions = new ArrayList<>();
+        post.setReactions(reactions);
+        assertEquals(post.getReactions(), reactions);
     }
+
+    /**
+     * Test of getLikeCount method
+     */
+    @Test
+    void testGetLikeCount() {
+        Post post = new Post();
+        post.setLikeCount(1);
+        assertEquals(post.getLikeCount(), 1);
+    }
+
+    /**
+     * Test of setLikeCount method
+     */
+    @Test
+    void testSetLikeCount() {
+        Post post = new Post();
+        post.setLikeCount(1);
+        assertEquals(post.getLikeCount(), 1);
+    }
+
+    /**
+     * Test of getLoveCount method
+     */
+    @Test
+    void testGetLoveCount() {
+        Post post = new Post();
+        post.setLoveCount(1);
+        assertEquals(post.getLoveCount(), 1);
+    }
+
+    /**
+     * Test of setLoveCount method
+     */
+    @Test
+    void testSetLoveCount() {
+        Post post = new Post();
+        post.setLoveCount(1);
+        assertEquals(post.getLoveCount(), 1);
+    }
+
+    /**
+     * Test of getLaughCount method
+     */
+    @Test
+    void testGetLaughCount() {
+        Post post = new Post();
+        post.setLaughCount(1);
+        assertEquals(post.getLaughCount(), 1);
+    }
+
+    /**
+     * Test of setLaughCount method
+     */
+    @Test
+    void testSetLaughCount() {
+        Post post = new Post();
+        post.setLaughCount(1);
+        assertEquals(post.getLaughCount(), 1);
+    }
+
+    /**
+     * Test of getCryCount method
+     */
+    @Test
+    void testGetCryCount() {
+        Post post = new Post();
+        post.setCryCount(1);
+        assertEquals(post.getCryCount(), 1);
+    }
+
+    /**
+     * Test of setCryCount method
+     */
+    @Test
+    void testSetCryCount() {
+        Post post = new Post();
+        post.setCryCount(1);
+        assertEquals(post.getCryCount(), 1);
+    }
+
+    /**
+     * Test of getAngryCount method
+     */
+    @Test
+    void testGetAngryCount() {
+        Post post = new Post();
+        post.setAngryCount(1);
+        assertEquals(post.getAngryCount(), 1);
+    }
+
+    /**
+     * Test of setAngryCount method
+     */
+    @Test
+    void testSetAngryCount() {
+        Post post = new Post();
+        post.setAngryCount(1);
+        assertEquals(post.getAngryCount(), 1);
+    }
+
+    /**
+     * Test of getFormattedDate method
+     */
+    @Test
+    void testGetFormattedDate() {
+        Post post = new Post();
+        post.setFormattedDate("formattedDate");
+        assertEquals(post.getFormattedDate(), "formattedDate");
+    }
+
+    /**
+     * Test of setFormattedDate method
+     */
+    @Test
+    void testSetFormattedDate() {
+        Post post = new Post();
+        post.setFormattedDate("formattedDate");
+        assertEquals(post.getFormattedDate(), "formattedDate");
+    }
+
 }

@@ -67,6 +67,7 @@ public class IndexController {
      *
      * @param request the HttpServletRequest object
      * @param model the Model object
+     * @param session the HttpSession object
      * @return the name of the view to be rendered
      */
     @GetMapping("/")

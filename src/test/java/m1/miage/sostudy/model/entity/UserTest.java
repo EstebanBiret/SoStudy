@@ -30,7 +30,6 @@ class UserTest {
         assertNotNull(user.getSubscribedChannels());
         assertNotNull(user.getCreatedChannels());
         assertNotNull(user.getCreatedPosts());
-        assertNotNull(user.getRepostedPosts());
         assertNotNull(user.getSubscribedCommunities());
         assertNotNull(user.getCreatedCommunities());
         assertNotNull(user.getSubscribedEvents());
@@ -110,19 +109,6 @@ class UserTest {
 
         user.removeCreatedPost(post);
         assertFalse(user.getCreatedPosts().contains(post));
-    }
-
-    /**
-     * Test the add and remove methods for reposted posts.
-     */
-    @Test
-    void testRepostedPosts() {
-        Post post = new Post();
-        user.addRepostedPost(post);
-        assertTrue(user.getRepostedPosts().contains(post));
-
-        user.removeRepostedPost(post);
-        assertFalse(user.getRepostedPosts().contains(post));
     }
 
     /**

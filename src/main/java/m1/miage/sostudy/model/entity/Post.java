@@ -62,15 +62,6 @@ public class Post {
     private User user;
 
     /**
-     * The list of users who reposted the post
-     */
-    @ManyToMany
-    @JoinTable(name = "reposted_posts",
-        joinColumns = @JoinColumn(name = "post_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> reposts = new ArrayList<>();
-
-    /**
      * The list of reactions to the post
      */
     @Transient
@@ -215,24 +206,6 @@ public class Post {
     public void setUser(User user) {this.user = user;}
 
     /**
-     * Getter for the list of users who reposted the post
-     * @return the list of users who reposted the post
-     */
-    public List<User> getReposts() {return reposts;}
-
-    /**
-     * Add a user to the list of users who reposted the post
-     * @param user the user to add
-     */
-    public void addRepost(User user) {this.reposts.add(user);}
-
-    /**
-     * Remove a user from the list of users who reposted the post
-     * @param user the user to remove
-     */
-    public void removeRepost(User user) {this.reposts.remove(user);}
-
-    /**
      * Getter for the list of reactions to the post
      * @return the list of reactions to the post
      */
@@ -243,24 +216,6 @@ public class Post {
      * @param reactions the list of reactions to the post
      */
     public void setReactions(List<UserPostReaction> reactions) {this.reactions = reactions;}
-
-    /**
-     * Gets the formatted date of the post
-     *
-     * @return the formatted date of the post
-     */
-    public String getFormattedDate() {
-        return formattedDate;
-    }
-
-    /**
-     * Sets the formatted date of the post
-     *
-     * @param formattedDate the formatted date of the post
-     */
-    public void setFormattedDate(String formattedDate) {
-        this.formattedDate = formattedDate;
-    }
 
     /**
      * Gets the count of like reactions
@@ -350,6 +305,22 @@ public class Post {
      */
     public void setAngryCount(long angryCount) {
         this.angryCount = angryCount;
+    }
+
+    /**
+     * Gets the formatted date of the post
+     * @return the formatted date of the post
+     */
+    public String getFormattedDate() {
+        return formattedDate;
+    }
+
+    /**
+     * Sets the formatted date of the post
+     * @param formatPostDate the formatted date of the post
+     */
+    public void setFormattedDate(String formatPostDate) {
+        this.formattedDate = formatPostDate;
     }
 
     /**

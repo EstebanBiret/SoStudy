@@ -198,7 +198,7 @@ class EventTest {
     }
 
     /**
-     * test the equals method
+     * Test the equals method
      */
     @Test
     void testEquals() {
@@ -208,7 +208,7 @@ class EventTest {
     }
 
     /**
-     * test the hashCode method
+     * Test the hashCode method
      */
     @Test
     void testHashCode() {
@@ -216,4 +216,18 @@ class EventTest {
         final Event event2 = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
         Assertions.assertEquals(event1.hashCode(), event2.hashCode());
     }
+    /**
+     * Test of removeUserInterested method
+     */
+    @Test
+    void testRemoveUserInterested() {
+        final User user = new User();
+        Event e = new Event(ID_EVENT, SUBJECT_EVENT, DATE_PUBLICATION_EVENT, CONTENT_EVENT, DATE_START_EVENT, DATE_END_EVENT, LOCATION_EVENT);
+        e.addUserInterested(user);
+        e.removeUserInterested(user);
+        final List<User> expected = List.of();
+        final List<User> actual = e.getUsersInterested();
+        Assertions.assertEquals(expected, actual);
+    }
+
 }

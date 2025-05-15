@@ -31,6 +31,13 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
      */
     Channel findById(int id);
 
+    /**
+     * Find all private channels between two users.
+     *
+     * @param userId the id of the first user
+     * @param user2Id the id of the second user
+     * @return the list of private channels between the two users
+     */
     @Query("""
     SELECT c FROM Channel c
     JOIN c.users u
@@ -40,6 +47,12 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
 """)
     List<Channel> findPrivateChannelBetween(@Param("userId") int userId, @Param("user2Id") int user2Id);
 
+    /**
+     * Find all channels subscribed by a user.
+     *
+     * @param userID the id of the user
+     * @return the list of channels subscribed by the user
+     */
     @Query("""
     SELECT c FROM User u
     JOIN u.subscribedChannels c
@@ -47,12 +60,17 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
 """)
     List<Channel> findByUsers(@Param("userID") int userID);
 
+    /**
+     * Find the last message of a channel.
+     *
+     * @param channel the channel
+     * @return the last message of the channel
+     */
     @Query("""
     SELECT m FROM Message m
     WHERE m.channel = :channel
     ORDER BY m.dateMessage DESC
     LIMIT 1
     """)
-
     Message findLastMessageByChannel(Channel channel);
 }

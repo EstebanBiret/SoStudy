@@ -16,30 +16,65 @@ import static m1.miage.sostudy.controller.AuthController.hashPassword;
 @Component
 public class DataInitializer implements CommandLineRunner {
     
+    /**
+     * User repository for database operations
+     */
     @Autowired
     private UserRepository userRepository;
     
+    /**
+     * Community repository for database operations
+     */
     @Autowired
     private CommunityRepository communityRepository;
     
+    /**
+     * Post repository for database operations
+     */
     @Autowired
     private PostRepository postRepository;
     
+    /**
+     * Event repository for database operations
+     */
     @Autowired
     private EventRepository eventRepository;
     
+    /**
+     * Message repository for database operations
+     */
     @Autowired
     private MessageRepository messageRepository;
     
+    /**
+     * Reaction repository for database operations
+     */
     @Autowired
     private ReactionRepository reactionRepository;
     
+    /**
+     * UserPostReaction repository for database operations
+     */
     @Autowired
     private UserPostReactionRepository userPostReactionRepository;
     
+    /**
+     * Channel repository for database operations
+     */
     @Autowired
     private ChannelRepository channelRepository;
+
+    /**
+     * Repost repository for database operations
+     */
+    @Autowired
+    private RepostRepository repostRepository;
     
+    /**
+     * Run the data initializer
+     * @param args the arguments
+     * @throws Exception if an error occurs
+     */
     @Override
     public void run(String... args) throws Exception {
         // Vérifier si les données existent déjà
@@ -246,14 +281,8 @@ public class DataInitializer implements CommandLineRunner {
         
         //TODO modifier la façon des reposts ce ne sont pas des posts
         // Création des posts repostés
-        Post repost1 = new Post();
-        repost1.setPostPublicationDate("2025-01-05");
-        repost1.setPostContent("J'ai trouvé ce tutoriel super utile !");
-        repost1.setUser(user3);
-        repost1.setCommunity(community2);
-        repost1.setCommentFather(post2);
-
-        // Ajouter le repost à la liste de reposts de l'utilisateur
+        Repost repost1 = new Repost(user3, post2, "2025-01-05", "J'ai trouvé ce tutoriel super utile !");
+        repost1 = repostRepository.save(repost1);
 
         // Création de nouveaux posts pour l'utilisateur 2
         Post post5 = new Post();
@@ -293,25 +322,8 @@ public class DataInitializer implements CommandLineRunner {
         post8 = postRepository.save(post8);
         post9 = postRepository.save(post9);
 
-        // Sauvegarde du repost
-        repost1 = postRepository.save(repost1);
-
-        Post repost2 = new Post();
-        repost2.setPostPublicationDate("2025-01-06");
-        repost2.setPostContent("Je partage ce post car je rencontre les mêmes problèmes avec Spring");
-        repost2.setUser(user1);
-        repost2.setCommunity(community2);
-        repost2.setCommentFather(post3);
-
-        // Ajouter le repost à la liste de reposts de l'utilisateur
-        user1.getRepostedPosts().add(repost2);
-
-        // Sauvegarde du repost
-        repost2 = postRepository.save(repost2);
-
-        // Sauvegarder les utilisateurs avec leurs reposts
-        userRepository.save(user3);
-        userRepository.save(user1);
+        Repost repost2 = new Repost(user1, post3, "2025-01-06", "Je partage ce post car je rencontre les mêmes problèmes avec Spring");
+        repost2 = repostRepository.save(repost2);
 
         // Création des réactions
         Reaction reaction1 = new Reaction(ReactionType.LIKE);

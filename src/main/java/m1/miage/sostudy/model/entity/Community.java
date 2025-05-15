@@ -66,10 +66,10 @@ public class Community {
 
     /**
      * Constructor of the Community class
-     * @param communityName
-     * @param communityCreationDate
-     * @param communityImagePath
-     * @param communityDescription
+     * @param communityName the name of the community
+     * @param communityCreationDate the creation date of the community
+     * @param communityImagePath the path of the image of the community
+     * @param communityDescription the description of the community
      */
     public Community(String communityName, String communityCreationDate, String communityImagePath, String communityDescription) {
         this.communityName = communityName;
@@ -80,11 +80,11 @@ public class Community {
 
     /**
      * Constructor of the Community class
-     * @param communityId
-     * @param communityName
-     * @param communityCreationDate
-     * @param communityImagePath
-     * @param communityDescription
+     * @param communityId the id of the community
+     * @param communityName the name of the community
+     * @param communityCreationDate the creation date of the community
+     * @param communityImagePath the path of the image of the community
+     * @param communityDescription the description of the community
      */
     public Community(int communityId, String communityName, String communityCreationDate, String communityImagePath, String communityDescription) {
         this.communityId = communityId;
@@ -96,91 +96,104 @@ public class Community {
     }
 
     /**
-     * Getters and Setters
+     * Get the id of the community
+     * @return the id of the community
      */
     public int getCommunityId() {
         return communityId;
     }
 
     /**
-     * Getters and Setters
+     * Get the name of the community
+     * @return the name of the community
      */
     public String getCommunityName() {
         return communityName;
     }
 
     /**
-     * Getters and Setters
+     * Set the name of the community
+     * @param nameCommunity the name of the community
      */
     public void setCommunityName(String nameCommunity) {
         this.communityName = nameCommunity;
     }
 
     /**
-     * Getters and Setters
+     * Get the creation date of the community
+     * @return the creation date of the community
      */
     public String getCommunityCreationDate() {
         return this.communityCreationDate;
     }
 
     /**
-     * Getters and Setters
+     * Set the creation date of the community
+     * @param dateCreationCommunity the creation date of the community
      */
     public void setCommunityCreationDate(String dateCreationCommunity) {
         this.communityCreationDate = dateCreationCommunity;
     }
 
     /**
-     * Getters and Setters
+     * Get the path of the image of the community
+     * @return the path of the image of the community
      */
     public String getCommunityImagePath() {
         return communityImagePath;
     }
 
     /**
-     * Getters and Setters
+     * Set the path of the image of the community
+     * @param communityImagePath the path of the image of the community
      */
     public void setCommunityImagePath(String communityImagePath) {
         this.communityImagePath = communityImagePath;
     }
 
     /**
-     * Getters and Setters
+     * Get the description of the community
+     * @return the description of the community
      */
     public String getCommunityDescription() {
         return communityDescription;
     }
 
     /**
-     * Getters and Setters
+     * Set the description of the community
+     * @param descriptionCommunity the description of the community
      */
     public void setCommunityDescription(String descriptionCommunity) {
         this.communityDescription = descriptionCommunity;
     }
 
     /**
-     * Getters and Setters
+     * Get the user who created the community
+     * @return the user who created the community
      */
     public User getUserCreator() {
         return userCreator;
     }
 
     /**
-     * Getters and Setters
+     * Set the user who created the community
+     * @param userCreator the user who created the community
      */
     public void setUserCreator(User userCreator) {
         this.userCreator = userCreator;
     }
 
     /**
-     * Getters and Setters
+     * Get the list of users who are members of the community
+     * @return the list of users who are members of the community
      */
     public List<User> getUsersMembers() {
         return usersMembers;
     }
 
     /**
-     * Getters and Setters
+     * Set the list of users who are members of the community
+     * @param usersMembers the list of users who are members of the community
      */
     public void setUsersMembers(List<User> usersMembers) {
         this.usersMembers = usersMembers;
@@ -203,14 +216,16 @@ public class Community {
     }
 
     /**
-     * Getters and Setters
+     * Get the list of posts of the community
+     * @return the list of posts of the community
      */
     public List<Post> getPosts() {
         return posts;
     }
 
     /**
-     * Getters and Setters
+     * Set the list of posts of the community
+     * @param posts the list of posts of the community
      */
     public void setPosts(List<Post> posts) {
         this.posts = posts;
@@ -253,50 +268,14 @@ public class Community {
 
     /**
      * Override the equals method
-     * @param obj the object to compare with
+     * @param o the object to compare with
      * @return true if the objects are equal, false otherwise
      */
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Community other = (Community) obj;
-        if (communityId != other.communityId)
-            return false;
-        if (communityName == null) {
-            if (other.communityName != null)
-                return false;
-        } else if (!communityName.equals(other.communityName))
-            return false;
-        if (communityCreationDate == null) {
-            if (other.communityCreationDate != null)
-                return false;
-        } else if (!communityCreationDate.equals(other.communityCreationDate))
-            return false;
-        if (communityImagePath == null) {
-            if (other.communityImagePath != null)
-                return false;
-        } else if (!communityImagePath.equals(other.communityImagePath))
-            return false;
-        if (communityDescription == null) {
-            if (other.communityDescription != null)
-                return false;
-        } else if (!communityDescription.equals(other.communityDescription))
-            return false;
-        if (userCreator == null) {
-            if (other.userCreator != null)
-                return false;
-        } else if (!userCreator.equals(other.userCreator))
-            return false;
-        if (usersMembers == null) {
-            if (other.usersMembers != null)
-                return false;
-        } else if (!usersMembers.equals(other.usersMembers))
-            return false;
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Community community = (Community) o;
+        return communityId == community.communityId;
     }
 }

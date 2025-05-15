@@ -93,11 +93,13 @@ public class PostController {
 
     /**
      * Publish a new post.
-     *
-     * @param post the post object
+     * @param post the post to publish
+     * @param communityId the id of the community
+     * @param image the image of the post
      * @param request the HttpServletRequest object
      * @param session the HttpSession object
      * @return the redirect URL
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/publish")
     public String publishPost(@ModelAttribute Post post,
@@ -124,6 +126,7 @@ public class PostController {
         }
     
         // if we have attached an image to the post, we save it
+        //TODO si j'ai le temps mettre une taille max de l'image sinon erreur 413
         String fileName = null;
         if (!image.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
@@ -141,7 +144,9 @@ public class PostController {
     /**
      * Edit a post
      * @param id the id of the post
-     * @param model the model
+     * @param request the HttpServletRequest object
+     * @param model the Model object
+     * @param session the HttpSession object
      * @return the edit post page (form)
      */
     @GetMapping("/edit/{id}")
@@ -155,6 +160,8 @@ public class PostController {
      * Update a post
      * @param id the id of the post
      * @param post the post to update
+     * @param request the HttpServletRequest object
+     * @param session the HttpSession object
      * @return the post details page
      */
     @PostMapping("/edit/{id}")
@@ -167,6 +174,8 @@ public class PostController {
     /**
      * Delete a post
      * @param id the id of the post
+     * @param request the HttpServletRequest object
+     * @param session the HttpSession object
      * @return the home page (feed)
      */
     @GetMapping("/delete/{id}")

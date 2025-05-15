@@ -3,9 +3,12 @@ package m1.miage.sostudy.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Post;
+import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.enums.ReactionType;
+import m1.miage.sostudy.repository.PostRepository;
+import m1.miage.sostudy.repository.RepostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 import m1.miage.sostudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,18 @@ public class UserController {
     private UserPostReactionRepository userPostReactionRepository;
 
     /**
+     * Autowired RepostRepository
+     */
+    @Autowired
+    private RepostRepository repostRepository;
+
+    /**
+     * Autowired PostRepository
+     */
+    @Autowired
+    private PostRepository postRepository;
+
+    /**
      * Displays the user profile page.
      * @param model the model to be used in the view
      * @param session the HTTP session
@@ -57,6 +72,7 @@ public class UserController {
 
     /**
      * Displays the user profile page for a specific user identified by their pseudo.
+     * @param pseudo the pseudo of the user
      * @param model the model to be used in the view
      * @param session the HTTP session
      * @param request the HTTP request
@@ -76,11 +92,11 @@ public class UserController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         List<Post> posts = new ArrayList<>();
-        for (Post post : userRepository.findByPseudo(pseudo).getCreatedPosts()) {
+        for (Post post : postRepository.findByUser_IdUser(userProfile.getIdUser())) {
             posts.add(post);
         }
-        for(Post post2 : userRepository.findByPseudo(pseudo).getRepostedPosts()) {
-            posts.add(post2);
+        for(Repost repost : repostRepository.findByUser(userProfile)) {
+            posts.add(repost.getOriginalPost());
         }
 
         //format date
@@ -126,7 +142,10 @@ public class UserController {
             return date2.compareTo(date1);
         });
 
-        List<Post> reposts = userRepository.findByPseudo(pseudo).getRepostedPosts();
+        List<Post> reposts = new ArrayList<>();
+        for(Repost repost : repostRepository.findByUser(userProfile)) {
+            reposts.add(repost.getOriginalPost());
+        }
         model.addAttribute("reposts", reposts);
         model.addAttribute("posts", posts);
 
