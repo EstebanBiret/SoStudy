@@ -191,7 +191,7 @@ public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession
     model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
     model.addAttribute("repostDisplays", repostDisplays);
     model.addAttribute("postMediaExistsMap", postMediaExistsMap);
-    model.addAttribute("repostedPostIds", repostedPostIds); // ✅ ajouté
+    model.addAttribute("repostedPostIds", repostedPostIds);
 
     return "profile";
 }

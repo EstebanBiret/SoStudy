@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Post;
+import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.entity.dto.RepostDisplay;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.RepostRepository;
@@ -134,9 +136,11 @@ public class IndexController {
         }
         
         List<Post> posts = new ArrayList<>();
-        
+        List<Repost> reposts = new ArrayList<>();
+
         for (User user2 : abonnements) {
             posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
+            reposts.addAll(repostRepository.findByUser(user2));
         }
 
         //if user has following but they have no posts
@@ -184,6 +188,12 @@ public class IndexController {
             post.setAngryCount(angryCount);
         }
 
+        // Map of post media presence
+        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+        for (Post post : posts) {
+            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+        }
+
         //handle repost
         Map<Integer, Boolean> repostedPostIds = new HashMap<>();
         for (Post post : posts) {
@@ -193,10 +203,47 @@ public class IndexController {
             repostedPostIds.put(post.getPostId(), hasReposted);
         }
 
-        //check if post media exists
-        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
-        for (Post post : posts) {
-            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+        List<RepostDisplay> repostDisplays = new ArrayList<>();
+
+        for (Repost repost : reposts) {
+
+
+            // Format repost date
+            LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
+            repost.setFormattedDate(formatRepostDate(repostDate));
+
+            Post original = repost.getOriginalPost();
+            
+            // Format date
+            LocalDate postDate = LocalDate.parse(original.getPostPublicationDate());
+            original.setFormattedDate(formatPostDate(postDate));
+
+            // Ajout des réactions
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(original.getPostId());
+            original.setReactions(reactions);
+
+            long likeCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count();
+            long loveCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count();
+            long laughCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count();
+            long cryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count();
+            long angryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count();
+
+            original.setLikeCount(likeCount);
+            original.setLoveCount(loveCount);
+            original.setLaughCount(laughCount);
+            original.setCryCount(cryCount);
+            original.setAngryCount(angryCount);
+
+            //check if post media exists
+            postMediaExistsMap.put(original.getPostId(), postMediaExists(original.getPostMediaPath()));
+
+            repostDisplays.add(new RepostDisplay(repost, original));
+
         }
 
         // sort posts by date
@@ -211,6 +258,7 @@ public class IndexController {
         model.addAttribute("user", user);
         model.addAttribute("repostedPostIds", repostedPostIds);
         model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("repostDisplays", repostDisplays);
 
         return "index";
     }

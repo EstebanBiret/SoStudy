@@ -23,16 +23,15 @@ function submitRepost(event) {
     })
     .then(res => {
         if (res.ok) {
-            // Mise à jour dynamique du bouton
-            const repostBtn = document.getElementById("repost-btn-" + currentPostId);
-            if (repostBtn) {
-                repostBtn.outerHTML = `
+            // Mise à jour dynamique du bouton / des boutons
+           document.querySelectorAll(`.repost-btn[data-post-id="${currentPostId}"]`).forEach(btn => {
+                btn.outerHTML = `
                     <button type="button" class="repost-btn" id="unrepost-btn-${currentPostId}" data-post-id="${currentPostId}" onclick="submitUnrepost(this)">
                         <img src="/images/logos/unrepost.png" alt="Unrepost" class="repost-icon">
                         Ne plus reposter
                     </button>
                 `;
-            }
+            });
             closeRepostModal();
         } else {
             alert("Erreur lors du repost");
@@ -49,21 +48,23 @@ function submitUnrepost(button) {
     })
     .then(res => {
         if (res.ok) {
-            // Mise à jour dynamique du bouton
-            const unrepostBtn = document.getElementById("unrepost-btn-" + postId);
-            if (unrepostBtn) {
-                unrepostBtn.outerHTML = `
+
+            // Mettre à jour tous les boutons correspondant à ce postId
+            document.querySelectorAll(`.repost-btn[data-post-id="${postId}"]`).forEach(btn => {
+                btn.outerHTML = `
                     <button type="button" class="repost-btn" id="repost-btn-${postId}" data-post-id="${postId}" onclick="openRepostModal(this)">
                         <img src="/images/logos/repost.png" alt="Repost" class="repost-icon">
                         Reposter
                     </button>
                 `;
-            }
+            });
 
-            // Supprimer le repost dans le profil de l'user connecté
-            const repostElement = document.getElementById('repost-wrapper-' + repostId);
-            if (repostElement) {
-                repostElement.remove();
+            // Supprimer visuellement le repost de l’utilisateur connecté (si c’est sa propre action)
+            if (repostId) {
+                const repostElement = document.getElementById('repost-wrapper-' + repostId);
+                if (repostElement) {
+                    repostElement.remove();
+                }
             }
 
         } else {
