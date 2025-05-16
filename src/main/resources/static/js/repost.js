@@ -67,6 +67,12 @@ function submitUnrepost(button) {
                 }
             }
 
+            //retirer un au nombre de post de l'user connecté
+            const userPostsCount = document.getElementById('user-posts-count');
+            if (userPostsCount) {
+                userPostsCount.textContent = parseInt(userPostsCount.textContent) - 1;
+            }
+
         } else {
             alert("Erreur lors du unrepost");
         }
