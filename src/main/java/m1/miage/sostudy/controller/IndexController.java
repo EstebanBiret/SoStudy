@@ -109,6 +109,21 @@ public class IndexController {
     }
 
     /**
+     * Counts all comments of a post recursively (comments + replies to comment etc.)
+     * @param post the post to count comments for
+     * @return the total number of comments
+     */
+    public static int countAllComments(Post post) {
+        if (post.getComments() == null) return 0;
+        int total = post.getComments().size();
+        for (Post comment : post.getComments()) {
+            total += countAllComments(comment); //recursive !
+        }
+        return total;
+    }
+
+
+    /**
      * Displays the index page.
      *
      * @param request the HttpServletRequest object
@@ -139,7 +154,7 @@ public class IndexController {
         List<Repost> reposts = new ArrayList<>();
 
         for (User user2 : abonnements) {
-            posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
+            posts.addAll(postRepository.findByUser_IdUserAndCommentFatherIsNull(user2.getIdUser()));
             reposts.addAll(repostRepository.findByUser(user2));
         }
 
@@ -263,6 +278,14 @@ public class IndexController {
             LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
             return date2.compareTo(date1);
         });
+
+        //count comments for each post
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        for (Post post : posts) {
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        model.addAttribute("postCommentCounts", postCommentCounts);
+
         
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);

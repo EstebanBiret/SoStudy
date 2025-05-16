@@ -106,8 +106,8 @@
                             </button>
                         </div>
                         <div class="post-stats">
-                            <span th:text="${post.reactions.size()}">0</span> réaction(s)
-                            <span th:text="${post.comments.size()}">0</span> commentaire(s)
+                            <!-- TODO ajouter icon pour commentaires et repost et ajouter nb de reposts -->
+                            <span th:text="${postCommentCounts[post.postId]}">0</span> commentaire(s)
                             <span th:href= "@{/post/{postId}(postId=${post.postId})}">Voir le post</span>
                         </div>
                     </div>
@@ -193,8 +193,7 @@
                                     </button>
                                 </div>
                                 <div class="post-stats">
-                                    <span th:text="${repostDisplay.originalPost.reactions.size()}">0</span> réaction(s)
-                                    <span th:text="${repostDisplay.originalPost.comments.size()}">0</span> commentaire(s)
+                                    <span th:text="${postCommentCounts[repostDisplay.originalPost.postId]}">0</span> commentaire(s)
                                     <span th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}">Voir le post</span>
                                 </div>
                             </div>

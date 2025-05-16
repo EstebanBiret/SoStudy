@@ -112,7 +112,7 @@ public class UserController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         // --- GET POSTS ---
-        List<Post> posts = postRepository.findByUser_IdUser(userProfile.getIdUser());
+        List<Post> posts = postRepository.findByUser_IdUserAndCommentFatherIsNull(userProfile.getIdUser());
 
         for (Post post : posts) {
             // Format date
@@ -148,6 +148,13 @@ public class UserController {
 
         // Sort posts
         posts.sort((p1, p2) -> LocalDate.parse(p2.getPostPublicationDate()).compareTo(LocalDate.parse(p1.getPostPublicationDate())));
+
+        //count comments for each post
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        for (Post post : posts) {
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        model.addAttribute("postCommentCounts", postCommentCounts);
 
         // --- GET REPOSTS ---
         List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
