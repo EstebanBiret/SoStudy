@@ -47,7 +47,7 @@ public class User extends Person {
      * List of the channels that the user is subscribed to.
      */
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "channel_suscribed",
+    @JoinTable(name = "subscribed_channels",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
     private List<Channel> subscribedChannels = new ArrayList<>();

@@ -120,8 +120,8 @@ class CommunityTest {
     void testGetUsersMembers() {
         final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
         List<User> users = new ArrayList<>(List.of(user));
-        community.setUsersMembers(users);
-        Assertions.assertEquals(user, community.getUsersMembers().get(0));
+        community.setUsers(users);
+        Assertions.assertEquals(user, community.getUsers().get(0));
     }
 
     /**
@@ -131,8 +131,8 @@ class CommunityTest {
     void testSetUserMembers() {
         final List<User> expected = new ArrayList<>();
         expected.add(new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio"));
-        community.setUsersMembers(expected);
-        Assertions.assertEquals(expected, community.getUsersMembers());
+        community.setUsers(expected);
+        Assertions.assertEquals(expected, community.getUsers());
     }
 
     /**
@@ -167,25 +167,25 @@ class CommunityTest {
     }
 
     /**
-     * Tests the addUserMember method.
+     * Tests the addUser method.
      */
     @Test
-    void testAddUserMember() {
+    void testAddUser() {
         final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
-        community.setUsersMembers(new ArrayList<>());
-        community.addUserMember(user);
-        Assertions.assertEquals(user, community.getUsersMembers().get(0));
+        community.setUsers(new ArrayList<>());
+        community.addUser(user);
+        Assertions.assertEquals(user, community.getUsers().get(0));
     }
 
     /**
-     * Tests the removeUserMember method.
+     * Tests the removeUser method.
      */
     @Test
-    void testRemoveUserMember() {
+    void testRemoveUser() {
         final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
-        community.setUsersMembers(new ArrayList<>(List.of(user)));
-        community.removeUserMember(user);
-        Assertions.assertTrue(community.getUsersMembers().isEmpty());
+        community.setUsers(new ArrayList<>(List.of(user)));
+        community.removeUser(user);
+        Assertions.assertTrue(community.getUsers().isEmpty());
     }
 
     /**

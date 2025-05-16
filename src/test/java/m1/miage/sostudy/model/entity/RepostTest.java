@@ -153,4 +153,44 @@ public class RepostTest {
         Assertions.assertNotNull(repost);
     }
 
+    /**
+     * Test of getFormattedDate method.
+     */
+    @Test
+    void testGetFormattedDate() {
+        Repost repost = new Repost();
+        repost.setFormattedDate("2025-01-05");
+        Assertions.assertEquals("2025-01-05", repost.getFormattedDate());
+    }
+
+    /**
+     * Test of setFormattedDate method.
+     */
+    @Test
+    void testSetFormattedDate() {
+        Repost repost = new Repost();
+        repost.setFormattedDate("test");
+        Assertions.assertEquals("test", repost.getFormattedDate());
+    }
+
+    /**
+     * Test of getRepostContent method.
+     */
+    @Test
+    void testGetRepostContent() {
+        Repost repost = new Repost();
+        repost.setRepostContent("test");
+        Assertions.assertEquals("test", repost.getRepostContent());
+    }
+
+    /**
+     * Test of setRepostContent method.
+     */
+    @Test
+    void testSetRepostContent() {
+        Repost repost = new Repost();
+        repost.setRepostContent("test");
+        Assertions.assertEquals("test", repost.getRepostContent());
+    }
+
 }

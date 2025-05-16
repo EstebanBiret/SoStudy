@@ -1,6 +1,9 @@
 package m1.miage.sostudy.model.entity.dto;
 
 import m1.miage.sostudy.model.entity.Repost;
+
+import java.util.Objects;
+
 import m1.miage.sostudy.model.entity.Post;
 
 /**
@@ -17,6 +20,11 @@ public class RepostDisplay {
      * The original post
      */
     private Post originalPost;
+
+    /**
+     * Default constructor
+     */
+    public RepostDisplay() {}
 
     /**
      * Constructor
@@ -42,5 +50,40 @@ public class RepostDisplay {
      */
     public Post getOriginalPost() {
         return originalPost;
+    }
+
+    /**
+     * Sets the repost
+     * @param repost the repost
+     */
+    public void setRepost(Repost repost) {
+        this.repost = repost;
+    }
+
+    /**
+     * Sets the original post
+     * @param originalPost the original post
+     */
+    public void setOriginalPost(Post originalPost) {
+        this.originalPost = originalPost;
+    }
+
+    /**
+     * Test the equals method
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RepostDisplay that)) return false;
+        return Objects.equals(repost, that.repost) &&
+        Objects.equals(originalPost, that.originalPost);
+    }
+
+    /**
+     * Test the hashCode method
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(repost, originalPost);
     }
 }

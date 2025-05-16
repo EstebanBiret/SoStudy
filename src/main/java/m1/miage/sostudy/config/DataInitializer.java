@@ -145,12 +145,12 @@ public class DataInitializer implements CommandLineRunner {
         community2.setUserCreator(user2);
 
         // Ajout des membres aux communautés
-        community1.getUsersMembers().add(user1);
-        community1.getUsersMembers().add(user2);
-        community1.getUsersMembers().add(user3);
-        community2.getUsersMembers().add(user1);
-        community2.getUsersMembers().add(user2);
-        community2.getUsersMembers().add(user3);
+        community1.getUsers().add(user1);
+        community1.getUsers().add(user2);
+        community1.getUsers().add(user3);
+        community2.getUsers().add(user1);
+        community2.getUsers().add(user2);
+        community2.getUsers().add(user3);
 
         // Sauvegarde des communautés avec leurs membres
         community1 = communityRepository.save(community1);
@@ -175,8 +175,10 @@ public class DataInitializer implements CommandLineRunner {
         event1.setUserCreator(user1);
         
         // Ajout des utilisateurs intéressés par l'événement
-        event1.addUserInterested(user2);
-        event1.addUserInterested(user3);
+        event1.addUser(user2);
+        event1.addUser(user3);
+        user2.getSubscribedEvents().add(event1);
+        user3.getSubscribedEvents().add(event1);
         event1 = eventRepository.save(event1);
         
         // Création d'un autre événement
@@ -190,8 +192,10 @@ public class DataInitializer implements CommandLineRunner {
         event2.setUserCreator(user2);
         
         // Ajout des utilisateurs intéressés par le deuxième événement
-        event2.addUserInterested(user1);
-        event2.addUserInterested(user3);
+        event2.addUser(user1);
+        event2.addUser(user3);
+        user1.getSubscribedEvents().add(event2);
+        user3.getSubscribedEvents().add(event2);
         event2 = eventRepository.save(event2);
 
         // Création des posts
@@ -468,6 +472,8 @@ public class DataInitializer implements CommandLineRunner {
         user1.addFollowing(user3);
         user2.addFollowers(user1);
         user2.addFollowing(user1);
+        user3.addFollowing(user2);
+        user2.addFollowers(user3);
         userRepository.save(user1);
         userRepository.save(user2);
         userRepository.save(user3);
