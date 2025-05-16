@@ -42,6 +42,7 @@ function submitRepost(event) {
 
 function submitUnrepost(button) {
     const postId = button.getAttribute("data-post-id");
+    const repostId = button.getAttribute('data-repost-id');
 
     fetch("/repost/delete/" + postId, {
         method: "POST"
@@ -58,6 +59,13 @@ function submitUnrepost(button) {
                     </button>
                 `;
             }
+
+            // Supprimer le repost dans le profil de l'user connecté
+            const repostElement = document.getElementById('repost-wrapper-' + repostId);
+            if (repostElement) {
+                repostElement.remove();
+            }
+
         } else {
             alert("Erreur lors du unrepost");
         }

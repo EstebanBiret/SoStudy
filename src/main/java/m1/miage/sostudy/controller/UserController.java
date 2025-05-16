@@ -6,6 +6,7 @@ import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.entity.dto.RepostDisplay;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.RepostRepository;
@@ -19,11 +20,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import static m1.miage.sostudy.controller.IndexController.*;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static m1.miage.sostudy.controller.IndexController.formatPostDate;
+import java.util.Map;
 
 /**
  * UserController handles user-related requests.
@@ -54,6 +59,20 @@ public class UserController {
     @Autowired
     private PostRepository postRepository;
 
+
+    /**
+     * Checks if a post media file exists
+     * @param mediaPath the path of the media file
+     * @return true if the media file exists, false otherwise
+     */
+    public boolean postMediaExists(String mediaPath) {
+        if (mediaPath == null) return false;
+        try {
+            return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
+        } catch (Exception e) {
+            return false;
+        }
+    }
     /**
      * Displays the user profile page.
      * @param model the model to be used in the view
@@ -79,78 +98,104 @@ public class UserController {
      * @return the name of the user profile view
      */
     @GetMapping("/{pseudo}")
-    public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
+public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
 
-        User userProfile = userRepository.findByPseudo(pseudo);
-        if (userProfile == null) {
-            return "redirect:/";
-        }
-        model.addAttribute("userProfile", userProfile);
-        model.addAttribute("currentUri", request.getRequestURI());
+    // user not logged in
+    if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
-        List<Post> posts = new ArrayList<>();
-        for (Post post : postRepository.findByUser_IdUser(userProfile.getIdUser())) {
-            posts.add(post);
-        }
-        for(Repost repost : repostRepository.findByUser(userProfile)) {
-            posts.add(repost.getOriginalPost());
-        }
+    User user = (User) session.getAttribute("user");
+    User userProfile = userRepository.findByPseudo(pseudo);
 
-        //format date
-        for (Post post : posts) {
-            LocalDate date = LocalDate.parse(post.getPostPublicationDate());
-            post.setFormattedDate(formatPostDate(date));
-        }
+    // user not found
+    if (userProfile == null) {return "redirect:/";}
 
-        // add reactions
-        for (Post post : posts) {
-            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
-            post.setReactions(reactions);
+    model.addAttribute("userProfile", userProfile);
+    model.addAttribute("currentUri", request.getRequestURI());
 
-            // count reactions by type
-            long likeCount = reactions.stream()
-                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE)
-                    .count();
-            long loveCount = reactions.stream()
-                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE)
-                    .count();
-            long laughCount = reactions.stream()
-                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH)
-                    .count();
-            long cryCount = reactions.stream()
-                    .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY)
-                    .count();
-            long angryCount = reactions.stream()
-                    .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
-                    .count();
+    // --- GET POSTS ---
+    List<Post> posts = postRepository.findByUser_IdUser(userProfile.getIdUser());
 
-            // store counters in post
-            post.setLikeCount(likeCount);
-            post.setLoveCount(loveCount);
-            post.setLaughCount(laughCount);
-            post.setCryCount(cryCount);
-            post.setAngryCount(angryCount);
-        }
+    for (Post post : posts) {
+        // Format date
+        LocalDate date = LocalDate.parse(post.getPostPublicationDate());
+        post.setFormattedDate(formatPostDate(date));
 
-        // sort posts by date
-        posts.sort((post1, post2) -> {
-            LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
-            LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
-            return date2.compareTo(date1);
-        });
+        // Get reactions
+        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+        post.setReactions(reactions);
 
-        List<Post> reposts = new ArrayList<>();
-        for(Repost repost : repostRepository.findByUser(userProfile)) {
-            reposts.add(repost.getOriginalPost());
-        }
-        model.addAttribute("reposts", reposts);
-        model.addAttribute("posts", posts);
-
-        return "profile";
+        // Count reactions
+        post.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
+        post.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
+        post.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
+        post.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
+        post.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
     }
+
+    // Map of post media presence
+    Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+    for (Post post : posts) {
+        postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+    }
+
+    // Map to check if current user has reposted these posts
+    Map<Integer, Boolean> repostedPostIds = new HashMap<>();
+    List<Repost> currentUserReposts = repostRepository.findByUser(user);
+    for (Post post : posts) {
+        boolean hasReposted = currentUserReposts.stream()
+            .anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
+        repostedPostIds.put(post.getPostId(), hasReposted);
+    }
+
+    // Sort posts
+    posts.sort((p1, p2) -> LocalDate.parse(p2.getPostPublicationDate()).compareTo(LocalDate.parse(p1.getPostPublicationDate())));
+
+    // --- GET REPOSTS ---
+    List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
+    List<RepostDisplay> repostDisplays = new ArrayList<>();
+
+    for (Repost repost : repostsFromUser) {
+        // Format repost date
+        LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
+        repost.setFormattedDate(formatRepostDate(repostDate));
+
+        Post original = repost.getOriginalPost();
+
+        // Format date of original post
+        LocalDate originalDate = LocalDate.parse(original.getPostPublicationDate());
+        original.setFormattedDate(formatPostDate(originalDate));
+
+        // Get reactions
+        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(original.getPostId());
+        original.setReactions(reactions);
+
+        original.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
+        original.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
+        original.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
+        original.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
+        original.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
+
+        // Check media
+        postMediaExistsMap.put(original.getPostId(), postMediaExists(original.getPostMediaPath()));
+
+        // Check if current user has reposted this original post
+        boolean hasReposted = currentUserReposts.stream()
+            .anyMatch(r -> r.getOriginalPost().getPostId().equals(original.getPostId()));
+        repostedPostIds.put(original.getPostId(), hasReposted);
+
+        repostDisplays.add(new RepostDisplay(repost, original));
+    }
+
+    // Add attributes to model
+    model.addAttribute("posts", posts);
+    model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
+    model.addAttribute("repostDisplays", repostDisplays);
+    model.addAttribute("postMediaExistsMap", postMediaExistsMap);
+    model.addAttribute("repostedPostIds", repostedPostIds); // ✅ ajouté
+
+    return "profile";
+}
+
 
     /**
      * Displays the edit user page.
