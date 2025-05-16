@@ -49,9 +49,8 @@ public class Community {
     /**
      * List of users who are members of the community
      */
-    @ManyToMany
-    @JoinTable(name = "community_users", joinColumns = @JoinColumn(name = "id_community"), inverseJoinColumns = @JoinColumn(name = "id_user"))
-    private List<User> usersMembers = new ArrayList<>();
+    @ManyToMany(mappedBy = "subscribedCommunities",fetch = FetchType.EAGER)
+    private List<User> users = new ArrayList<>();
 
     /**
      * List of posts of the community
@@ -187,32 +186,32 @@ public class Community {
      * Get the list of users who are members of the community
      * @return the list of users who are members of the community
      */
-    public List<User> getUsersMembers() {
-        return usersMembers;
+    public List<User> getUsers() {
+        return users;
     }
 
     /**
      * Set the list of users who are members of the community
      * @param usersMembers the list of users who are members of the community
      */
-    public void setUsersMembers(List<User> usersMembers) {
-        this.usersMembers = usersMembers;
+    public void setUsers(List<User> usersMembers) {
+        this.users = usersMembers;
     }
 
     /**
      * Add a user to the list of members of the community
      * @param user the user to add
      */
-    public void addUserMember(User user) {
-        this.usersMembers.add(user);
+    public void addUser(User user) {
+        this.users.add(user);
     }
 
     /**
      * Remove a user from the list of members of the community
      * @param user the user to remove
      */
-    public void removeUserMember(User user) {
-        this.usersMembers.remove(user);
+    public void removeUser(User user) {
+        this.users.remove(user);
     }
 
     /**
@@ -261,7 +260,7 @@ public class Community {
         result = prime * result + ((communityImagePath == null) ? 0 : communityImagePath.hashCode());
         result = prime * result + ((communityDescription == null) ? 0 : communityDescription.hashCode());
         result = prime * result + ((userCreator == null) ? 0 : userCreator.hashCode());
-        result = prime * result + ((usersMembers == null) ? 0 : usersMembers.hashCode());
+        result = prime * result + ((users == null) ? 0 : users.hashCode());
         result = prime * result + ((posts == null) ? 0 : posts.hashCode());
         return result;
     }

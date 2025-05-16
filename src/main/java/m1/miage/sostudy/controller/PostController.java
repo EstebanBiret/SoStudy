@@ -85,7 +85,7 @@ public class PostController {
         User user = (User) session.getAttribute("user");
 
         //get user communities
-        List<Community> userCommunities = communityRepository.findByUsersMembers_IdUser(user.getIdUser());
+        List<Community> userCommunities = communityRepository.findByUsers_IdUser(user.getIdUser());
         model.addAttribute("userCommunities", userCommunities);
         model.addAttribute("currentUri", request.getRequestURI());
         return "post/form_publish";

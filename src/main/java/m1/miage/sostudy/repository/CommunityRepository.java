@@ -23,6 +23,6 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
      * @param userId the id of the user
      * @return list of communities
      */
-    List<Community> findByUsersMembers_IdUser(Integer userId);
+    List<Community> findByUsers_IdUser(Integer userId);
     
 }

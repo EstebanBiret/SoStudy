@@ -144,7 +144,7 @@
 
                                 <button class="repost-btn"
                                         th:id="'repost-btn-' + ${repostDisplay.originalPost.postId}"
-                                        th:if="${repostDisplay.originalPost.user.pseudo != session.user.pseudo and not repostedPostIds[repostDisplay.originalPost.postId]}"
+                                        th:if="${repostDisplay.originalPost.user.pseudo != session.user.pseudo and (repostedPostIds[repostDisplay.originalPost.postId] == null or not repostedPostIds[repostDisplay.originalPost.postId])}"
                                         th:attr="data-post-id=${repostDisplay.originalPost.postId}"
                                         onclick="openRepostModal(this)">
                                     <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">

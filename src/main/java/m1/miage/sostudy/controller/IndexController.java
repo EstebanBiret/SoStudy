@@ -207,7 +207,6 @@ public class IndexController {
 
         for (Repost repost : reposts) {
 
-
             // Format repost date
             LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
             repost.setFormattedDate(formatRepostDate(repostDate));
@@ -245,6 +244,18 @@ public class IndexController {
             repostDisplays.add(new RepostDisplay(repost, original));
 
         }
+
+        for (RepostDisplay rd : repostDisplays) {
+            Post original = rd.getOriginalPost();
+            int postId = original.getPostId();
+            // Si le post n'est pas déjà dans la map, ajoute-le
+            repostedPostIds.putIfAbsent(postId,
+                repostRepository.findByUser(user)
+                    .stream()
+                    .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))
+            );
+        }
+        
 
         // sort posts by date
         posts.sort((post1, post2) -> {

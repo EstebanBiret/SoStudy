@@ -2,6 +2,9 @@ package m1.miage.sostudy.model.entity;
 
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -58,9 +61,8 @@ public class Event {
     /**
      * List of users who are interested in the event
      */
-    @ManyToMany
-    @JoinTable(name = "event_users", joinColumns = @JoinColumn(name = "id_event"), inverseJoinColumns = @JoinColumn(name = "id_user"))
-    private java.util.List<User> usersInterested;
+    @ManyToMany(mappedBy = "subscribedEvents",fetch = FetchType.EAGER)
+    private List<User> users = new ArrayList<>();
 
     /**
      * Constructor of the Event class
@@ -230,36 +232,36 @@ public class Event {
      * Get the list of users interested in the event
      * @return the list of users interested in the event
      */
-    public java.util.List<User> getUsersInterested() {
-        return usersInterested;
+    public java.util.List<User> getUsers() {
+        return users;
     }
 
     /**
      * Set the list of users interested in the event
-     * @param usersInterested the list of users interested in the event
+     * @param users the list of users interested in the event
      */
-    public void setUsersInterested(java.util.List<User> usersInterested) {
-        this.usersInterested = usersInterested;
+    public void setUsers(java.util.List<User> users) {
+        this.users = users;
     }
 
     /**
      * add a user to the list of users interested in the event
      * @param user the user to add to the list of users interested in the event
      */
-    public void addUserInterested(User user) {
-        if (this.usersInterested == null) {
-            this.usersInterested = new java.util.ArrayList<>();
+    public void addUser(User user) {
+        if (this.users == null) {
+            this.users = new java.util.ArrayList<>();
         }
-        this.usersInterested.add(user);
+        this.users.add(user);
     }
 
     /**
      * remove a user from the list of users interested in the event
      * @param user the user to remove from the list of users interested in the event
      */
-    public void removeUserInterested(User user) {
-        if (this.usersInterested != null) {
-            this.usersInterested.remove(user);
+    public void removeUser(User user) {
+        if (this.users != null) {
+            this.users.remove(user);
         }
     }
 
