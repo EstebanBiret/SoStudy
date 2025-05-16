@@ -57,17 +57,11 @@ function submitUnrepost(button) {
                     </button>`;
             });
 
-            // Supprimer visuellement le repost de l’utilisateur uniquement si nous sommes sur son profil
+            // Supprimer visuellement le repost de l’utilisateur (si c'est le profil de l'utilisateur connecté)
             if (repostId) {
-                // Vérifier si nous sommes sur le profil de l'utilisateur connecté
-                const currentUri = document.querySelector('meta[name="current-uri"]').content;
-                const isUserProfile = currentUri.includes('/profile/') && !currentUri.includes('/profile/other/');
-                
-                if (isUserProfile) {
-                    const repostElement = document.getElementById('repost-wrapper-' + repostId);
-                    if (repostElement) {
-                        repostElement.remove();
-                    }
+                const repostElement = document.getElementById('repost-wrapper-' + repostId);
+                if (repostElement) {
+                    repostElement.remove();
                 }
             }
 
