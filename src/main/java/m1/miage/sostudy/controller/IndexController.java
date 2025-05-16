@@ -122,7 +122,6 @@ public class IndexController {
         return total;
     }
 
-
     /**
      * Displays the index page.
      *
@@ -158,8 +157,8 @@ public class IndexController {
             reposts.addAll(repostRepository.findByUser(user2));
         }
 
-        //if user has following but they have no posts
-        if (posts.isEmpty()) {
+        //if user has following but they have no posts or reposts
+        if (posts.isEmpty() && reposts.isEmpty()) {
             model.addAttribute("posts", posts);
             model.addAttribute("user", user);
             model.addAttribute("currentUri", request.getRequestURI());
@@ -286,10 +285,10 @@ public class IndexController {
         model.addAttribute("postCommentCounts", postCommentCounts);
 
         //count reposts for each post
-        Map<Post, Long> repostCounts = new HashMap<>();
+        Map<Integer, Long> repostCounts = new HashMap<>();
         for (Post post : posts) {
             long repostCount = repostRepository.countByOriginalPost(post);
-            repostCounts.put(post, repostCount);
+            repostCounts.put(post.getPostId(), repostCount);
         }
         model.addAttribute("repostCounts", repostCounts);
 

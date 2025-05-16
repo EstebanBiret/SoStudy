@@ -156,9 +156,25 @@ public class UserController {
         }
         model.addAttribute("postCommentCounts", postCommentCounts);
 
+        //count reposts for each post
+        Map<Integer, Long> repostCounts = new HashMap<>();
+        for (Post post : posts) {
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post.getPostId(), repostCount);
+        }
+        
         // --- GET REPOSTS ---
         List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
         List<RepostDisplay> repostDisplays = new ArrayList<>();
+        
+        //count reposts for posts in reposts
+        for (Repost repost : repostsFromUser) {
+            Post originalPost = repost.getOriginalPost();
+            long repostCount = repostRepository.countByOriginalPost(originalPost);
+            repostCounts.put(originalPost.getPostId(), repostCount);
+        }
+        
+        model.addAttribute("repostCounts", repostCounts);
 
         for (Repost repost : repostsFromUser) {
             // Format repost date

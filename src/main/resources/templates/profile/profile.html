@@ -119,6 +119,7 @@
                         </div>
                         <div class="post-stats">
                             <span th:text="${postCommentCounts[post.postId]}">0</span> commentaire(s)
+                            <span th:text="${repostCounts[post.postId]}">0</span> repost(s)
                             <span th:href= "@{/post/{postId}(postId=${post.postId})}">Voir le post</span>
                         </div>
                     </div>
@@ -208,6 +209,7 @@
                                 </div>
                                 <div class="post-stats">
                                     <span th:text="${postCommentCounts[repostDisplay.originalPost.postId]}">0</span> commentaire(s)
+                            <span th:text="${repostCounts[repostDisplay.originalPost.postId]}">0</span> repost(s)
 
                                     <span th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}">Voir le post</span>
                                 </div>
