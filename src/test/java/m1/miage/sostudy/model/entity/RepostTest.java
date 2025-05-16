@@ -26,8 +26,8 @@ public class RepostTest {
     @Test
     void testGetContent() {
         Repost repost = new Repost();
-        repost.setContent("test");
-        Assertions.assertEquals("test", repost.getContent());
+        repost.setRepostContent("test");
+        Assertions.assertEquals("test", repost.getRepostContent());
     }
 
     /**
@@ -88,8 +88,8 @@ public class RepostTest {
     @Test
     void testSetContent() {
         Repost repost = new Repost();
-        repost.setContent("test");
-        Assertions.assertEquals("test", repost.getContent());
+        repost.setRepostContent("test");
+        Assertions.assertEquals("test", repost.getRepostContent());
     }
 
     /**
