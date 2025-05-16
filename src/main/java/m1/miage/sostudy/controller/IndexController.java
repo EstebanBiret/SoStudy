@@ -14,12 +14,15 @@ import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
+import m1.miage.sostudy.repository.RepostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +45,12 @@ public class IndexController {
      */
     @Autowired
     private PostRepository postRepository;
+
+    /**
+     * Autowired RepostRepository
+     */
+    @Autowired
+    private RepostRepository repostRepository;
     
     /**
      * Formats the date of a post
@@ -140,6 +149,15 @@ public class IndexController {
             post.setAngryCount(angryCount);
         }
 
+        //handle repost
+        Map<Integer, Boolean> repostedPostIds = new HashMap<>();
+        for (Post post : posts) {
+            boolean hasReposted = repostRepository.findByUser(user)
+                .stream()
+                .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(post.getPostId()));
+            repostedPostIds.put(post.getPostId(), hasReposted);
+        }
+
         // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
@@ -149,6 +167,7 @@ public class IndexController {
         
         model.addAttribute("posts", posts);
         model.addAttribute("user", user);
+        model.addAttribute("repostedPostIds", repostedPostIds);
         model.addAttribute("currentUri", request.getRequestURI());
 
         return "index";
