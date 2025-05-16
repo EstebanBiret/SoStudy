@@ -90,111 +90,103 @@ public class UserController {
      * @return the name of the user profile view
      */
     @GetMapping("/{pseudo}")
-public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
+    public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
 
-    // user not logged in
-    if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        // user not logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
-    User user = (User) session.getAttribute("user");
-    User userProfile = userRepository.findByPseudo(pseudo);
+        User user = (User) session.getAttribute("user");
+        User userProfile = userRepository.findByPseudo(pseudo);
 
-    // user not found
-    if (userProfile == null) {return "redirect:/";}
+        // user not found
+        if (userProfile == null) {return "redirect:/";}
 
-    model.addAttribute("userProfile", userProfile);
-    model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("userProfile", userProfile);
+        model.addAttribute("currentUri", request.getRequestURI());
 
-    // --- GET POSTS ---
-    List<Post> posts = postRepository.findByUser_IdUser(userProfile.getIdUser());
+        // --- GET POSTS ---
+        List<Post> posts = postRepository.findByUser_IdUser(userProfile.getIdUser());
 
-    for (Post post : posts) {
-        // Format date
-        LocalDate date = LocalDate.parse(post.getPostPublicationDate());
-        post.setFormattedDate(formatPostDate(date));
+        for (Post post : posts) {
+            // Format date
+            LocalDate date = LocalDate.parse(post.getPostPublicationDate());
+            post.setFormattedDate(formatPostDate(date));
 
-        // Get reactions
-        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
-        post.setReactions(reactions);
-        
-        List<Post> reposts = new ArrayList<>();
-        for(Repost repost : repostRepository.findByUser(userProfile)) {
-            reposts.add(repost.getOriginalPost());
+            // Get reactions
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            post.setReactions(reactions);
+
+            // Count reactions
+            post.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
+            post.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
+            post.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
+            post.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
+            post.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
         }
-        model.addAttribute("reposts", reposts);
+
+        // Map of post media presence
+        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+        for (Post post : posts) {
+            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+        }
+
+        // Map to check if current user has reposted these posts
+        Map<Integer, Boolean> repostedPostIds = new HashMap<>();
+        List<Repost> currentUserReposts = repostRepository.findByUser(user);
+        for (Post post : posts) {
+            boolean hasReposted = currentUserReposts.stream()
+                    .anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
+            repostedPostIds.put(post.getPostId(), hasReposted);
+        }
+
+        // Sort posts
+        posts.sort((p1, p2) -> LocalDate.parse(p2.getPostPublicationDate()).compareTo(LocalDate.parse(p1.getPostPublicationDate())));
+
+        // --- GET REPOSTS ---
+        List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
+        List<RepostDisplay> repostDisplays = new ArrayList<>();
+
+        for (Repost repost : repostsFromUser) {
+            // Format repost date
+            LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
+            repost.setFormattedDate(formatRepostDate(repostDate));
+
+            Post original = repost.getOriginalPost();
+
+            // Format date of original post
+            LocalDate originalDate = LocalDate.parse(original.getPostPublicationDate());
+            original.setFormattedDate(formatPostDate(originalDate));
+
+            // Get reactions
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(original.getPostId());
+            original.setReactions(reactions);
+
+            original.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
+            original.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
+            original.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
+            original.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
+            original.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
+
+            // Check media
+            postMediaExistsMap.put(original.getPostId(), postMediaExists(original.getPostMediaPath()));
+
+            // Check if current user has reposted this original post
+            boolean hasReposted = currentUserReposts.stream()
+                    .anyMatch(r -> r.getOriginalPost().getPostId().equals(original.getPostId()));
+            repostedPostIds.put(original.getPostId(), hasReposted);
+
+            repostDisplays.add(new RepostDisplay(repost, original));
+        }
+
+        // Add attributes to model
         model.addAttribute("posts", posts);
+        model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
+        model.addAttribute("repostDisplays", repostDisplays);
+        model.addAttribute("postMediaExistsMap", postMediaExistsMap);
+        model.addAttribute("repostedPostIds", repostedPostIds); // ✅ ajouté
 
-        return "profile/profile";
-        // Count reactions
-        post.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
-        post.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
-        post.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
-        post.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
-        post.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
+        return "profile";
     }
-
-    // Map of post media presence
-    Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
-    for (Post post : posts) {
-        postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
-    }
-
-    // Map to check if current user has reposted these posts
-    Map<Integer, Boolean> repostedPostIds = new HashMap<>();
-    List<Repost> currentUserReposts = repostRepository.findByUser(user);
-    for (Post post : posts) {
-        boolean hasReposted = currentUserReposts.stream()
-            .anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
-        repostedPostIds.put(post.getPostId(), hasReposted);
-    }
-
-    // Sort posts
-    posts.sort((p1, p2) -> LocalDate.parse(p2.getPostPublicationDate()).compareTo(LocalDate.parse(p1.getPostPublicationDate())));
-
-    // --- GET REPOSTS ---
-    List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
-    List<RepostDisplay> repostDisplays = new ArrayList<>();
-
-    for (Repost repost : repostsFromUser) {
-        // Format repost date
-        LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
-        repost.setFormattedDate(formatRepostDate(repostDate));
-
-        Post original = repost.getOriginalPost();
-
-        // Format date of original post
-        LocalDate originalDate = LocalDate.parse(original.getPostPublicationDate());
-        original.setFormattedDate(formatPostDate(originalDate));
-
-        // Get reactions
-        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(original.getPostId());
-        original.setReactions(reactions);
-
-        original.setLikeCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count());
-        original.setLoveCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count());
-        original.setLaughCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count());
-        original.setCryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count());
-        original.setAngryCount(reactions.stream().filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count());
-
-        // Check media
-        postMediaExistsMap.put(original.getPostId(), postMediaExists(original.getPostMediaPath()));
-
-        // Check if current user has reposted this original post
-        boolean hasReposted = currentUserReposts.stream()
-            .anyMatch(r -> r.getOriginalPost().getPostId().equals(original.getPostId()));
-        repostedPostIds.put(original.getPostId(), hasReposted);
-
-        repostDisplays.add(new RepostDisplay(repost, original));
-    }
-
-    // Add attributes to model
-    model.addAttribute("posts", posts);
-    model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
-    model.addAttribute("repostDisplays", repostDisplays);
-    model.addAttribute("postMediaExistsMap", postMediaExistsMap);
-    model.addAttribute("repostedPostIds", repostedPostIds); // ✅ ajouté
-
-    return "profile";
-}
 
 
     /**
