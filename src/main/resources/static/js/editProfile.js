@@ -1,5 +1,4 @@
-let emailValid = false;
-let pseudoValid = false;
+let pseudoValid = true; // Supposé valide par défaut
 
 function debounce(func, wait = 300) {
     let timeout;
@@ -10,36 +9,26 @@ function debounce(func, wait = 300) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const emailInput = document.getElementById('email');
     const pseudoInput = document.getElementById('pseudo');
+    const pseudoCheck = document.getElementById('pseudoCheck');
     const form = document.getElementById('registerForm');
 
-    emailInput.addEventListener('blur', debounce(() => {
-        const email = emailInput.value.trim();
-        if (email.length > 2) {
-            fetch(`/auth/check-email?email=${encodeURIComponent(email)}`)
-                .then(response => response.json())
-                .then(isAvailable => {
-                    const emailCheck = document.getElementById('emailCheck');
-                    if (!isAvailable) {
-                        emailCheck.textContent = 'Cet email est déjà utilisé.';
-                        emailCheck.style.color = 'red';
-                        emailValid = false;
-                    } else {
-                        emailCheck.textContent = '';
-                        emailValid = true;
-                    }
-                });
-        }
-    }));
+    const currentPseudo = pseudoInput.value.trim(); // pseudo original de session
 
     pseudoInput.addEventListener('blur', debounce(() => {
         const pseudo = pseudoInput.value.trim();
-        if (pseudo.length >=1) {
+
+        // Si le pseudo n’a pas changé, on ne fait rien
+        if (pseudo === currentPseudo) {
+            pseudoCheck.textContent = '';
+            pseudoValid = true;
+            return;
+        }
+
+        if (pseudo.length >= 1) {
             fetch(`/auth/check-pseudo?pseudo=${encodeURIComponent(pseudo)}`)
                 .then(response => response.json())
                 .then(isAvailable => {
-                    const pseudoCheck = document.getElementById('pseudoCheck');
                     if (!isAvailable) {
                         pseudoCheck.textContent = 'Ce pseudo est déjà pris.';
                         pseudoCheck.style.color = 'red';
@@ -53,9 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
 
     form.addEventListener('submit', function (e) {
-        if (!emailValid || !pseudoValid) {
+        if (!pseudoValid) {
             e.preventDefault();
-            showModal("L'email ou le pseudo est déjà utilisé. Veuillez les corriger avant de valider.");
+            showModal("Ce pseudo est déjà utilisé. Veuillez en choisir un autre.");
+
         }
     });
 });
