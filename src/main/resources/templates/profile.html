@@ -74,7 +74,7 @@
                 </div>
                 <div class="post-content">
                     <p th:text="${post.postContent}">Contenu du post</p>
-                    <div th:if="${post.postMediaPath != null}" class="post-media">
+                    <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">
                         <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
                     </div>
                 </div>
@@ -104,6 +104,7 @@
                     <div class="post-stats">
                         <span th:text="${post.reactions.size()}">0</span> réaction(s)
                         <span th:text="${post.comments.size()}">0</span> commentaire(s)
+                        <span th:href= "@{/post/{postId}(postId=${post.postId})}">Voir le post</span>
                     </div>
                 </div>
             </div>

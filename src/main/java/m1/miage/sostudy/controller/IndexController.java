@@ -1,5 +1,7 @@
 package m1.miage.sostudy.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -68,6 +70,20 @@ public class IndexController {
             return "a posté il y a 1 jour";
         } else {
             return "a posté il y a " + daysBetween + " jours";
+        }
+    }
+
+    /**
+     * Checks if a post media file exists
+     * @param mediaPath the path of the media file
+     * @return true if the media file exists, false otherwise
+     */
+    public boolean postMediaExists(String mediaPath) {
+        if (mediaPath == null) return false;
+        try {
+            return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -158,6 +174,12 @@ public class IndexController {
             repostedPostIds.put(post.getPostId(), hasReposted);
         }
 
+        //check if post media exists
+        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+        for (Post post : posts) {
+            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+        }
+
         // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
@@ -165,6 +187,7 @@ public class IndexController {
             return date2.compareTo(date1);
         });
         
+        model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);
         model.addAttribute("user", user);
         model.addAttribute("repostedPostIds", repostedPostIds);
