@@ -66,3 +66,5 @@
 | /react/new/{postid}          | POST    | ReactionController | Ajouter une réaction à un post                          | postid, Formulaire      |
 | /react/delete/{postid}       | POST    | ReactionController | Supprimer une réaction                                  | postid                  |
 | /react/update/{id}           | POST    | ReactionController | Modifier une réaction                                   | id, Formulaire          |
+| /repost/{postId}        | POST    | RepostController    | Reposter un post                                  | postId                 |
+| /repost/delete/{postId}       | POST    | RepostController    | Suppirmer le repost d'un post                                    | postId                 |
