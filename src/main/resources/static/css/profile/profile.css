@@ -132,43 +132,6 @@ body {
     object-fit: contain;
 }
 
-.post-stats {
-    font-size: 0.9em;
-    color: #666;
-}
-
-.post-stats span {
-    color: #333;
-    font-weight: bold;
-}
-
-.repost-btn {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 4px;
-    padding: .8rem 1rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.repost-btn:hover {
-    background-color: #e0e0e0;
-}
-
-.repost-icon {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
-}
-
 .profile-container {
     display: flex;
     justify-content: center;
@@ -381,34 +344,6 @@ body {
     text-align: center;
     font-size: 20px;
     margin: 5px 0;
-}
-
-
-.repost-btn {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 4px;
-    padding: .8rem 1rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.repost-btn:hover {
-    background-color: #e0e0e0;
-}
-
-.repost-icon {
-    width: 16px;
-    height: 16px;
-    object-fit: contain;
 }
 
 /* Fond de la modal (flou + semi-transparent) */
