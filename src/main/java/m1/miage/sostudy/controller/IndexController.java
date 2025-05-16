@@ -4,6 +4,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +28,6 @@ import m1.miage.sostudy.repository.RepostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 
 import org.springframework.ui.Model;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -279,19 +280,37 @@ public class IndexController {
 
         //count comments for each post
         Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        // Compter les commentaires pour les posts normaux
         for (Post post : posts) {
             postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        // Compter les commentaires pour les posts originaux dans les reposts
+        Set<Integer> originalPostIds = new HashSet<>();
+        for (RepostDisplay rd : repostDisplays) {
+            Post original = rd.getOriginalPost();
+            originalPostIds.add(original.getPostId());
+        }
+        
+        // Récupérer les posts originaux des reposts
+        List<Post> originalPosts = postRepository.findAllById(originalPostIds);
+        for (Post original : originalPosts) {
+            postCommentCounts.put(original.getPostId(), countAllComments(original));
         }
         model.addAttribute("postCommentCounts", postCommentCounts);
 
         //count reposts for each post
         Map<Integer, Long> repostCounts = new HashMap<>();
+        // Compter les reposts pour les posts normaux
         for (Post post : posts) {
             long repostCount = repostRepository.countByOriginalPost(post);
             repostCounts.put(post.getPostId(), repostCount);
         }
+        // Compter les reposts pour les posts originaux dans les reposts
+        for (Post original : originalPosts) {
+            long repostCount = repostRepository.countByOriginalPost(original);
+            repostCounts.put(original.getPostId(), repostCount);
+        }
         model.addAttribute("repostCounts", repostCounts);
-
         
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);

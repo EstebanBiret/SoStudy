@@ -1,0 +1,17 @@
+.post-stats-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 16px;
+}
+
+.post-stats-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.post-stats-count {
+    font-size: 16px;
+    font-weight: 500;
+    color: #666;
+}

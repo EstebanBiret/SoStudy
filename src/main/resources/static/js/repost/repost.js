@@ -24,13 +24,12 @@ function submitRepost(event) {
     .then(res => {
         if (res.ok) {
             // Mise à jour dynamique du bouton / des boutons
-           document.querySelectorAll(`.repost-btn[data-post-id="${currentPostId}"]`).forEach(btn => {
+            document.querySelectorAll(`.repost-btn[data-post-id="${currentPostId}"]`).forEach(btn => {
                 btn.outerHTML = `
                     <button type="button" class="repost-btn" id="unrepost-btn-${currentPostId}" data-post-id="${currentPostId}" onclick="submitUnrepost(this)">
                         <img src="/images/logos/unrepost.png" alt="Unrepost" class="repost-icon">
                         Ne plus reposter
-                    </button>
-                `;
+                    </button>`;
             });
             closeRepostModal();
         } else {
@@ -55,15 +54,20 @@ function submitUnrepost(button) {
                     <button type="button" class="repost-btn" id="repost-btn-${postId}" data-post-id="${postId}" onclick="openRepostModal(this)">
                         <img src="/images/logos/repost.png" alt="Repost" class="repost-icon">
                         Reposter
-                    </button>
-                `;
+                    </button>`;
             });
 
-            // Supprimer visuellement le repost de l’utilisateur connecté (si c’est sa propre action)
+            // Supprimer visuellement le repost de l’utilisateur uniquement si nous sommes sur son profil
             if (repostId) {
-                const repostElement = document.getElementById('repost-wrapper-' + repostId);
-                if (repostElement) {
-                    repostElement.remove();
+                // Vérifier si nous sommes sur le profil de l'utilisateur connecté
+                const currentUri = document.querySelector('meta[name="current-uri"]').content;
+                const isUserProfile = currentUri.includes('/profile/') && !currentUri.includes('/profile/other/');
+                
+                if (isUserProfile) {
+                    const repostElement = document.getElementById('repost-wrapper-' + repostId);
+                    if (repostElement) {
+                        repostElement.remove();
+                    }
                 }
             }
 
