@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SoStudy - Inscription</title>
+  <link rel="stylesheet" type="text/css" th:href="@{/css/register.css}">
+  <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+<div class="form">
+  <h1 class="title">Modification</h1>
+  <form id="registerForm" action="/user/edit" method="post" enctype="multipart/form-data">
+
+    <div class="input-container ic1">
+      <input id="nom" class="input" type="text" name="nom" placeholder=" " th:value="${session.user.name}" required/>
+      <div class="cut"></div>
+      <label for="nom" class="placeholder">Nom</label>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="prenom" class="input" type="text" placeholder=" " name="prenom" th:value="${session.user.firstName}" required/>
+      <div class="cut"></div>
+      <label for="prenom" class="placeholder">Prenom</label>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="pseudo" class="input" type="text" placeholder=" " name="pseudo" th:value="${session.user.pseudo}" required/>
+      <span id="pseudoCheck" class="error"></span>
+      <div class="cut"></div>
+      <label for="pseudo" class="placeholder">Pseudo</label>
+    </div>
+    <div th:if="${pseudoError} == true" class="error">
+      <p> Erreur : Ce pseudo est déjà utilisé</p>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="password" class="input" type="password" placeholder=" " name="password" required pattern="^\S+$"/>
+      <div class="cut"></div>
+      <label for="password" class="placeholder">Mot de passe</label>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="birthdate" class="input" type="date" placeholder=" " name="birthdate" th:value="${session.user.birthDate}" required/>
+      <div class="cut"></div>
+      <label for="birthdate" class="placeholder">Date de naissance</label>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="bioUser" class="input" type="text" placeholder=" " name="bioUser" th:value="${session.user.bioUser}"/>
+      <div class="cut"></div>
+      <label for="bioUser" class="placeholder">Bio</label>
+    </div>
+
+    <div class="input-container ic2">
+      <input id="image" class="input" type="file" name="image" accept="image/*" />
+      <div class="cut"></div>
+      <label for="image" class="placeholder">Changer la photo de profil</label>
+    </div>
+
+    <button type="submit" class="submit">Confirmer</button>
+  </form>
+</div>
+
+<div id="customModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" id="closeModal">&times;</span>
+    <p id="modalMessage">Ce pseudo est déjà utilisé. Veuillez en choisir un autre.</p>
+  </div>
+</div>
+</body>
+<script src="/js/editProfile.js"></script>
+</html>
