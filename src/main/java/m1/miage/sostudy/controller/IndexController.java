@@ -263,7 +263,7 @@ public class IndexController {
         for (RepostDisplay rd : repostDisplays) {
             Post original = rd.getOriginalPost();
             int postId = original.getPostId();
-            // Si le post n'est pas déjà dans la map, ajoute-le
+            //if post is not already in map, add it
             repostedPostIds.putIfAbsent(postId,
                 repostRepository.findByUser(user)
                     .stream()
@@ -271,7 +271,6 @@ public class IndexController {
             );
         }
         
-
         // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
@@ -285,6 +284,14 @@ public class IndexController {
             postCommentCounts.put(post.getPostId(), countAllComments(post));
         }
         model.addAttribute("postCommentCounts", postCommentCounts);
+
+        //count reposts for each post
+        Map<Post, Long> repostCounts = new HashMap<>();
+        for (Post post : posts) {
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post, repostCount);
+        }
+        model.addAttribute("repostCounts", repostCounts);
 
         
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);

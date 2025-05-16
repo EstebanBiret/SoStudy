@@ -192,7 +192,15 @@ public class UserController {
             repostDisplays.add(new RepostDisplay(repost, original));
         }
 
-        // Add attributes to model
+        //count comments for each repost
+        for (RepostDisplay repostDisplay : repostDisplays) {
+            Post originalPost = repostDisplay.getOriginalPost();
+            if (!postCommentCounts.containsKey(originalPost.getPostId())) {
+                postCommentCounts.put(originalPost.getPostId(), countAllComments(originalPost));
+            }
+        }
+
+        //add attributes to model
         model.addAttribute("posts", posts);
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
         model.addAttribute("repostDisplays", repostDisplays);

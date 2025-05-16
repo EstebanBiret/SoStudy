@@ -208,6 +208,7 @@
                                 </div>
                                 <div class="post-stats">
                                     <span th:text="${postCommentCounts[repostDisplay.originalPost.postId]}">0</span> commentaire(s)
+
                                     <span th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}">Voir le post</span>
                                 </div>
                             </div>
