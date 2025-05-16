@@ -14,15 +14,20 @@ import m1.miage.sostudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import static m1.miage.sostudy.controller.AuthController.hashPassword;
 import static m1.miage.sostudy.controller.IndexController.formatPostDate;
 
 /**
@@ -55,20 +60,9 @@ public class UserController {
     private PostRepository postRepository;
 
     /**
-     * Displays the user profile page.
-     * @param model the model to be used in the view
-     * @param session the HTTP session
-     * @param request the HTTP request
-     * @return the name of the user profile view
+     * Path for uploading files.
      */
-    @GetMapping("")
-    public String user(Model model, HttpSession session, HttpServletRequest request) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
-        model.addAttribute("currentUri", request.getRequestURI());
-        return "profile";
-    }
+    private final String UPLOAD_DIR = "./src/main/resources/static/images/profiles_pictures/";
 
     /**
      * Displays the user profile page for a specific user identified by their pseudo.
@@ -149,26 +143,85 @@ public class UserController {
         model.addAttribute("reposts", reposts);
         model.addAttribute("posts", posts);
 
-        return "profile";
+        return "profile/profile";
     }
 
     /**
      * Displays the edit user page.
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param request the HTTP request
      * @return the name of the edit user view
      */
     @GetMapping("/edit")
-    public String editUser() {
-        return "editUser";
+    public String editUser(Model model, HttpSession session, HttpServletRequest request) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        return "profile/form_edit_profile";
     }
 
+
     /**
-     * Displays the edit user page for a specific user identified by their pseudo.
-     * @return the name of the edit user view
+     * Handles the submission of the edit user form.
+      * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param nom the name of the user
+     * @param prenom the first name of the user
+     * @param pseudo the pseudo of the user
+     * @param password the password of the user
+     * @param birthdate the date of birth of the user
+     * @param bioUser the bio of the user
+     * @param image the image of the user
+     * @return a redirect to the user profile page
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/edit")
-    public String editUserPost() {
-        return "redirect:/user";
+    public String editUserPost(Model model, HttpSession session, @RequestParam String nom, @RequestParam String prenom,
+                               @RequestParam String pseudo,
+                               @RequestParam String password,
+                               @RequestParam String birthdate,
+                               @RequestParam String bioUser,
+                               @RequestParam MultipartFile image) throws IOException {
+
+        if (session.getAttribute("user") == null) {
+            return "redirect:/auth/login";
+        }
+
+        User user = (User) session.getAttribute("user");
+        user.setName(nom);
+        user.setFirstName(prenom);
+        user.setPseudo(pseudo);
+        user.setPassword(hashPassword(password));
+        user.setBirthDate(birthdate);
+        user.setBioUser(bioUser);
+
+        if (!image.isEmpty()) {
+            // Supprimer l'ancienne image si elle n'est pas la photo par défaut
+            String oldImagePath = user.getPersonImagePath();
+            if (oldImagePath != null && !oldImagePath.contains("defaultProfilePic.jpg")) {
+                Path oldImageFilePath = Paths.get("src/main/resources/static" + oldImagePath);
+                try {
+                    Files.deleteIfExists(oldImageFilePath);
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la suppression de l'ancienne image : " + e.getMessage());
+                }
+            }
+
+            // Ajouter la nouvelle image
+            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get("src/main/resources/static/images/profiles_pictures", rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            String fileName = "/images/profiles_pictures/" + rawFileName;
+            user.setPersonImagePath(fileName);
+        }
+
+        userRepository.save(user);
+        session.setAttribute("user", user);
+        return "redirect:/user/" + user.getPseudo();
     }
+
 
     /**
      * Displays the delete user page.

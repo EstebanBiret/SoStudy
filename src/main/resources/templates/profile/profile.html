@@ -39,10 +39,10 @@
                             <form th:action="@{'/auth/logout'}" method="post">
                                 <button type="submit">Se déconnecter</button>
                             </form>
-                            <form th:action="@{'/profile/update/' + ${userProfile.pseudo}}" method="post">
+                            <form th:action="@{'/user/edit'}" method="get">
                                 <button type="submit">Modifier</button>
                             </form>
-                            <form th:action="@{'/profile/delete/' + ${userProfile.pseudo}}" method="post">
+                            <form th:action="@{'/profile/delete/'}" method="post">
                                 <button type="submit" onclick="return confirm('Supprimer ce profil ?')">Supprimer</button>
                             </form>
                         </div>
