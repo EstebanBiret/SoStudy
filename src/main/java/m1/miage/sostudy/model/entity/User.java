@@ -55,15 +55,13 @@ public class User extends Person {
     /**
      * List of the channels that the user is creator of.
      */
-    @OneToMany
-    @JoinColumn(name = "channelId")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Channel> createdChannels = new ArrayList<>();
 
     /**
      * List of the posts that the user has created.
      */
-    @OneToMany
-    @JoinColumn(name = "postId")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> createdPosts = new ArrayList<>();
 
     /**
@@ -78,8 +76,7 @@ public class User extends Person {
     /**
      * List of the communities that the user is creator of.
      */
-    @OneToMany
-    @JoinColumn(name = "communityId")
+    @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
     private List<Community> createdCommunities = new ArrayList<>();
 
     /**
@@ -94,15 +91,13 @@ public class User extends Person {
     /**
      * List of the events that the user is creator of.
      */
-    @OneToMany
-    @JoinColumn(name = "eventId")
+    @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
     private List<Event> createdEvents = new ArrayList<>();
 
     /**
      * List of the messages that the user has sent.
      */
-    @OneToMany
-    @JoinColumn(name = "messageId")
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Message> sentMessages = new ArrayList<>();
 
     /**

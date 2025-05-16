@@ -137,11 +137,6 @@ public class DataInitializer implements CommandLineRunner {
         user2.getSubscribedChannels().add(channel2);
         user3.getSubscribedChannels().add(channel1);
         
-        // Sauvegarde des utilisateurs avec les channels
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
-        
         // Création des communautés
         Community community1 = new Community("Java Developers", "2025-01-01", " /images/community/java.png", "Communauté des développeurs Java");
         Community community2 = new Community("Spring Framework", "2025-02-01", "/images/community/spring.png", "Communauté des développeurs Spring");
@@ -168,10 +163,6 @@ public class DataInitializer implements CommandLineRunner {
         user1.getSubscribedCommunities().add(community2);
         user2.getSubscribedCommunities().add(community2);
         user3.getSubscribedCommunities().add(community2);
-        
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
 
         // Création d'un événement
         Event event1 = new Event();
@@ -262,7 +253,6 @@ public class DataInitializer implements CommandLineRunner {
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5
         user4.getFollowing().add(user5);
-        userRepository.save(user4);
 
         // Création de nouveaux posts pour user2
         Post user2Post1 = new Post();
@@ -480,6 +470,9 @@ public class DataInitializer implements CommandLineRunner {
         user2.addFollowing(user1);
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(user3);
+        userRepository.save(user4);
+        userRepository.save(user5);
 
         System.out.println("Données initiales créées avec succès !");
     }
