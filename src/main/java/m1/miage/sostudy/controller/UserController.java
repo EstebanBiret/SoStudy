@@ -18,20 +18,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import static m1.miage.sostudy.controller.AuthController.hashPassword;
+import static m1.miage.sostudy.controller.IndexController.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import static m1.miage.sostudy.controller.IndexController.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
-import static m1.miage.sostudy.controller.AuthController.hashPassword;
-import static m1.miage.sostudy.controller.IndexController.formatPostDate;
-import java.util.Map;
+import java.util.*;
 
 /**
  * UserController handles user-related requests.
@@ -77,9 +73,20 @@ public class UserController {
         }
     }
     /**
-     * Path for uploading files.
+     * Displays the user profile page.
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param request the HTTP request
+     * @return the name of the user profile view
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/profiles_pictures/";
+    @GetMapping("")
+    public String user(Model model, HttpSession session, HttpServletRequest request) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        model.addAttribute("currentUri", request.getRequestURI());
+        return "profile/profile";
+    }
 
     /**
      * Displays the user profile page for a specific user identified by their pseudo.
@@ -183,9 +190,9 @@ public class UserController {
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
         model.addAttribute("repostDisplays", repostDisplays);
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
-        model.addAttribute("repostedPostIds", repostedPostIds); // ✅ ajouté
+        model.addAttribute("repostedPostIds", repostedPostIds);
 
-        return "profile";
+        return "profile/profile";
     }
 
 
@@ -204,10 +211,9 @@ public class UserController {
         return "profile/form_edit_profile";
     }
 
-
     /**
      * Handles the submission of the edit user form.
-      * @param model the model to be used in the view
+     * @param model the model to be used in the view
      * @param session the HTTP session
      * @param nom the name of the user
      * @param prenom the first name of the user
@@ -264,7 +270,6 @@ public class UserController {
         session.setAttribute("user", user);
         return "redirect:/user/" + user.getPseudo();
     }
-
 
     /**
      * Displays the delete user page.
