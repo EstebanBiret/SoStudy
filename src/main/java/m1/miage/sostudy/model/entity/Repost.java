@@ -39,7 +39,13 @@ public class Repost {
      * Text content added by the user when reposting
      */
     @Column
-    private String content;
+    private String repostContent;
+
+    /**
+     * The formatted date of the repost
+     */
+    @Transient
+    private String formattedDate;
 
     /**
      * Default constructor
@@ -52,13 +58,13 @@ public class Repost {
      * @param user the user who made the repost
      * @param originalPost the original post that was reposted
      * @param repostDate the date of the repost
-     * @param content the text content added by the user when reposting
+     * @param repostContent the text content added by the user when reposting
      */
-    public Repost(User user, Post originalPost, String repostDate, String content) {
+    public Repost(User user, Post originalPost, String repostDate, String repostContent) {
         this.user = user;
         this.originalPost = originalPost;
         this.repostDate = repostDate;
-        this.content = content;
+        this.repostContent = repostContent;
     }
 
     /**
@@ -113,13 +119,25 @@ public class Repost {
      * Gets the content of the repost
      * @return the content of the repost
      */
-    public String getContent() {return content;}
+    public String getRepostContent() {return repostContent;}
 
     /**
      * Sets the content of the repost
      * @param content the content of the repost
      */
-    public void setContent(String content) {this.content = content;}
+    public void setRepostContent(String content) {this.repostContent = content;}
+
+    /**
+     * Gets the formatted date of the repost
+     * @return the formatted date of the repost
+     */
+    public String getFormattedDate() {return formattedDate;}
+
+    /**
+     * Sets the formatted date of the repost
+     * @param formattedDate the formatted date of the repost
+     */
+    public void setFormattedDate(String formattedDate) {this.formattedDate = formattedDate;}
 
     /**
      * Override of the equals method.

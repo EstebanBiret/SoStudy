@@ -74,6 +74,25 @@ public class IndexController {
     }
 
     /**
+     * Formats the date of a repost
+     * @param postDate the date of the repost
+     * @return the formatted date of the repost
+     */
+    public static String formatRepostDate(LocalDate postDate) {
+        LocalDate today = LocalDate.now();
+        if (postDate.isEqual(today)) {
+            return "a reposté aujourd'hui";
+        }
+    
+        long daysBetween = ChronoUnit.DAYS.between(postDate, today);
+        if (daysBetween == 1) {
+            return "a reposté il y a 1 jour";
+        } else {
+            return "a reposté il y a " + daysBetween + " jours";
+        }
+    }
+
+    /**
      * Checks if a post media file exists
      * @param mediaPath the path of the media file
      * @return true if the media file exists, false otherwise
