@@ -298,6 +298,41 @@ public class PostController {
     }
 
     /**
+     * Create a new comment on a post or reply to a comment
+     * @param parentId the id of the post or comment to reply to
+     * @param commentContent the content of the comment/reply
+     * @param session the current session
+     * @return redirect to post details with success message
+     */
+    @PostMapping("/comment/{parentId}")
+    public String createComment(@PathVariable Integer parentId,
+                              @RequestParam String commentContent,
+                              HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        Post parent = postRepository.findById(parentId)
+            .orElseThrow(() -> new RuntimeException("Post or comment not found"));
+
+        Post comment = new Post();
+        comment.setPostContent(commentContent);
+        comment.setUser(currentUser);
+        comment.setPostPublicationDate(LocalDate.now().toString());
+        comment.setCommentFather(parent);
+        postRepository.save(comment);
+
+        // Get the original post (the post at the top of the hierarchy)
+        Post originalPost = parent;
+        while (originalPost.getCommentFather() != null) {
+            originalPost = originalPost.getCommentFather();
+        }
+
+        return "redirect:/post/" + originalPost.getPostId() + "?success=comment";
+    }
+
+    /**
      * Delete a post
      * @param id the id of the post
      * @param request the HttpServletRequest object
