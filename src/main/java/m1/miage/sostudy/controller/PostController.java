@@ -223,8 +223,6 @@ public class PostController {
         model.addAttribute("commentsCount", commentsCount);
         model.addAttribute("hasReposted", hasReposted);
         return "post/details";
-
-        //TODO voir pk on voit pas les réponses des réponses des comms
     }
 
     /**
