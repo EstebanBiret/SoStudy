@@ -17,6 +17,8 @@ import m1.miage.sostudy.repository.CommunityRepository;
 import java.util.HashMap;
 import java.util.List;
 
+import m1.miage.sostudy.model.enums.ReactionType;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import static m1.miage.sostudy.controller.IndexController.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -98,6 +102,7 @@ public class PostController {
      */
     @GetMapping("/{id}")
     public String getPost(@PathVariable Integer id, HttpServletRequest request, Model model, HttpSession session) {
+        
         //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
@@ -109,58 +114,62 @@ public class PostController {
 
         model.addAttribute("currentUri", request.getRequestURI());
 
-        // Get the post
+        // Get the post and the actuel user
         Post post = postRepository.findById(id).get();
+        User currentUser = (User) session.getAttribute("user");
+        
+        // Format post date
+        LocalDate postDate = LocalDate.parse(post.getPostPublicationDate());
+        post.setFormattedDate(formatPostDate(postDate));
         
         // Get comments for this post (direct comments only)
         List<Post> comments = postRepository.findByCommentFather_PostIdAndCommentFatherIsNull(id);
         
-        // Get all reactions for this post
-        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(id);
+        // Count comments
+        int commentsCount = countAllComments(post);
+        
+        // Count reposts
+        long repostCount = repostRepository.countByOriginalPost(post);
+        
+        // Get reactions
+        List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+        post.setReactions(reactions);
         
         // Count reactions by type
-        Map<String, Integer> reactionCounts = new HashMap<>();
-        reactions.forEach(userPostReaction -> {
-            String type = userPostReaction.getReaction().getReactionType().name();
-            reactionCounts.put(type, reactionCounts.getOrDefault(type, 0) + 1);
-        });
+        long likeCount = reactions.stream()
+            .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE)
+            .count();
+        long loveCount = reactions.stream()
+            .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE)
+            .count();
+        long laughCount = reactions.stream()
+            .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH)
+            .count();
+        long cryCount = reactions.stream()
+            .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY)
+            .count();
+        long angryCount = reactions.stream()
+            .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
+            .count();
         
-        // Get repost count
-        Integer repostCount = repostRepository.countByOriginalPost(postRepository.findById(id).get());
+        // Store counters in post
+        post.setLikeCount(likeCount);
+        post.setLoveCount(loveCount);
+        post.setLaughCount(laughCount);
+        post.setCryCount(cryCount);
+        post.setAngryCount(angryCount);
         
-        // Get comments count (total comments including replies)
-        Integer commentsCount = postRepository.countByCommentFather_PostId(id);
-        
-        // Get repost status for current user
-        User currentUser = (User) session.getAttribute("user");
+        // Check if current user has reposted this post
+        boolean hasReposted = repostRepository.findByUser(currentUser).stream().anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
 
-        
-        boolean isReposted = repostRepository.findByUser(currentUser).stream()
-                .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(post.getPostId()));
-        
         // Add all data to model
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
-        
-        // Add reaction counts to model
-        model.addAttribute("likeCount", reactionCounts.getOrDefault("LIKE", 0));
-        model.addAttribute("loveCount", reactionCounts.getOrDefault("LOVE", 0));
-        model.addAttribute("laughCount", reactionCounts.getOrDefault("LAUGH", 0));
-        model.addAttribute("cryCount", reactionCounts.getOrDefault("CRY", 0));
-        model.addAttribute("angryCount", reactionCounts.getOrDefault("ANGRY", 0));
-        
-        // Add repost status
-        model.addAttribute("repostedPostIds", Map.of(post.getPostId(), isReposted));
-        
-        // Add comment counts
         model.addAttribute("postCommentCounts", Map.of(post.getPostId(), commentsCount));
-        model.addAttribute("repostCounts", Map.of(post.getPostId(), repostCount));
-        
-        // Add existing attributes
-        model.addAttribute("reactionCounts", reactionCounts);
-        model.addAttribute("repostCount", repostCount);
+        model.addAttribute("repostCounts", repostCount);
+        model.addAttribute("repostedPostIds", Map.of(post.getPostId(), hasReposted));
         model.addAttribute("commentsCount", commentsCount);
-        model.addAttribute("isReposted", isReposted);
+        model.addAttribute("hasReposted", hasReposted);
         
         return "post/details";
     }

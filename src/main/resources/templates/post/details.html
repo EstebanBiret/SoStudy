@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>SoStudy - Post Details</title>
+        <title>SoStudy - Détails du post</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
@@ -12,60 +12,86 @@
 
         <div class="container">
             <div class="post-card">
+
+                <!-- Post header -->
                 <div class="post-header">
                     <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
                     <div class="post-user-info">
                         <h3>
                             <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
-                            a posté il y a
+                            
                         </h3>
                         <p th:text="${post.formattedDate}"></p>
                     </div>
+
+                    <!-- Repost button -->
+                    <button class="repost-btn"
+                            th:id="'repost-btn-' + ${post.postId}"
+                            th:if="${post.user.pseudo != session.user.pseudo and (repostedPostIds[post.postId] == null or not repostedPostIds[post.postId])}"
+                            th:attr="data-post-id=${post.postId}"
+                            onclick="openRepostModal(this)">
+                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
+                        Reposter
+                    </button>
+
+                    <!-- Unrepost button -->
+                    <button class="repost-btn"
+                            th:id="'repost-btn-' + ${post.postId}"
+                            th:if="${post.user.pseudo != session.user.pseudo and repostedPostIds[post.postId]}"
+                            th:attr="data-post-id=${post.postId}"
+                            onclick="submitUnrepost(this)">
+                        <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="unrepost-icon">
+                        Ne plus reposter
+                    </button>
                 </div>
+
+                <!-- Post content -->
                 <div class="post-content">
-                    <p th:text="${post.postContent}"></p>
+                    <p th:text="${post.postContent}">Contenu du post</p>
                     <div th:if="${post.postMediaPath != null}" class="post-media">
                         <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
                     </div>
                 </div>
+
+                <!-- Post actions -->
                 <div class="post-actions">
                     <div class="reaction-buttons">
                         <button class="reaction-btn">
                             <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
-                            <span th:text="${likeCount}">0</span>
+                            <span th:text="${post.likeCount}">0</span>
                         </button>
                         <button class="reaction-btn">
                             <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
-                            <span th:text="${loveCount}">0</span>
+                            <span th:text="${post.loveCount}">0</span>
                         </button>
                         <button class="reaction-btn">
                             <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
-                            <span th:text="${laughCount}">0</span>
+                            <span th:text="${post.laughCount}">0</span>
                         </button>
                         <button class="reaction-btn">
                             <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
-                            <span th:text="${cryCount}">0</span>
+                            <span th:text="${post.cryCount}">0</span>
                         </button>
                         <button class="reaction-btn">
                             <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
-                            <span th:text="${angryCount}">0</span>
+                            <span th:text="${post.angryCount}">0</span>
                         </button>
                     </div>
+
+                    <!-- Post stats -->
                     <div class="post-stats">
                         <div class="post-stats-item">
                             <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
-                            <span th:text="${commentsCount}">0</span>
-                                <h4>
-                                    <a th:href="@{/user/{pseudo}(pseudo=${comment.user.pseudo})}" th:text="${comment.user.pseudo}"></a>
-                                </h4>
-                                <p th:text="${comment.formattedDate}"></p>
-                            </div>
+                            <span th:text="${commentsCount}" class="post-stats-count">0</span>
                         </div>
-                        <div class="comment-content">
-                            <p th:text="${comment.commentContent}"></p>
+                        <div class="post-stats-item">
+                            <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                            <span th:text="${repostCounts}" class="post-stats-count">0</span>
                         </div>
                     </div>
+
                 </div>
+
             </div>
         </div>
 
@@ -90,18 +116,14 @@
         <!-- Repost Modal -->
         <div id="repostModal" class="modal-overlay" style="display:none;">
             <div class="modal">
-                <div class="modal-header">
-                    <h2>Reposter ce post</h2>
-                    <button onclick="closeRepostModal()">&times;</button>
-                </div>
-                <div class="modal-content">
-                    <form th:action="@{/repost/${post.postId}}" method="post" onsubmit="return submitRepost(event)">
-                        <div class="form-group">
-                            <textarea id="repostContent" name="content" placeholder="Ajoutez un commentaire à votre repost..." required></textarea>
-                        </div>
-                        <button type="submit" class="submit-btn">Reposter</button>
-                    </form>
-                </div>
+                <h2>Ajouter un message à votre repost (optionnel)</h2>
+                <form id="repostForm" method="post">
+                    <textarea id="repostContent" name="content"></textarea>
+                    <div class="modal-buttons">
+                        <button type="submit" class="submit" onclick="submitRepost(event)">Reposter</button>
+                        <button type="button" class="cancel" onclick="closeRepostModal()">Annuler</button>
+                    </div>
+                </form>
             </div>
         </div>
 
