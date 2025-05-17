@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>SoStudy - Post Details</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
+        <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    </head>
+    <body>
+        <div th:replace="common/navbar :: navbar(${currentUri})"></div>
+
+        <div class="container">
+            <div class="post-card">
+                <div class="post-header">
+                    <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
+                    <div class="post-user-info">
+                        <h3>
+                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
+                            a posté il y a
+                        </h3>
+                        <p th:text="${post.formattedDate}"></p>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p th:text="${post.postContent}"></p>
+                    <div th:if="${post.postMediaPath != null}" class="post-media">
+                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="reaction-buttons">
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                            <span th:text="${likeCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                            <span th:text="${loveCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                            <span th:text="${laughCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                            <span th:text="${cryCount}">0</span>
+                        </button>
+                        <button class="reaction-btn">
+                            <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                            <span th:text="${angryCount}">0</span>
+                        </button>
+                    </div>
+                    <div class="post-stats">
+                        <div class="post-stats-item">
+                            <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                            <span th:text="${commentsCount}">0</span>
+                                <h4>
+                                    <a th:href="@{/user/{pseudo}(pseudo=${comment.user.pseudo})}" th:text="${comment.user.pseudo}"></a>
+                                </h4>
+                                <p th:text="${comment.formattedDate}"></p>
+                            </div>
+                        </div>
+                        <div class="comment-content">
+                            <p th:text="${comment.commentContent}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comment Modal -->
+        <div id="commentModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Ajouter un commentaire</h2>
+                    <button onclick="closeCommentModal()">&times;</button>
+                </div>
+                <div class="modal-content">
+                    <form th:action="@{/comment/${post.postId}}" method="post" onsubmit="return submitComment(event)">
+                        <div class="form-group">
+                            <textarea name="content" placeholder="Écrivez votre commentaire..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Publier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repost Modal -->
+        <div id="repostModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Reposter ce post</h2>
+                    <button onclick="closeRepostModal()">&times;</button>
+                </div>
+                <div class="modal-content">
+                    <form th:action="@{/repost/${post.postId}}" method="post" onsubmit="return submitRepost(event)">
+                        <div class="form-group">
+                            <textarea id="repostContent" name="content" placeholder="Ajoutez un commentaire à votre repost..." required></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Reposter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script th:src="@{/js/post/details.js}"></script>
+        <script th:src="@{/js/repost/repost.js}"></script>
+    </body>
+</html>

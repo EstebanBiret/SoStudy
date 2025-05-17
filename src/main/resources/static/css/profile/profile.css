@@ -93,6 +93,17 @@ body {
     border-top: 1px solid #eee;
 }
 
+.post-link {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+}
+
+.post-link:hover {
+    color: #ce29e4;
+}
+
 .reaction-buttons {
     display: flex;
     gap: 10px;
