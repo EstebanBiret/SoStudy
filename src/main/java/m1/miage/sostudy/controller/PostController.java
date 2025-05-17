@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import m1.miage.sostudy.model.entity.Community;
@@ -295,6 +296,48 @@ public class PostController {
 
         postRepository.save(post);
         return "redirect:/";
+    }
+
+    /**
+     * Create a new comment on a post or reply to a comment
+     * @param parentId the id of the post or comment to reply to
+     * @param commentContent the content of the comment/reply
+     * @param session the current session
+     * @return redirect to post details with success message
+     */
+    @PostMapping("/comment/{parentId}")
+    @ResponseBody
+    public Map<String, Object> createComment(@PathVariable Integer parentId,
+                                            @RequestParam String commentContent,
+                                            HttpSession session) {
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            return Map.of("success", false, "error", "User not authenticated");
+        }
+
+        try {
+            Post parent = postRepository.findById(parentId)
+                .orElseThrow(() -> new RuntimeException("Post or comment not found"));
+
+            Post comment = new Post();
+            comment.setPostContent(commentContent);
+            comment.setUser(currentUser);
+            comment.setPostPublicationDate(LocalDate.now().toString());
+            comment.setCommentFather(parent);
+            postRepository.save(comment);
+
+            return Map.of(
+                "success", true,
+                "commentId", comment.getPostId(),
+                "user", Map.of(
+                    "pseudo", currentUser.getPseudo(),
+                    "personImagePath", currentUser.getPersonImagePath()
+                ),
+                "formattedDate", comment.getPostPublicationDate()
+            );
+        } catch (Exception e) {
+            return Map.of("success", false, "error", e.getMessage());
+        }
     }
 
     /**

@@ -10,6 +10,14 @@ function closeRepostModal() {
     document.getElementById("repostContent").value = "";
 }
 
+// Fermer le modal quand on clique en dehors
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('repostModal');
+    if (event.target === modal) {
+        closeRepostModal();
+    }
+});
+
 function submitRepost(event) {
     event.preventDefault();
     const content = document.getElementById("repostContent").value;
