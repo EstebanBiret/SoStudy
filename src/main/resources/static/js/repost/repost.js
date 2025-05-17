@@ -10,6 +10,8 @@ function closeRepostModal() {
     document.getElementById("repostContent").value = "";
 }
 
+//TODO compteur de repost dynamique quand on repost ou unrepost
+
 function submitRepost(event) {
     event.preventDefault();
     const content = document.getElementById("repostContent").value;
@@ -31,6 +33,25 @@ function submitRepost(event) {
                         Ne plus reposter
                     </button>`;
             });
+
+            //maj dynamique du compteur de reposts du/des posts
+            // On trouve tous les boutons de repost avec l'ID du post actuel
+            const repostBtns = document.querySelectorAll(`.repost-btn[data-post-id="${currentPostId}"]`);
+            repostBtns.forEach(btn => {
+                // On remonte au post-card parent
+                const postCard = btn.closest('.post-card');
+                if (postCard) {
+                    // On trouve le compteur de reposts dans le post-card
+                    const repostStatsItem = postCard.querySelector('.post-stats-item:has(.post-stats-icon[src$="repost.png"])');
+                    if (repostStatsItem) {
+                        const repostCount = repostStatsItem.querySelector('.post-stats-count');
+                        if (repostCount) {
+                            repostCount.textContent = parseInt(repostCount.textContent) + 1;
+                        }
+                    }
+                }
+            });
+
             closeRepostModal();
         } else {
             alert("Erreur lors du repost");
@@ -64,6 +85,23 @@ function submitUnrepost(button) {
                     repostElement.remove();
                 }
             }
+
+            // Mettre à jour le compteur de reposts
+            const repostBtns = document.querySelectorAll(`.repost-btn[data-post-id="${postId}"]`);
+            repostBtns.forEach(btn => {
+                // On remonte au post-card parent
+                const postCard = btn.closest('.post-card');
+                if (postCard) {
+                    // On trouve le compteur de reposts dans le post-card
+                    const repostStatsItem = postCard.querySelector('.post-stats-item:has(.post-stats-icon[src$="repost.png"])');
+                    if (repostStatsItem) {
+                        const repostCount = repostStatsItem.querySelector('.post-stats-count');
+                        if (repostCount) {
+                            repostCount.textContent = parseInt(repostCount.textContent) - 1;
+                        }
+                    }
+                }
+            });
 
             //retirer un au nombre de post de l'user connecté
             const userPostsCount = document.getElementById('user-posts-count');
