@@ -110,7 +110,7 @@
                         <button class="comment-btn" th:attr="data-post-id=${post.postId}">Commenter</button>
                     </div>
                 </div>
-                <div th:each="comment : ${comments}" class="comment">
+                <div th:each="comment : ${comments}" class="comment" th:attr="data-comment-id=${comment.postId}">
                     <div class="comment-content">
                         <div class="comment-header">
                             <img th:src="@{${comment.user.personImagePath}}" alt="Avatar" class="comment-avatar">
@@ -136,7 +136,7 @@
                                     </button>
                                 </div>
                                 <div class="replies-container" style="display: none;">
-                                    <div th:each="reply : ${comment.comments}" class="comment reply">
+                                    <div th:each="reply : ${comment.comments}" class="comment reply" th:attr="data-comment-id=${reply.postId}">
                                         <div class="comment-content level-1">
                                             <div class="comment-header">
                                                 <img th:src="@{${reply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
@@ -163,7 +163,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="replies-container" style="display: none;">
-                                                        <div th:each="subReply : ${reply.comments}" class="comment reply">
+                                                        <div th:each="subReply : ${reply.comments}" class="comment reply" th:attr="data-comment-id=${subReply.postId}">
                                                             <div class="comment-content">
                                                                 <div class="comment-header">
                                                                     <img th:src="@{${subReply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
@@ -190,7 +190,7 @@
                                                                             </button>
                                                                         </div>
                                                                         <div class="replies-container" style="display: none;">
-                                                                            <div th:each="subSubReply : ${subReply.comments}" class="comment reply">
+                                                                            <div th:each="subSubReply : ${subReply.comments}" class="comment reply" th:attr="data-comment-id=${subSubReply.postId}">
                                                                                 <div class="comment-content">
                                                                                     <div class="comment-header">
                                                                                         <img th:src="@{${subSubReply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
