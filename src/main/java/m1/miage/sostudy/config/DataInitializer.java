@@ -277,9 +277,9 @@ public class DataInitializer implements CommandLineRunner {
         Repost repost1 = new Repost(user3, post2, "2025-01-05", "J'ai trouvé ce tutoriel super utile !");
         repost1 = repostRepository.save(repost1);
 
-        // Création des commentaires et réponses
+        // -- Création des commentaires et réponses ----//
 
-        // Commentaire sur le post1 de user1
+        // Commentaire de user2 sur le post1 de user1
         Post comment1 = new Post();
         comment1.setPostPublicationDate("2025-01-01");
         comment1.setPostContent("Je peux t'aider avec les interfaces ! Regarde la documentation officielle de Java.");
@@ -287,13 +287,68 @@ public class DataInitializer implements CommandLineRunner {
         comment1.setCommentFather(post1);
         post1.getComments().add(comment1);
         
-        // Réponse au commentaire1
+        // Réponse de user1 au commentaire1
         Post reply1 = new Post();
         reply1.setPostPublicationDate("2025-01-01");
         reply1.setPostContent("Merci beaucoup ! Je vais regarder ça de suite.");
         reply1.setUser(user1);
         reply1.setCommentFather(comment1);
         comment1.getComments().add(reply1);
+
+        // Réponse de user2 à la reponse1
+        Post reply2 = new Post();
+        reply2.setPostPublicationDate("2025-01-02");
+        reply2.setPostContent("Fais le loup pour moi");
+        reply2.setUser(user2);
+        reply2.setCommentFather(reply1);
+        reply1.getComments().add(reply2);
+
+        // Réponse de user3 à la reponse1
+        Post reply2bis = new Post();
+        reply2bis.setPostPublicationDate("2025-01-03");
+        reply2bis.setPostContent("Allez, fais ce fichu loup 🐺");
+        reply2bis.setUser(user3);
+        reply2bis.setCommentFather(reply1);
+        reply1.getComments().add(reply2bis);
+
+        // Réponse de user3 à la reponse1
+        Post reply2bisbis = new Post();
+        reply2bisbis.setPostPublicationDate("2025-01-09");
+        reply2bisbis.setPostContent("Alternance des commentaires #elleVeut");
+        reply2bisbis.setUser(user2);
+        reply2bisbis.setCommentFather(reply2bis);
+        reply2bis.getComments().add(reply2bisbis);
+
+        Post reply2bisbisbis = new Post();
+        reply2bisbisbis.setPostPublicationDate("2025-05-11");
+        reply2bisbisbis.setPostContent("Eva la tana");
+        reply2bisbisbis.setUser(user3);
+        reply2bisbisbis.setCommentFather(reply2bisbis);
+        reply2bisbis.getComments().add(reply2bisbisbis);
+
+        // Commentaire de user3 sur le post1 de user1
+        Post reply3 = new Post();
+        reply3.setPostPublicationDate("2025-01-02");
+        reply3.setPostContent("Hmm les interfaces ...");
+        reply3.setUser(user3);
+        reply3.setCommentFather(post1);
+        post1.getComments().add(reply3);
+
+        // Réponse au reply3
+        Post reply3bis = new Post();
+        reply3bis.setPostPublicationDate("2025-01-03");
+        reply3bis.setPostContent("C'est délicieux les interfaces, avec un peu de miel !");
+        reply3bis.setUser(user2);
+        reply3bis.setCommentFather(reply3);
+        reply3.getComments().add(reply3bis);
+
+        // Réponse au reply3
+        Post reply3bisbis = new Post();
+        reply3bisbis.setPostPublicationDate("2025-01-03");
+        reply3bisbis.setPostContent("Je réponds à mon propre commentaire ! #caillou");
+        reply3bisbis.setUser(user3);
+        reply3bisbis.setCommentFather(reply3);
+        reply3.getComments().add(reply3bisbis);
         
         // Commentaire sur le post2 de user2
         Post comment2 = new Post();
@@ -303,19 +358,26 @@ public class DataInitializer implements CommandLineRunner {
         comment2.setCommentFather(post2);
         post2.getComments().add(comment2);
         
-        // Réponse au commentaire2
-        Post reply2 = new Post();
-        reply2.setPostPublicationDate("2025-01-02");
-        reply2.setPostContent("Je suis content que ça t'ait plu ! J'en prépare un autre sur Spring Security.");
-        reply2.setUser(user2);
-        reply2.setCommentFather(comment2);
-        comment2.getComments().add(reply2);
+        // Réponse de user2 au commentaire2
+        Post reply4 = new Post();
+        reply4.setPostPublicationDate("2025-01-02");
+        reply4.setPostContent("Je suis content que ça t'ait plu ! J'en prépare un autre sur Spring Security.");
+        reply4.setUser(user2);
+        reply4.setCommentFather(comment2);
+        comment2.getComments().add(reply4);
         
-        // Sauvegarde des commentaires et réponses
+        // Sauvegarde des commentaires et réponses aux commentaires
         comment1 = postRepository.save(comment1);
         reply1 = postRepository.save(reply1);
-        comment2 = postRepository.save(comment2);
         reply2 = postRepository.save(reply2);
+        reply2bis = postRepository.save(reply2bis);
+        reply2bisbis = postRepository.save(reply2bisbis);
+        reply2bisbisbis = postRepository.save(reply2bisbisbis);
+        reply3 = postRepository.save(reply3);
+        reply3bis = postRepository.save(reply3bis);
+        reply3bisbis = postRepository.save(reply3bisbis);
+        comment2 = postRepository.save(comment2);
+        reply4 = postRepository.save(reply4);
 
         // Création de nouveaux posts pour l'utilisateur 2
         Post post5 = new Post();

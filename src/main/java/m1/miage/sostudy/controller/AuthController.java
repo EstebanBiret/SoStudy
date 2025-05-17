@@ -112,6 +112,7 @@ public class AuthController {
         if (session.getAttribute("user") != null) {
             return"redirect:/";
         }
+        //TODO rajouter champs : - niveau d'études, - intitulé études et nom de la fac/école
         return "auth/register";
     }
 

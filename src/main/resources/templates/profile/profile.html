@@ -127,7 +127,7 @@
                                 <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
                                 <span th:text="${repostCounts[post.postId]}" class="post-stats-count">0</span>
                             </div>
-                            <span th:href= "@{/post/{postId}(postId=${post.postId})}">Voir le post</span>
+                            <a th:href="@{/post/{postId}(postId=${post.postId})}" class="post-link">Voir le post</a>
                         </div>
                     </div>
                 </div>
@@ -223,7 +223,7 @@
                                         <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
                                         <span th:text="${repostCounts[repostDisplay.originalPost.postId]}" class="post-stats-count">0</span>
                                     </div>
-                                    <span th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}">Voir le post</span>
+                                    <a th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}" class="post-link">Voir le post</a>
                                 </div>
                             </div>
                         </div>
