@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>SoStudy</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
         <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
     </head>
@@ -118,8 +119,14 @@
                             </button>
                         </div>
                         <div class="post-stats">
-                            <span th:text="${post.reactions.size()}">0</span> réaction(s)
-                            <span th:text="${post.comments.size()}">0</span> commentaire(s)
+                            <div class="post-stats-item">
+                                <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                                <span th:text="${postCommentCounts[post.postId]}" class="post-stats-count">0</span>
+                            </div>
+                            <div class="post-stats-item">
+                                <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                                <span th:text="${repostCounts[post.postId]}" class="post-stats-count">0</span>
+                            </div>
                             <span th:href= "@{/post/{postId}(postId=${post.postId})}">Voir le post</span>
                         </div>
                     </div>
@@ -208,8 +215,14 @@
                                     </button>
                                 </div>
                                 <div class="post-stats">
-                                    <span th:text="${repostDisplay.originalPost.reactions.size()}">0</span> réaction(s)
-                                    <span th:text="${repostDisplay.originalPost.comments.size()}">0</span> commentaire(s)
+                                    <div class="post-stats-item">
+                                        <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                                        <span th:text="${postCommentCounts[repostDisplay.originalPost.postId]}" class="post-stats-count">0</span>
+                                    </div>
+                                    <div class="post-stats-item">
+                                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                                        <span th:text="${repostCounts[repostDisplay.originalPost.postId]}" class="post-stats-count">0</span>
+                                    </div>
                                     <span th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}">Voir le post</span>
                                 </div>
                             </div>

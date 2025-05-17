@@ -4,6 +4,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,11 +28,6 @@ import m1.miage.sostudy.repository.RepostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
 
 import org.springframework.ui.Model;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -109,6 +110,20 @@ public class IndexController {
     }
 
     /**
+     * Counts all comments of a post recursively (comments + replies to comment etc.)
+     * @param post the post to count comments for
+     * @return the total number of comments
+     */
+    public static int countAllComments(Post post) {
+        if (post.getComments() == null) return 0;
+        int total = post.getComments().size();
+        for (Post comment : post.getComments()) {
+            total += countAllComments(comment); //recursive !
+        }
+        return total;
+    }
+
+    /**
      * Displays the index page.
      *
      * @param request the HttpServletRequest object
@@ -139,12 +154,12 @@ public class IndexController {
         List<Repost> reposts = new ArrayList<>();
 
         for (User user2 : abonnements) {
-            posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
+            posts.addAll(postRepository.findByUser_IdUserAndCommentFatherIsNull(user2.getIdUser()));
             reposts.addAll(repostRepository.findByUser(user2));
         }
 
-        //if user has following but they have no posts
-        if (posts.isEmpty()) {
+        //if user has following but they have no posts or reposts
+        if (posts.isEmpty() && reposts.isEmpty()) {
             model.addAttribute("posts", posts);
             model.addAttribute("user", user);
             model.addAttribute("currentUri", request.getRequestURI());
@@ -248,7 +263,7 @@ public class IndexController {
         for (RepostDisplay rd : repostDisplays) {
             Post original = rd.getOriginalPost();
             int postId = original.getPostId();
-            // Si le post n'est pas déjà dans la map, ajoute-le
+            //if post is not already in map, add it
             repostedPostIds.putIfAbsent(postId,
                 repostRepository.findByUser(user)
                     .stream()
@@ -256,13 +271,46 @@ public class IndexController {
             );
         }
         
-
         // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
             LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
             return date2.compareTo(date1);
         });
+
+        //count comments for each post
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        // Compter les commentaires pour les posts normaux
+        for (Post post : posts) {
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        // Compter les commentaires pour les posts originaux dans les reposts
+        Set<Integer> originalPostIds = new HashSet<>();
+        for (RepostDisplay rd : repostDisplays) {
+            Post original = rd.getOriginalPost();
+            originalPostIds.add(original.getPostId());
+        }
+        
+        // Récupérer les posts originaux des reposts
+        List<Post> originalPosts = postRepository.findAllById(originalPostIds);
+        for (Post original : originalPosts) {
+            postCommentCounts.put(original.getPostId(), countAllComments(original));
+        }
+        model.addAttribute("postCommentCounts", postCommentCounts);
+
+        //count reposts for each post
+        Map<Integer, Long> repostCounts = new HashMap<>();
+        // Compter les reposts pour les posts normaux
+        for (Post post : posts) {
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post.getPostId(), repostCount);
+        }
+        // Compter les reposts pour les posts originaux dans les reposts
+        for (Post original : originalPosts) {
+            long repostCount = repostRepository.countByOriginalPost(original);
+            repostCounts.put(original.getPostId(), repostCount);
+        }
+        model.addAttribute("repostCounts", repostCounts);
         
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);

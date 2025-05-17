@@ -273,10 +273,49 @@ public class DataInitializer implements CommandLineRunner {
         user2Post2.setCommunity(community2);
         user2Post2 = postRepository.save(user2Post2);
         
-        //TODO modifier la façon des reposts ce ne sont pas des posts
         // Création des posts repostés
         Repost repost1 = new Repost(user3, post2, "2025-01-05", "J'ai trouvé ce tutoriel super utile !");
         repost1 = repostRepository.save(repost1);
+
+        // Création des commentaires et réponses
+
+        // Commentaire sur le post1 de user1
+        Post comment1 = new Post();
+        comment1.setPostPublicationDate("2025-01-01");
+        comment1.setPostContent("Je peux t'aider avec les interfaces ! Regarde la documentation officielle de Java.");
+        comment1.setUser(user2);
+        comment1.setCommentFather(post1);
+        post1.getComments().add(comment1);
+        
+        // Réponse au commentaire1
+        Post reply1 = new Post();
+        reply1.setPostPublicationDate("2025-01-01");
+        reply1.setPostContent("Merci beaucoup ! Je vais regarder ça de suite.");
+        reply1.setUser(user1);
+        reply1.setCommentFather(comment1);
+        comment1.getComments().add(reply1);
+        
+        // Commentaire sur le post2 de user2
+        Post comment2 = new Post();
+        comment2.setPostPublicationDate("2025-01-02");
+        comment2.setPostContent("Super tutoriel ! J'ai appris plein de choses.");
+        comment2.setUser(user1);
+        comment2.setCommentFather(post2);
+        post2.getComments().add(comment2);
+        
+        // Réponse au commentaire2
+        Post reply2 = new Post();
+        reply2.setPostPublicationDate("2025-01-02");
+        reply2.setPostContent("Je suis content que ça t'ait plu ! J'en prépare un autre sur Spring Security.");
+        reply2.setUser(user2);
+        reply2.setCommentFather(comment2);
+        comment2.getComments().add(reply2);
+        
+        // Sauvegarde des commentaires et réponses
+        comment1 = postRepository.save(comment1);
+        reply1 = postRepository.save(reply1);
+        comment2 = postRepository.save(comment2);
+        reply2 = postRepository.save(reply2);
 
         // Création de nouveaux posts pour l'utilisateur 2
         Post post5 = new Post();

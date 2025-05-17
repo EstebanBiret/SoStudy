@@ -112,7 +112,7 @@ public class UserController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         // --- GET POSTS ---
-        List<Post> posts = postRepository.findByUser_IdUser(userProfile.getIdUser());
+        List<Post> posts = postRepository.findByUser_IdUserAndCommentFatherIsNull(userProfile.getIdUser());
 
         for (Post post : posts) {
             // Format date
@@ -149,9 +149,32 @@ public class UserController {
         // Sort posts
         posts.sort((p1, p2) -> LocalDate.parse(p2.getPostPublicationDate()).compareTo(LocalDate.parse(p1.getPostPublicationDate())));
 
+        //count comments for each post
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        for (Post post : posts) {
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        model.addAttribute("postCommentCounts", postCommentCounts);
+
+        //count reposts for each post
+        Map<Integer, Long> repostCounts = new HashMap<>();
+        for (Post post : posts) {
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post.getPostId(), repostCount);
+        }
+        
         // --- GET REPOSTS ---
         List<Repost> repostsFromUser = repostRepository.findByUser(userProfile);
         List<RepostDisplay> repostDisplays = new ArrayList<>();
+        
+        //count reposts for posts in reposts
+        for (Repost repost : repostsFromUser) {
+            Post originalPost = repost.getOriginalPost();
+            long repostCount = repostRepository.countByOriginalPost(originalPost);
+            repostCounts.put(originalPost.getPostId(), repostCount);
+        }
+        
+        model.addAttribute("repostCounts", repostCounts);
 
         for (Repost repost : repostsFromUser) {
             // Format repost date
@@ -185,7 +208,15 @@ public class UserController {
             repostDisplays.add(new RepostDisplay(repost, original));
         }
 
-        // Add attributes to model
+        //count comments for each repost
+        for (RepostDisplay repostDisplay : repostDisplays) {
+            Post originalPost = repostDisplay.getOriginalPost();
+            if (!postCommentCounts.containsKey(originalPost.getPostId())) {
+                postCommentCounts.put(originalPost.getPostId(), countAllComments(originalPost));
+            }
+        }
+
+        //add attributes to model
         model.addAttribute("posts", posts);
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
         model.addAttribute("repostDisplays", repostDisplays);

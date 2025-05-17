@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
     /**
-     * Find all posts by user ID.
+     * Find only top-level posts (not comments or replies) by user ID.
      * @param idUser the ID of the user.
-     * @return a list of posts created by the user.
+     * @return a list of top-level posts created by the user.
      */
-    List<Post> findByUser_IdUser(Integer idUser);
+    List<Post> findByUser_IdUserAndCommentFatherIsNull(Integer idUser);
 }

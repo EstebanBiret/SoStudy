@@ -24,4 +24,12 @@ public interface RepostRepository extends JpaRepository<Repost, Integer> {
      * @return List of reposts created by this user.
      */
     List<Repost> findByUser(User user);
+
+    /**
+     * Count the number of reposts of a given post.
+     * @param post the original post.
+     * @return the number of reposts.
+     */
+    Integer countByOriginalPost(Post post);
+
 }
