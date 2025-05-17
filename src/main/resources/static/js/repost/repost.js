@@ -10,8 +10,6 @@ function closeRepostModal() {
     document.getElementById("repostContent").value = "";
 }
 
-//TODO compteur de repost dynamique quand on repost ou unrepost
-
 function submitRepost(event) {
     event.preventDefault();
     const content = document.getElementById("repostContent").value;

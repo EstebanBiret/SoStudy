@@ -3,23 +3,22 @@ package m1.miage.sostudy.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import org.springframework.ui.Model;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import m1.miage.sostudy.model.entity.Community;
-import m1.miage.sostudy.model.entity.Post;
-import m1.miage.sostudy.model.entity.User;
-import m1.miage.sostudy.model.entity.UserPostReaction;
-import m1.miage.sostudy.repository.PostRepository;
-import m1.miage.sostudy.repository.UserPostReactionRepository;
-import m1.miage.sostudy.repository.RepostRepository;
-import m1.miage.sostudy.repository.CommunityRepository;
-import java.util.HashMap;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
-import m1.miage.sostudy.model.enums.ReactionType;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,18 +27,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import static m1.miage.sostudy.controller.IndexController.*;
+import m1.miage.sostudy.model.entity.Community;
+import m1.miage.sostudy.model.entity.Post;
+import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.enums.ReactionType;
+import m1.miage.sostudy.repository.CommunityRepository;
+import m1.miage.sostudy.repository.PostRepository;
+import m1.miage.sostudy.repository.RepostRepository;
+import m1.miage.sostudy.repository.UserPostReactionRepository;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Map;
-import java.util.HashMap;
+import static m1.miage.sostudy.controller.IndexController.*;
 
 /**
  * Controller for the post
@@ -81,6 +79,60 @@ public class PostController {
     private final String UPLOAD_DIR = "./src/main/resources/static/images/posts_images/";
 
     /**
+     * Formats the date of a post without the "a posté" prefix
+     * @param postDate the date of the post
+     * @return the formatted date of the post
+     */
+    private String formatCommentDate(LocalDate postDate) {
+        LocalDate today = LocalDate.now();
+        if (postDate.isEqual(today)) {
+            return "aujourd'hui";
+        }
+    
+        long daysBetween = ChronoUnit.DAYS.between(postDate, today);
+        if (daysBetween == 1) {
+            return "il y a 1 jour";
+        } else {
+            return "il y a " + daysBetween + " jours";
+        }
+    }
+
+    /**
+     * Get all comments of a post recursively
+     * @param post the post to get comments from
+     * @return the list of comments
+     */
+    private List<Post> getAllComments(Post post) {
+        List<Post> comments = new ArrayList<>();
+        if (post.getComments() != null) {
+            for (Post comment : post.getComments()) {
+                // Format comment date
+                LocalDate commentDate = LocalDate.parse(comment.getPostPublicationDate());
+                comment.setFormattedDate(formatCommentDate(commentDate));
+                
+                // Add context to formatted date
+                String context = "commenté";
+                if (comment.getCommentFather() != null) {
+                    if (comment.getCommentFather().getCommentFather() != null) {
+                        context = "répondu";
+                    }
+                }
+                String formattedDate = "a " + context + " " + comment.getFormattedDate();
+                comment.setFormattedDate(formattedDate);
+                
+                // Get replies recursively
+                List<Post> replies = getAllComments(comment);
+                if (!replies.isEmpty()) {
+                    comment.setComments(replies);
+                }
+                
+                comments.add(comment);
+            }
+        }
+        return comments;
+    }
+
+    /**
      * Redirect to home page if the post id is empty
      */
     @GetMapping("")
@@ -116,14 +168,13 @@ public class PostController {
 
         // Get the post and the actuel user
         Post post = postRepository.findById(id).get();
-        User currentUser = (User) session.getAttribute("user");
         
         // Format post date
         LocalDate postDate = LocalDate.parse(post.getPostPublicationDate());
         post.setFormattedDate(formatPostDate(postDate));
         
-        // Get comments for this post (direct comments only)
-        List<Post> comments = postRepository.findByCommentFather_PostIdAndCommentFatherIsNull(id);
+        // Get all comments recursively
+        List<Post> allComments = getAllComments(post);
         
         // Count comments
         int commentsCount = countAllComments(post);
@@ -160,18 +211,20 @@ public class PostController {
         post.setAngryCount(angryCount);
         
         // Check if current user has reposted this post
+        User currentUser = (User) session.getAttribute("user");
         boolean hasReposted = repostRepository.findByUser(currentUser).stream().anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
 
         // Add all data to model
         model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments", allComments);
         model.addAttribute("postCommentCounts", Map.of(post.getPostId(), commentsCount));
         model.addAttribute("repostCounts", repostCount);
         model.addAttribute("repostedPostIds", Map.of(post.getPostId(), hasReposted));
         model.addAttribute("commentsCount", commentsCount);
         model.addAttribute("hasReposted", hasReposted);
-        
         return "post/details";
+
+        //TODO voir pk on voit pas les réponses des réponses des comms
     }
 
     /**
