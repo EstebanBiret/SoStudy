@@ -7,6 +7,7 @@ import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.entity.dto.RepostDisplay;
+import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.RepostRepository;
@@ -216,6 +217,42 @@ public class UserController {
             }
         }
 
+        // Récupérer toutes les réactions de l'utilisateur
+        Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
+        
+        // Pour les posts normaux
+        for (Post post : posts) {
+            // Get the reaction type from the repository
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            if (reactions != null && !reactions.isEmpty()) {
+                // Find the reaction for this user
+                for (UserPostReaction r : reactions) {
+                    if (r.getUser().equals(user)) {
+                        userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Pour les reposts
+        for (Repost repost : repostsFromUser) {
+            Post originalPost = repost.getOriginalPost();
+            if (originalPost != null) {
+                List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(originalPost.getPostId());
+                if (reactions != null && !reactions.isEmpty()) {
+                    for (UserPostReaction r : reactions) {
+                        if (r.getUser().equals(user)) {
+                            userReactedPosts.put(originalPost.getPostId(), r.getReaction().getReactionType());
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        model.addAttribute("userReactedPosts", userReactedPosts);
+        
         //add attributes to model
         model.addAttribute("posts", posts);
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
@@ -223,7 +260,7 @@ public class UserController {
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("repostedPostIds", repostedPostIds);
 
-            return "profile/profile";
+        return "profile/profile";
     }
 
 

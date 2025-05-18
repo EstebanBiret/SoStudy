@@ -181,27 +181,6 @@
                             </div>
                             <div class="post-actions">
                                 <div class="reaction-buttons">
-                                    <!-- <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.likeCount}">0</span>
-                                    </button> 
-
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.loveCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.laughCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.cryCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
-                                    </button>-->
 
                                     <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LIKE'} ? ' active' : ''"
                                         onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.likeCount}">
@@ -232,6 +211,7 @@
                                         <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
                                         <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
                                     </button>
+                                    
                                 </div>
 
                                 <div class="post-stats">
