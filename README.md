@@ -61,8 +61,6 @@
 | /post/publish                | GET    | PostController     | Formulaire de création d'un post                    |               |
 | /post/publish                | POST    | PostController     | Publier post, commentaire ou réponse                    | Formulaire              |
 | /post/delete/{postid}        | POST    | PostController     | Supprime un post                                        | postid                  |
-| /react/new/{postid}          | POST    | ReactionController | Ajouter une réaction à un post                          | postid, Formulaire      |
-| /react/delete/{postid}       | POST    | ReactionController | Supprimer une réaction                                  | postid                  |
-| /react/update/{id}           | POST    | ReactionController | Modifier une réaction                                   | id, Formulaire          |
+| /reaction/update/{postId}/{reactionType}           | POST    | ReactionController | Ajouter, modifier ou supprimer une réaction sur un post                             | postId, reactionType          |
 | /repost/{postId}        | POST    | RepostController    | Reposter un post                                  | postId                 |
 | /repost/delete/{postId}       | POST    | RepostController    | Suppirmer le repost d'un post                                    | postId                 |

@@ -1,0 +1,21 @@
+.reaction {
+    cursor: pointer;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.reaction.active {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.reaction:hover:not(.active) {
+    background-color: #f0f0f0;
+}
+
+.reaction-count {
+    font-size: 0.9em;
+    margin-left: 4px;
+}
