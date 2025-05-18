@@ -1,0 +1,42 @@
+.chat-messages {
+    flex: 1;
+    display: grid;
+    grid-auto-rows: min-content;
+    padding: 20px;
+    overflow-y: auto;
+    row-gap: 10px;
+    background-color: #f9f9f9;
+    max-height: 60vh; /* ajuste selon ton layout */
+}
+
+.message-row {
+    display: flex;
+}
+
+.message-row.friend {
+    justify-content: flex-start;
+}
+
+.message-row.me {
+    justify-content: flex-end;
+}
+
+.bubble {
+    padding: 10px 15px;
+    border-radius: 20px;
+    max-width: 60%;
+    word-break: break-word;
+    background-color: #e0e0e0;
+}
+
+.message-row.me .bubble {
+    background-color: #007bff;
+    color: white;
+}
+
+.form-no-style {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+}

@@ -39,7 +39,7 @@ public class Message {
      * Channel associated with the message.
      */
     @ManyToOne
-    @JoinColumn(name = "idChannel")
+    @JoinColumn(name = "channelId")
     private Channel channel;
 
     /**
