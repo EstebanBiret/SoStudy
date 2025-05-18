@@ -48,13 +48,13 @@ public abstract class Person {
 
     /**
      * Constructor of the Person class
-     * @param name
-     * @param firstName
-     * @param email
-     * @param password
-     * @param pseudo
-     * @param birthDate
-     * @param personImagePath
+     * @param name the name of the person
+     * @param firstName the first name of the person
+     * @param email the email address of the person
+     * @param password the password of the person
+     * @param pseudo the pseudo of the person
+     * @param birthDate the date of birth of the person
+     * @param personImagePath the path of the image of the person
      */
     public Person(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath) {
         this.name = name;

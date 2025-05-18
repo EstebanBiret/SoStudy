@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>SoStudy</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/form_publish_post.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/modal.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/list_new_conv.css}">
+    <title>SoStudy | Créer une conversation</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/post/form_publish_post.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/modal.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_new_conv.css}">
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
-<div th:replace="navbar :: navbar(${currentUri})"></div>
+    <div th:replace="common/navbar :: navbar(${currentUri})"></div>
 
 
 <div th:if="${error}" class="flash-message error" id="errorAlert">
@@ -84,8 +84,8 @@
         </form>
     </div>
 </div>
-<script th:src="@{/js/modal.js}"></script>
-<script th:src="@{/js/new_conv.js}"></script>
-<script th:src="@{/js/flashMessage.js}"></script>
+<script th:src="@{/js/message/modal.js}"></script>
+<script th:src="@{/js/message/new_conv.js}"></script>
+<script th:src="@{/js/message/flashMessage.js}"></script>
 </body>
 </html>

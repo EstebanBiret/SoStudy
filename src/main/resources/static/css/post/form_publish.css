@@ -1,4 +1,9 @@
-/* Container principal */
+body {
+    background-color: #efeff3;
+    padding: 0;
+    margin: 0;
+}
+
 .form-container {
     display: flex;
     justify-content: center;

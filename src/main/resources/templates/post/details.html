@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>SoStudy - Détails du post</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/post/details.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
+        <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    </head>
+    <body>
+        <div th:replace="common/navbar :: navbar(${currentUri})"></div>
+
+        <div class="container">
+            <div class="post-card">
+                <!-- Post header -->
+                <div class="post-header">
+                    <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
+                    <div class="post-user-info">
+                        <h3>
+                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
+                            
+                        </h3>
+                        <p th:text="${post.formattedDate}"></p>
+                    </div>
+
+                    <!-- Repost button -->
+                    <button class="repost-btn"
+                            th:id="'repost-btn-' + ${post.postId}"
+                            th:if="${post.user.pseudo != session.user.pseudo and (repostedPostIds[post.postId] == null or not repostedPostIds[post.postId])}"
+                            th:attr="data-post-id=${post.postId}"
+                            onclick="openRepostModal(this)">
+                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
+                        Reposter
+                    </button>
+
+                    <!-- Unrepost button -->
+                    <button class="repost-btn"
+                            th:id="'repost-btn-' + ${post.postId}"
+                            th:if="${post.user.pseudo != session.user.pseudo and repostedPostIds[post.postId]}"
+                            th:attr="data-post-id=${post.postId}"
+                            onclick="submitUnrepost(this)">
+                        <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="unrepost-icon">
+                        Ne plus reposter
+                    </button>
+                </div>
+
+                <!-- Post content -->
+                <div class="post-content">
+                    <p th:text="${post.postContent}">Contenu du post</p>
+                    <div th:if="${post.postMediaPath != null}" class="post-media">
+                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                    </div>
+                </div>
+
+                <!-- Post actions -->
+                <div class="post-actions">
+                    <div class="reaction-buttons">
+                        <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LIKE'} ? ' active' : ''"
+                            onclick="submitReaction(this)" data-original-count="${post.likeCount}">
+                                <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                                <span th:text="${post.likeCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LOVE'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.loveCount}">
+                                <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                                <span th:text="${post.loveCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LAUGH'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.laughCount}">
+                                <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                                <span th:text="${post.laughCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'CRY'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.cryCount}">
+                                <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                                <span th:text="${post.cryCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'ANGRY'} ? 'active' : ''" onclick="submitReaction(this)">
+                                <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                                <span th:text="${post.angryCount}">0</span>
+                            </button>
+                    </div>
+
+                    <!-- Post stats -->
+                    <div class="post-stats">
+                        <div class="post-stats-item">
+                            <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                            <span th:text="${commentsCount}" class="post-stats-count">0</span>
+                        </div>
+                        <div class="post-stats-item">
+                            <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                            <span th:text="${repostCounts}" class="post-stats-count">0</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Post comments -->
+            <div id="post-comments" class="post-card">
+                <div class="comments-header">
+                </div>
+                <div th:if="${commentsCount == 0}" class="no-comments">
+                    <p>Pas encore de commentaires, soyez le premier à commenter !</p>
+                </div>
+                <div class="button-container">
+                    <div class="back-button">
+                        <button class="back-btn" onclick="window.location.href='/'">Retour à l'accueil</button>
+                    </div>
+                    <div class="comment-button">
+                        <button class="comment-btn" th:attr="data-post-id=${post.postId}">Commenter</button>
+                    </div>
+                </div>
+                <div th:each="comment : ${comments}" class="comment" th:attr="data-comment-id=${comment.postId}">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <img th:src="@{${comment.user.personImagePath}}" alt="Avatar" class="comment-avatar">
+                            <div class="comment-user-info post-user-info">
+                                <h3>
+                                    <a th:href="@{/user/{pseudo}(pseudo=${comment.user.pseudo})}" th:text="${comment.user.pseudo}"></a>
+                                </h3>
+                                <p th:text="${comment.formattedDate}"></p>
+                            </div>
+                            <div class="reply-button">
+                                <button class="reply-btn" th:attr="data-comment-id=${comment.postId}">Répondre</button>
+                            </div>
+                        </div>
+                        <p th:text="${comment.postContent}"></p>
+                        <div class="comment-replies">
+                            <div th:if="${comment.comments != null and !comment.comments.isEmpty()}">
+                                <div class="toggle-replies-btn" th:with="replyCount=${#lists.size(comment.comments)}">
+                                    <button class="toggle-replies-btn" th:if="${replyCount == 1}">
+                                        <span th:text="${'Afficher la réponse'}">Afficher la réponse</span>
+                                    </button>
+                                    <button class="toggle-replies-btn" th:if="${replyCount > 1}">
+                                        <span th:text="${'Afficher les ' + replyCount + ' réponses'}">Afficher les réponses</span>
+                                    </button>
+                                </div>
+                                <div class="replies-container" style="display: none;">
+                                    <div th:each="reply : ${comment.comments}" class="comment reply" th:attr="data-comment-id=${reply.postId}">
+                                        <div class="comment-content level-1">
+                                            <div class="comment-header">
+                                                <img th:src="@{${reply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
+                                                <div class="comment-user-info">
+                                                    <h3>
+                                                        <a th:href="@{/user/{pseudo}(pseudo=${reply.user.pseudo})}" th:text="${reply.user.pseudo}"></a>
+                                                    </h3>
+                                                    <p th:text="${reply.formattedDate}"></p>
+                                                </div>
+                                                <div class="reply-button">
+                                                    <button class="reply-btn" th:attr="data-comment-id=${reply.postId}">Répondre</button>
+                                                </div>
+                                            </div>
+                                            <p th:text="${reply.postContent}"></p>
+                                            
+                                            <div class="comment-replies">
+                                                <div th:if="${reply.comments != null and !reply.comments.isEmpty()}">
+                                                    <div class="toggle-replies-btn" th:with="subReplyCount=${#lists.size(reply.comments)}">
+                                                        <button class="toggle-replies-btn" th:if="${subReplyCount == 1}">
+                                                            <span th:text="${'Afficher la réponse'}">Afficher la réponse</span>
+                                                        </button>
+                                                        <button class="toggle-replies-btn" th:if="${subReplyCount > 1}">
+                                                            <span th:text="${'Afficher les ' + subReplyCount + ' réponses'}">Afficher les réponses</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="replies-container" style="display: none;">
+                                                        <div th:each="subReply : ${reply.comments}" class="comment reply" th:attr="data-comment-id=${subReply.postId}">
+                                                            <div class="comment-content">
+                                                                <div class="comment-header">
+                                                                    <img th:src="@{${subReply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
+                                                                    <div class="comment-user-info">
+                                                                        <h3>
+                                                                            <a th:href="@{/user/{pseudo}(pseudo=${subReply.user.pseudo})}" th:text="${subReply.user.pseudo}"></a>
+                                                                        </h3>
+                                                                        <p th:text="${subReply.formattedDate}"></p>
+                                                                    </div>
+                                                                    <div class="reply-button">
+                                                                        <button class="reply-btn" th:attr="data-comment-id=${subReply.postId}">Répondre</button>
+                                                                    </div>
+                                                                </div>
+                                                                <p th:text="${subReply.postContent}"></p>
+                                                                
+                                                                <div class="comment-replies">
+                                                                    <div th:if="${subReply.comments != null and !subReply.comments.isEmpty()}">
+                                                                        <div class="toggle-replies-btn" th:with="subSubReplyCount=${#lists.size(subReply.comments)}">
+                                                                            <button class="toggle-replies-btn" th:if="${subSubReplyCount == 1}">
+                                                                                <span th:text="${'Afficher la réponse'}">Afficher la réponse</span>
+                                                                            </button>
+                                                                            <button class="toggle-replies-btn" th:if="${subSubReplyCount > 1}">
+                                                                                <span th:text="${'Afficher les ' + subSubReplyCount + ' réponses'}">Afficher les réponses</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="replies-container" style="display: none;">
+                                                                            <div th:each="subSubReply : ${subReply.comments}" class="comment reply" th:attr="data-comment-id=${subSubReply.postId}">
+                                                                                <div class="comment-content">
+                                                                                    <div class="comment-header">
+                                                                                        <img th:src="@{${subSubReply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
+                                                                                        <div class="comment-user-info">
+                                                                                            <h3>
+                                                                                                <a th:href="@{/user/{pseudo}(pseudo=${subSubReply.user.pseudo})}" th:text="${subSubReply.user.pseudo}"></a>
+                                                                                            </h3>
+                                                                                            <p th:text="${subSubReply.formattedDate}"></p>
+                                                                                        </div>
+                                                                                        <div class="reply-button">
+                                                                                            <button class="reply-btn" th:attr="data-comment-id=${subSubReply.postId}">Répondre</button>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <p th:text="${subSubReply.postContent}"></p>
+                                                                                    <div class="comment-replies">
+                                                                                        <div th:if="${subSubReply.comments != null and !subSubReply.comments.isEmpty()}">
+                                                                                            <div class="toggle-replies-btn" th:with="subSubSubReplyCount=${#lists.size(subSubReply.comments)}">
+                                                                                                <button class="toggle-replies-btn" th:if="${subSubSubReplyCount == 1}">
+                                                                                                    <span th:text="${'Afficher la réponse'}">Afficher la réponse</span>
+                                                                                                </button>
+                                                                                                <button class="toggle-replies-btn" th:if="${subSubSubReplyCount > 1}">
+                                                                                                    <span th:text="${'Afficher les ' + subSubSubReplyCount + ' réponses'}">Afficher les réponses</span>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                            <div class="replies-container" style="display: none;">
+                                                                                                <div th:each="subSubSubReply : ${subSubReply.comments}" class="comment reply">
+                                                                                                    <div class="comment-content">
+                                                                                                        <div class="comment-header">
+                                                                                                            <img th:src="@{${subSubSubReply.user.personImagePath}}" alt="Avatar" class="comment-avatar">
+                                                                                                            <div class="comment-user-info">
+                                                                                                                <h3>
+                                                                                                                    <a th:href="@{/user/{pseudo}(pseudo=${subSubSubReply.user.pseudo})}" th:text="${subSubSubReply.user.pseudo}"></a>
+                                                                                                                </h3>
+                                                                                                                <p th:text="${subSubSubReply.formattedDate}"></p>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <p th:text="${subSubSubReply.postContent}"></p>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Comment Modal -->
+        <div id="commentModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="modalTitle">Ajouter un commentaire</h2>
+                <form id="commentForm" method="POST">
+                    <textarea name="commentContent" placeholder="Écrivez votre commentaire ici..." required></textarea>
+                    <div class="modal-buttons">
+                        <button type="submit" class="submit">Commenter</button>
+                        <button type="button" class="cancel" onclick="closeCommentModal()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Repost Modal -->
+        <div id="repostModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2>Ajouter un message à votre repost (optionnel)</h2>
+                <form id="repostForm" method="post">
+                    <textarea id="repostContent" name="content"></textarea>
+                    <div class="modal-buttons">
+                        <button type="submit" class="submit" onclick="submitRepost(event)">Reposter</button>
+                        <button type="button" class="cancel" onclick="closeRepostModal()">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script th:src="@{/js/post/details.js}"></script>
+        <script th:src="@{/js/repost/repost.js}"></script>
+        <script th:src="@{/js/reaction/reaction.js}"></script>
+
+    </body>
+</html>

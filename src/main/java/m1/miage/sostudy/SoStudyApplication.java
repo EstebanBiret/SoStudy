@@ -11,7 +11,7 @@ public class SoStudyApplication {
 
 	/**
 	 * Start the application
-	 * @param args
+	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SoStudyApplication.class, args);

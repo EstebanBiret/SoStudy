@@ -14,9 +14,37 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
     /**
-     * Find all posts by user ID.
+     * Find only top-level posts (not comments or replies) by user ID.
      * @param idUser the ID of the user.
-     * @return a list of posts created by the user.
+     * @return a list of top-level posts created by the user.
      */
-    List<Post> findByUser_IdUser(Integer idUser);
+    List<Post> findByUser_IdUserAndCommentFatherIsNull(Integer idUser);
+
+    /**
+     * Find all comments (direct or replies) for a given post.
+     * @param postId the ID of the post.
+     * @return a list of comments and replies.
+     */
+    List<Post> findByCommentFather_PostId(Integer postId);
+
+    /**
+     * Count all comments (direct or replies) for a given post.
+     * @param postId the ID of the post.
+     * @return the total number of comments and replies.
+     */
+    Integer countByCommentFather_PostId(Integer postId);
+
+    /**
+     * Find all direct comments for a given post.
+     * @param postId the ID of the post.
+     * @return a list of direct comments.
+     */
+    List<Post> findByCommentFather_PostIdAndCommentFatherIsNull(Integer postId);
+
+    /**
+     * Count all direct comments for a given post.
+     * @param postId the ID of the post.
+     * @return the number of direct comments.
+     */
+    Integer countByCommentFather_PostIdAndCommentFatherIsNull(Integer postId);
 }

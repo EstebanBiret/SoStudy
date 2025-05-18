@@ -55,7 +55,23 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', function (e) {
         if (!emailValid || !pseudoValid) {
             e.preventDefault();
-            alert("L'email ou le pseudo est déjà utilisé. Veuillez les corriger avant de valider.");
+            showModal("L'email ou le pseudo est déjà utilisé. Veuillez les corriger avant de valider.");
         }
     });
 });
+
+function showModal(message) {
+    const modal = document.getElementById('customModal');
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+    modal.style.display = "block";
+
+    const closeBtn = document.getElementById('closeModal');
+    closeBtn.onclick = () => modal.style.display = "none";
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+}

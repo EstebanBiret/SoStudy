@@ -11,12 +11,15 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation .MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for the Message entity
+ */
 @Controller
 @RequestMapping("/message")
 public class MessageController {
@@ -33,14 +36,13 @@ public class MessageController {
     private UserRepository userRepository;
 
     /**
-     * Displays the form to send a message.
-     *
+     * send a message
+     * @param idchannel the id of the channel
      * @return the name of the view to be rendered
      */
     @PostMapping("/{idchannel}/send")
-    public String sendMessage() {
-        // Logic to send a message
-        return "redirect:/channels/"; // Redirect to the list of channels after sending
+    public String sendMessage(@PathVariable int idchannel) {
+        return "redirect:/channels/";
     }
 
     /**

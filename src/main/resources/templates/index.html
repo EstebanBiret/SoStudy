@@ -1,97 +1,255 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>SoStudy</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
-    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
-</head>
-<body>
-    <div th:replace="navbar :: navbar(${currentUri})"></div>
+    <head>
+        <title>SoStudy | Accueil</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
+        <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    </head>
+    <body>
+        <div th:replace="common/navbar :: navbar(${currentUri})"></div>
 
-    <!-- Section des posts -->
-    <div th:if="${following == 'empty'}">
-        <div class="no-following-container">
-            <div class="no-following-content">
-                <h2>Commencez à suivre des utilisateurs</h2>
-                <p>Pour voir des posts, commencez par suivre des utilisateurs qui partagent vos intérêts.</p>
-                <form th:action="@{/user/search}" method="get" class="search-form">
-                    <div class="search-input-group">
-                        <input type="text" placeholder="Rechercher un utilisateur..." name="pseudo" required>
-                        <button type="submit" class="search-btn">
-                            Rechercher
+        <!-- If user has no following -->
+        <div th:if="${following == 'empty'}">
+            <div class="no-following-container">
+                <div class="no-following-content">
+                    <h2>Commencez à suivre des utilisateurs</h2>
+                    <p>Pour voir des posts, commencez par suivre des utilisateurs qui partagent vos intérêts.</p>
+                    <form th:action="@{/user/search}" method="get" class="search-form">
+                        <div class="search-input-group">
+                            <input type="text" placeholder="Rechercher un utilisateur..." name="pseudo" required>
+                            <button type="submit" class="search-btn">
+                                Rechercher
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- If user has no posts -->
+        <div th:if="${following == 'no_posts'}">
+            <div class="no-following-container">
+                <div class="no-following-content">
+                    <h2>Aucun post de vos abonnements</h2>
+                    <p>Vous suivez des utilisateurs mais ils n'ont pas encore posté de contenu. Soyez le premier à partager !</p>
+                    <a th:href="@{/post/publish}" id="createPostBtn">
+                        Créer un post
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- If user has posts -->
+        <div class="container">
+            <div class="posts-container">
+                <div th:each="post : ${posts}" class="post-card">
+
+                    <div class="post-header">
+                        <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
+                        <div class="post-user-info">
+                            <h3>
+                                <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
+                            </h3>
+                            <p th:text="${post.formattedDate}"></p>
+                        </div>
+
+                        <!-- Repost button -->
+                        <button class="repost-btn"
+                                th:id="'repost-btn-' + ${post.postId}"
+                                th:if="${not repostedPostIds[post.postId]}"
+                                th:attr="data-post-id=${post.postId}"
+                                onclick="openRepostModal(this)">
+                            <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
+                            Reposter
                         </button>
+
+                        <!-- Unrepost button -->
+                        <button type="button"
+                                class="repost-btn"
+                                th:id="'unrepost-btn-' + ${post.postId}"
+                                th:if="${repostedPostIds[post.postId]}"
+                                th:attr="data-post-id=${post.postId}"
+                                onclick="submitUnrepost(this)">
+                            <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
+                            Ne plus reposter
+                        </button>
+
+                    </div>
+                    <div class="post-content">
+                        <p th:text="${post.postContent}">Contenu du post</p>
+                        <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">
+                            <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <div class="reaction-buttons">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LIKE'} ? ' active' : ''"
+                            onclick="submitReaction(this)" data-original-count="${post.likeCount}">
+                                <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                                <span th:text="${post.likeCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LOVE'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.loveCount}">
+                                <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                                <span th:text="${post.loveCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LAUGH'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.laughCount}">
+                                <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                                <span th:text="${post.laughCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'CRY'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.cryCount}">
+                                <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                                <span th:text="${post.cryCount}">0</span>
+                            </button>
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'ANGRY'} ? 'active' : ''" onclick="submitReaction(this)">
+                                <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                                <span th:text="${post.angryCount}">0</span>
+                            </button>
+                        </div>
+                        <div class="post-stats">
+                            <div class="post-stats-item">
+                                <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                                <span th:text="${postCommentCounts[post.postId]}" class="post-stats-count">0</span>
+                            </div>
+                            <div class="post-stats-item">
+                                <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                                <span th:text="${repostCounts[post.postId]}" class="post-stats-count">0</span>
+                            </div>
+                            <a th:href="@{/post/{postId}(postId=${post.postId})}" class="post-link">Voir le post</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section des reposts -->
+                <div th:each="repostDisplay : ${repostDisplays}" class="post-card repost-wrapper">
+                    <div class="post-header">
+                        <img th:src="@{${repostDisplay.repost.user.personImagePath}}" class="post-avatar">
+                        <div class="post-user-info">
+                            <h3>
+                                <a th:href="@{/user/{pseudo}(pseudo=${repostDisplay.repost.user.pseudo})}" th:text="${repostDisplay.repost.user.pseudo}"></a>
+                            </h3>
+                            <p th:text="${repostDisplay.repost.formattedDate}"></p>
+                        </div>
+                    </div>
+
+                    <div class="repost-content">
+                        <p th:text="${repostDisplay.repost.repostContent}">Contenu du repost</p>
+                    </div>
+
+                    <div class="reposted-post">
+                        <div class="repost-arrow">⬇</div>
+                        <div class="post-card reposted">
+                             <!-- Post original -->
+                             <div class="post-header">
+                                <img th:src="@{${repostDisplay.originalPost.user.personImagePath}}" class="post-avatar">
+                                <div class="post-user-info">
+                                    <h3>
+                                        <a th:href="@{/user/{pseudo}(pseudo=${repostDisplay.originalPost.user.pseudo})}" th:text="${repostDisplay.originalPost.user.pseudo}"></a>
+                                    </h3>
+                                    <p th:text="${repostDisplay.originalPost.formattedDate}"></p>
+                                </div>
+
+                                <button class="repost-btn"
+                                        th:id="'repost-btn-' + ${repostDisplay.originalPost.postId}"
+                                        th:if="${repostDisplay.originalPost.user.pseudo != session.user.pseudo and (repostedPostIds[repostDisplay.originalPost.postId] == null or not repostedPostIds[repostDisplay.originalPost.postId])}"
+                                        th:attr="data-post-id=${repostDisplay.originalPost.postId}"
+                                        onclick="openRepostModal(this)">
+                                    <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
+                                    Reposter
+                                </button>
+
+                                <button type="button"
+                                        class="repost-btn"
+                                        th:id="'unrepost-btn-' + ${repostDisplay.originalPost.postId}"
+                                        th:if="${repostDisplay.originalPost.user.pseudo != session.user.pseudo and repostedPostIds[repostDisplay.originalPost.postId]}"
+                                        th:attr="data-post-id=${repostDisplay.originalPost.postId}, data-repost-id=${repostDisplay.repost.id}"
+                                        onclick="submitUnrepost(this)">
+                                    <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
+                                    Ne plus reposter
+                                </button>
+
+                            </div>
+
+                            <div class="post-content">
+                                <p th:text="${repostDisplay.originalPost.postContent}"></p>
+                                <div th:if="${postMediaExistsMap[repostDisplay.originalPost.postId]}" class="post-media">
+                                    <img th:src="@{${repostDisplay.originalPost.postMediaPath}}" alt="Media du post" class="post-media-image">
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <div class="reaction-buttons">
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LIKE'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.likeCount}">
+                                        <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.likeCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LOVE'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.loveCount}">
+                                        <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.loveCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LAUGH'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.laughCount}">
+                                        <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.laughCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'CRY'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.cryCount}">
+                                        <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.cryCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'ANGRY'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.angryCount}">
+                                        <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
+                                    </button>
+                                    
+                                </div>
+
+                                <div class="post-stats">
+                                    <div class="post-stats-item">
+                                        <img th:src="@{/images/logos/comments.svg}" alt="Comment" class="post-stats-icon">
+                                        <span th:text="${postCommentCounts[repostDisplay.originalPost.postId]}" class="post-stats-count">0</span>
+                                    </div>
+                                    <div class="post-stats-item">
+                                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="post-stats-icon">
+                                        <span th:text="${repostCounts[repostDisplay.originalPost.postId]}" class="post-stats-count">0</span>
+                                    </div>
+                                    <a th:href="@{/post/{postId}(postId=${repostDisplay.originalPost.postId})}" class="post-link">Voir le post</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Repost modal -->
+        <div id="repostModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2>Ajouter un message à votre repost (optionnel)</h2>
+                <form id="repostForm" method="post">
+                    <textarea id="repostContent" name="content"></textarea>
+                    <div class="modal-buttons">
+                        <button type="submit" class="submit" onclick="submitRepost(event)">Reposter</button>
+                        <button type="button" class="cancel" onclick="closeRepostModal()">Annuler</button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
 
-    <div th:if="${following == 'no_posts'}">
-        <div class="no-following-container">
-            <div class="no-following-content">
-                <h2>Aucun post de vos abonnements</h2>
-                <p>Vous suivez des utilisateurs mais ils n'ont pas encore posté de contenu. Soyez le premier à partager !</p>
-                <a th:href="@{/post/publish}" id="createPostBtn">
-                    Créer un post
-                </a>
-            </div>
-        </div>
-    </div>
+        <script th:src="@{/js/repost/repost.js}"></script>
+        <script th:src="@{/js/reaction/reaction.js}"></script>
 
-    <div class="container">
-        <div class="posts-container">
-            <div th:each="post : ${posts}" class="post-card">
-                <div class="post-header">
-                    <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
-                    <div class="post-user-info">
-                        <h3>
-                            <a th:href="@{/user/{pseudo}(pseudo=${post.user.pseudo})}" th:text="${post.user.pseudo}"></a>
-                        </h3>
-                        <p th:text="${post.formattedDate}"></p>
-                    </div>
-                    <button class="repost-btn">
-                        <img th:src="@{/images/logos/repost.png}" alt="Repost" class="repost-icon">
-                        Reposter
-                    </button>
-                </div>
-                <div class="post-content">
-                    <p th:text="${post.postContent}">Contenu du post</p>
-                    <div th:if="${post.postMediaPath != null}" class="post-media">
-                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
-                    </div>
-                </div>
-                <div class="post-actions">
-                    <div class="reaction-buttons">
-                        <button class="reaction-btn">
-                            <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
-                            <span th:text="${post.likeCount}">0</span>
-                        </button>
-                        <button class="reaction-btn">
-                            <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
-                            <span th:text="${post.loveCount}">0</span>
-                        </button>
-                        <button class="reaction-btn">
-                            <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
-                            <span th:text="${post.laughCount}">0</span>
-                        </button>
-                        <button class="reaction-btn">
-                            <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
-                            <span th:text="${post.cryCount}">0</span>
-                        </button>
-                        <button class="reaction-btn">
-                            <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
-                            <span th:text="${post.angryCount}">0</span>
-                        </button>
-                    </div>
-                    <div class="post-stats">
-                        <span th:text="${post.reactions.size()}">0</span> réaction(s)
-                        <span th:text="${post.comments.size()}">0</span> commentaire(s)
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</body>
+    </body>
 </html>

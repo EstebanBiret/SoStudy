@@ -16,30 +16,65 @@ import static m1.miage.sostudy.controller.AuthController.hashPassword;
 @Component
 public class DataInitializer implements CommandLineRunner {
     
+    /**
+     * User repository for database operations
+     */
     @Autowired
     private UserRepository userRepository;
     
+    /**
+     * Community repository for database operations
+     */
     @Autowired
     private CommunityRepository communityRepository;
     
+    /**
+     * Post repository for database operations
+     */
     @Autowired
     private PostRepository postRepository;
     
+    /**
+     * Event repository for database operations
+     */
     @Autowired
     private EventRepository eventRepository;
     
+    /**
+     * Message repository for database operations
+     */
     @Autowired
     private MessageRepository messageRepository;
     
+    /**
+     * Reaction repository for database operations
+     */
     @Autowired
     private ReactionRepository reactionRepository;
     
+    /**
+     * UserPostReaction repository for database operations
+     */
     @Autowired
     private UserPostReactionRepository userPostReactionRepository;
     
+    /**
+     * Channel repository for database operations
+     */
     @Autowired
     private ChannelRepository channelRepository;
+
+    /**
+     * Repost repository for database operations
+     */
+    @Autowired
+    private RepostRepository repostRepository;
     
+    /**
+     * Run the data initializer
+     * @param args the arguments
+     * @throws Exception if an error occurs
+     */
     @Override
     public void run(String... args) throws Exception {
         // Vérifier si les données existent déjà
@@ -47,6 +82,14 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("Les données initiales existent déjà. Pas de création de données.");
             return;
         }
+
+        /*TODO pour faire + réseau social d'étudiants, créer des comptes types étudiant, 
+        avoir des canaux du style "Soirée de x", "Groupe 3", "Promo M1 MIAGE"..., des évènements du style "Soirée au Délirium le 20 mai 2025", "Atelier SpringBoot le 21 mai 2025", "Consultation de copies le 22 mai 2025"...
+        des posts qui fassent + étudiant,
+        des communautés centrés sur des sujets d'études ou promo par ex.
+
+        + voir si on pourrait implémenter l'envoi de post dans un canal
+        */
 
         // Création des utilisateurs
         User user1 = new User();
@@ -102,11 +145,6 @@ public class DataInitializer implements CommandLineRunner {
         user2.getSubscribedChannels().add(channel2);
         user3.getSubscribedChannels().add(channel1);
         
-        // Sauvegarde des utilisateurs avec les channels
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
-        
         // Création des communautés
         Community community1 = new Community("Java Developers", "2025-01-01", " /images/community/java.png", "Communauté des développeurs Java");
         Community community2 = new Community("Spring Framework", "2025-02-01", "/images/community/spring.png", "Communauté des développeurs Spring");
@@ -115,12 +153,12 @@ public class DataInitializer implements CommandLineRunner {
         community2.setUserCreator(user2);
 
         // Ajout des membres aux communautés
-        community1.getUsersMembers().add(user1);
-        community1.getUsersMembers().add(user2);
-        community1.getUsersMembers().add(user3);
-        community2.getUsersMembers().add(user1);
-        community2.getUsersMembers().add(user2);
-        community2.getUsersMembers().add(user3);
+        community1.getUsers().add(user1);
+        community1.getUsers().add(user2);
+        community1.getUsers().add(user3);
+        community2.getUsers().add(user1);
+        community2.getUsers().add(user2);
+        community2.getUsers().add(user3);
 
         // Sauvegarde des communautés avec leurs membres
         community1 = communityRepository.save(community1);
@@ -133,10 +171,6 @@ public class DataInitializer implements CommandLineRunner {
         user1.getSubscribedCommunities().add(community2);
         user2.getSubscribedCommunities().add(community2);
         user3.getSubscribedCommunities().add(community2);
-        
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
 
         // Création d'un événement
         Event event1 = new Event();
@@ -149,8 +183,10 @@ public class DataInitializer implements CommandLineRunner {
         event1.setUserCreator(user1);
         
         // Ajout des utilisateurs intéressés par l'événement
-        event1.addUserInterested(user2);
-        event1.addUserInterested(user3);
+        event1.addUser(user2);
+        event1.addUser(user3);
+        user2.getSubscribedEvents().add(event1);
+        user3.getSubscribedEvents().add(event1);
         event1 = eventRepository.save(event1);
         
         // Création d'un autre événement
@@ -164,8 +200,10 @@ public class DataInitializer implements CommandLineRunner {
         event2.setUserCreator(user2);
         
         // Ajout des utilisateurs intéressés par le deuxième événement
-        event2.addUserInterested(user1);
-        event2.addUserInterested(user3);
+        event2.addUser(user1);
+        event2.addUser(user3);
+        user1.getSubscribedEvents().add(event2);
+        user3.getSubscribedEvents().add(event2);
         event2 = eventRepository.save(event2);
 
         // Création des posts
@@ -227,7 +265,6 @@ public class DataInitializer implements CommandLineRunner {
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5
         user4.getFollowing().add(user5);
-        userRepository.save(user4);
 
         // Création de nouveaux posts pour user2
         Post user2Post1 = new Post();
@@ -245,14 +282,110 @@ public class DataInitializer implements CommandLineRunner {
         user2Post2 = postRepository.save(user2Post2);
         
         // Création des posts repostés
-        Post repost1 = new Post();
-        repost1.setPostPublicationDate("2025-01-05");
-        repost1.setPostContent("J'ai trouvé ce tutoriel super utile !");
-        repost1.setUser(user3);
-        repost1.setCommunity(community2);
-        repost1.setCommentFather(post2);
+        Repost repost1 = new Repost(user3, post2, "2025-01-05", "J'ai trouvé ce tutoriel super utile !");
+        repost1 = repostRepository.save(repost1);
 
-        // Ajouter le repost à la liste de reposts de l'utilisateur
+        // -- Création des commentaires et réponses ----//
+
+        // Commentaire de user2 sur le post1 de user1
+        Post comment1 = new Post();
+        comment1.setPostPublicationDate("2025-01-01");
+        comment1.setPostContent("Je peux t'aider avec les interfaces ! Regarde la documentation officielle de Java.");
+        comment1.setUser(user2);
+        comment1.setCommentFather(post1);
+        post1.getComments().add(comment1);
+        
+        // Réponse de user1 au commentaire1
+        Post reply1 = new Post();
+        reply1.setPostPublicationDate("2025-01-01");
+        reply1.setPostContent("Merci beaucoup ! Je vais regarder ça de suite.");
+        reply1.setUser(user1);
+        reply1.setCommentFather(comment1);
+        comment1.getComments().add(reply1);
+
+        // Réponse de user2 à la reponse1
+        Post reply2 = new Post();
+        reply2.setPostPublicationDate("2025-01-02");
+        reply2.setPostContent("Fais le loup pour moi");
+        reply2.setUser(user2);
+        reply2.setCommentFather(reply1);
+        reply1.getComments().add(reply2);
+
+        // Réponse de user3 à la reponse1
+        Post reply2bis = new Post();
+        reply2bis.setPostPublicationDate("2025-01-03");
+        reply2bis.setPostContent("Allez, fais ce fichu loup 🐺");
+        reply2bis.setUser(user3);
+        reply2bis.setCommentFather(reply1);
+        reply1.getComments().add(reply2bis);
+
+        // Réponse de user3 à la reponse1
+        Post reply2bisbis = new Post();
+        reply2bisbis.setPostPublicationDate("2025-01-09");
+        reply2bisbis.setPostContent("Alternance des commentaires #elleVeut");
+        reply2bisbis.setUser(user2);
+        reply2bisbis.setCommentFather(reply2bis);
+        reply2bis.getComments().add(reply2bisbis);
+
+        Post reply2bisbisbis = new Post();
+        reply2bisbisbis.setPostPublicationDate("2025-05-11");
+        reply2bisbisbis.setPostContent("Eva la tana");
+        reply2bisbisbis.setUser(user3);
+        reply2bisbisbis.setCommentFather(reply2bisbis);
+        reply2bisbis.getComments().add(reply2bisbisbis);
+
+        // Commentaire de user3 sur le post1 de user1
+        Post reply3 = new Post();
+        reply3.setPostPublicationDate("2025-01-02");
+        reply3.setPostContent("Hmm les interfaces ...");
+        reply3.setUser(user3);
+        reply3.setCommentFather(post1);
+        post1.getComments().add(reply3);
+
+        // Réponse au reply3
+        Post reply3bis = new Post();
+        reply3bis.setPostPublicationDate("2025-01-03");
+        reply3bis.setPostContent("C'est délicieux les interfaces, avec un peu de miel !");
+        reply3bis.setUser(user2);
+        reply3bis.setCommentFather(reply3);
+        reply3.getComments().add(reply3bis);
+
+        // Réponse au reply3
+        Post reply3bisbis = new Post();
+        reply3bisbis.setPostPublicationDate("2025-01-03");
+        reply3bisbis.setPostContent("Je réponds à mon propre commentaire ! #caillou");
+        reply3bisbis.setUser(user3);
+        reply3bisbis.setCommentFather(reply3);
+        reply3.getComments().add(reply3bisbis);
+        
+        // Commentaire sur le post2 de user2
+        Post comment2 = new Post();
+        comment2.setPostPublicationDate("2025-01-02");
+        comment2.setPostContent("Super tutoriel ! J'ai appris plein de choses.");
+        comment2.setUser(user1);
+        comment2.setCommentFather(post2);
+        post2.getComments().add(comment2);
+        
+        // Réponse de user2 au commentaire2
+        Post reply4 = new Post();
+        reply4.setPostPublicationDate("2025-01-02");
+        reply4.setPostContent("Je suis content que ça t'ait plu ! J'en prépare un autre sur Spring Security.");
+        reply4.setUser(user2);
+        reply4.setCommentFather(comment2);
+        comment2.getComments().add(reply4);
+        
+        // Sauvegarde des commentaires et réponses aux commentaires
+        comment1 = postRepository.save(comment1);
+        reply1 = postRepository.save(reply1);
+        reply2 = postRepository.save(reply2);
+        reply2bis = postRepository.save(reply2bis);
+        reply2bisbis = postRepository.save(reply2bisbis);
+        reply2bisbisbis = postRepository.save(reply2bisbisbis);
+        reply3 = postRepository.save(reply3);
+        reply3bis = postRepository.save(reply3bis);
+        reply3bisbis = postRepository.save(reply3bisbis);
+        comment2 = postRepository.save(comment2);
+        reply4 = postRepository.save(reply4);
 
         // Création de nouveaux posts pour l'utilisateur 2
         Post post5 = new Post();
@@ -292,25 +425,8 @@ public class DataInitializer implements CommandLineRunner {
         post8 = postRepository.save(post8);
         post9 = postRepository.save(post9);
 
-        // Sauvegarde du repost
-        repost1 = postRepository.save(repost1);
-
-        Post repost2 = new Post();
-        repost2.setPostPublicationDate("2025-01-06");
-        repost2.setPostContent("Je partage ce post car je rencontre les mêmes problèmes avec Spring");
-        repost2.setUser(user1);
-        repost2.setCommunity(community2);
-        repost2.setCommentFather(post3);
-
-        // Ajouter le repost à la liste de reposts de l'utilisateur
-        user1.getRepostedPosts().add(repost2);
-
-        // Sauvegarde du repost
-        repost2 = postRepository.save(repost2);
-
-        // Sauvegarder les utilisateurs avec leurs reposts
-        userRepository.save(user3);
-        userRepository.save(user1);
+        Repost repost2 = new Repost(user1, post3, "2025-01-06", "Je partage ce post car je rencontre les mêmes problèmes avec Spring");
+        repost2 = repostRepository.save(repost2);
 
         // Création des réactions
         Reaction reaction1 = new Reaction(ReactionType.LIKE);
@@ -372,15 +488,6 @@ public class DataInitializer implements CommandLineRunner {
         upr5.setPost(post2);
         upr5.setReaction(reaction5);
 
-        UserPostReaction upr6 = new UserPostReaction();
-        upr6.setId(new UserPostReactionID());
-        upr6.getId().setUserId(user3.getIdUser());
-        upr6.getId().setPostId(post2.getPostId());
-        upr6.getId().setReactionId(reaction1.getReactionId());
-        upr6.setUser(user3);
-        upr6.setPost(post2);
-        upr6.setReaction(reaction1);
-
         UserPostReaction upr7 = new UserPostReaction();
         upr7.setId(new UserPostReactionID());
         upr7.getId().setUserId(user1.getIdUser());
@@ -441,7 +548,6 @@ public class DataInitializer implements CommandLineRunner {
         userPostReactionRepository.save(upr3);
         userPostReactionRepository.save(upr4);
         userPostReactionRepository.save(upr5);
-        userPostReactionRepository.save(upr6);
         userPostReactionRepository.save(upr7);
         userPostReactionRepository.save(upr8);
         userPostReactionRepository.save(upr9);
@@ -465,8 +571,13 @@ public class DataInitializer implements CommandLineRunner {
         user1.addFollowing(user3);
         user2.addFollowers(user1);
         user2.addFollowing(user1);
+        user3.addFollowing(user2);
+        user2.addFollowers(user3);
         userRepository.save(user1);
         userRepository.save(user2);
+        userRepository.save(user3);
+        userRepository.save(user4);
+        userRepository.save(user5);
 
         System.out.println("Données initiales créées avec succès !");
     }

@@ -97,6 +97,9 @@ class ChannelTest {
         assertNotEquals(channel1, channel2);
     }
 
+    /**
+     * Tests the add and remove methods for users.
+     */
     @Test
     void testAddAndRemoveUser() {
         User user1 = new User();
@@ -118,6 +121,9 @@ class ChannelTest {
         assertFalse(channel.getUsers().contains(user1));
     }
 
+    /**
+     * Tests the set and get methods for creator.
+     */
     @Test
     void testSetAndGetCreator() {
         User creator = new User();
@@ -126,6 +132,9 @@ class ChannelTest {
         assertEquals(creator, channel.getCreator());
     }
 
+    /**
+     * Tests the add and remove methods for messages.
+     */
     @Test
     void testAddAndRemoveMessage() {
         Message message1 = new Message();
@@ -145,5 +154,16 @@ class ChannelTest {
         channel.removeMessage(message1);
         assertEquals(1, channel.getMessages().size());
         assertFalse(channel.getMessages().contains(message1));
+    }
+
+    /**
+     * Tests the hashcode method.
+     */
+    @Test
+    void testHashCode() {
+        Channel channel1 = new Channel("Tech", "http://example.com/tech.png");
+        Channel channel2 = new Channel("Tech", "http://example.com/tech.png");
+
+        assertEquals(channel1.hashCode(), channel2.hashCode());
     }
 }

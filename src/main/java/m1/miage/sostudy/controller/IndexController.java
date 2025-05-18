@@ -1,7 +1,17 @@
 package m1.miage.sostudy.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,17 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Post;
+import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.entity.dto.RepostDisplay;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
+import m1.miage.sostudy.repository.RepostRepository;
 import m1.miage.sostudy.repository.UserPostReactionRepository;
-import m1.miage.sostudy.repository.UserRepository;
 
 import org.springframework.ui.Model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,12 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-    
-    /**
-     * Autowired UserRepository
-     */
-    @Autowired
-    private UserRepository userRepository;
 
     /**
      * Autowired UserPostReactionRepository
@@ -49,6 +53,12 @@ public class IndexController {
      */
     @Autowired
     private PostRepository postRepository;
+
+    /**
+     * Autowired RepostRepository
+     */
+    @Autowired
+    private RepostRepository repostRepository;
     
     /**
      * Formats the date of a post
@@ -70,10 +80,58 @@ public class IndexController {
     }
 
     /**
+     * Formats the date of a repost
+     * @param postDate the date of the repost
+     * @return the formatted date of the repost
+     */
+    public static String formatRepostDate(LocalDate postDate) {
+        LocalDate today = LocalDate.now();
+        if (postDate.isEqual(today)) {
+            return "a reposté aujourd'hui";
+        }
+    
+        long daysBetween = ChronoUnit.DAYS.between(postDate, today);
+        if (daysBetween == 1) {
+            return "a reposté il y a 1 jour";
+        } else {
+            return "a reposté il y a " + daysBetween + " jours";
+        }
+    }
+
+    /**
+     * Checks if a post media file exists
+     * @param mediaPath the path of the media file
+     * @return true if the media file exists, false otherwise
+     */
+    public boolean postMediaExists(String mediaPath) {
+        if (mediaPath == null) return false;
+        try {
+            return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Counts all comments of a post recursively (comments + replies to comment etc.)
+     * @param post the post to count comments for
+     * @return the total number of comments
+     */
+    public static int countAllComments(Post post) {
+        if (post.getComments() == null) return 0;
+        int total = post.getComments().size();
+        for (Post comment : post.getComments()) {
+            total += countAllComments(comment); //recursive !
+        }
+        return total;
+    }
+
+    /**
      * Displays the index page.
      *
      * @param request the HttpServletRequest object
      * @param model the Model object
+     * @param session the HttpSession object
      * @return the name of the view to be rendered
      */
     @GetMapping("/")
@@ -96,13 +154,37 @@ public class IndexController {
         }
         
         List<Post> posts = new ArrayList<>();
-        
+        List<Repost> reposts = new ArrayList<>();
+
         for (User user2 : abonnements) {
-            posts.addAll(postRepository.findByUser_IdUser(user2.getIdUser()));
+            posts.addAll(postRepository.findByUser_IdUserAndCommentFatherIsNull(user2.getIdUser()));
+            reposts.addAll(repostRepository.findByUser(user2));
         }
 
-        //if user has following but they have no posts
-        if (posts.isEmpty()) {
+        // Récupérer toutes les réactions de l'utilisateur
+        Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
+        for (Post post : posts) {
+            // Create the composite ID
+            UserPostReactionID reactionId = new UserPostReactionID();
+            reactionId.setUserId(user.getIdUser());
+            reactionId.setPostId(post.getPostId());
+            
+            // Get the reaction type from the repository
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            if (reactions != null && !reactions.isEmpty()) {
+                // Find the reaction for this user
+                for (UserPostReaction r : reactions) {
+                    if (r.getUser().equals(user)) {
+                        userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                        break;
+                    }
+                }
+            }
+        }
+        model.addAttribute("userReactedPosts", userReactedPosts);
+
+        //if user has following but they have no posts or reposts
+        if (posts.isEmpty() && reposts.isEmpty()) {
             model.addAttribute("posts", posts);
             model.addAttribute("user", user);
             model.addAttribute("currentUri", request.getRequestURI());
@@ -138,7 +220,6 @@ public class IndexController {
                 .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
                 .count();
 
-            // store counters in post
             post.setLikeCount(likeCount);
             post.setLoveCount(loveCount);
             post.setLaughCount(laughCount);
@@ -146,16 +227,122 @@ public class IndexController {
             post.setAngryCount(angryCount);
         }
 
+        // Map of post media presence
+        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+        for (Post post : posts) {
+            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+        }
+
+        //handle repost
+        Map<Integer, Boolean> repostedPostIds = new HashMap<>();
+        for (Post post : posts) {
+            boolean hasReposted = repostRepository.findByUser(user)
+                .stream()
+                .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(post.getPostId()));
+            repostedPostIds.put(post.getPostId(), hasReposted);
+        }
+
+        List<RepostDisplay> repostDisplays = new ArrayList<>();
+
+        for (Repost repost : reposts) {
+
+            // Format repost date
+            LocalDate repostDate = LocalDate.parse(repost.getRepostDate());
+            repost.setFormattedDate(formatRepostDate(repostDate));
+
+            Post original = repost.getOriginalPost();
+            
+            // Format date
+            LocalDate postDate = LocalDate.parse(original.getPostPublicationDate());
+            original.setFormattedDate(formatPostDate(postDate));
+
+            // Ajout des réactions
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(original.getPostId());
+            original.setReactions(reactions);
+
+            long likeCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE).count();
+            long loveCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE).count();
+            long laughCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH).count();
+            long cryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY).count();
+            long angryCount = reactions.stream()
+                .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY).count();
+
+            original.setLikeCount(likeCount);
+            original.setLoveCount(loveCount);
+            original.setLaughCount(laughCount);
+            original.setCryCount(cryCount);
+            original.setAngryCount(angryCount);
+
+            //check if post media exists
+            postMediaExistsMap.put(original.getPostId(), postMediaExists(original.getPostMediaPath()));
+
+            repostDisplays.add(new RepostDisplay(repost, original));
+
+        }
+
+        for (RepostDisplay rd : repostDisplays) {
+            Post original = rd.getOriginalPost();
+            int postId = original.getPostId();
+            //if post is not already in map, add it
+            repostedPostIds.putIfAbsent(postId,
+                repostRepository.findByUser(user)
+                    .stream()
+                    .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))
+            );
+        }
+        
         // sort posts by date
         posts.sort((post1, post2) -> {
             LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
             LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
             return date2.compareTo(date1);
         });
+
+        //count comments for each post
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        // Compter les commentaires pour les posts normaux
+        for (Post post : posts) {
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+        }
+        // Compter les commentaires pour les posts originaux dans les reposts
+        Set<Integer> originalPostIds = new HashSet<>();
+        for (RepostDisplay rd : repostDisplays) {
+            Post original = rd.getOriginalPost();
+            originalPostIds.add(original.getPostId());
+        }
         
+        // Récupérer les posts originaux des reposts
+        List<Post> originalPosts = postRepository.findAllById(originalPostIds);
+        for (Post original : originalPosts) {
+            postCommentCounts.put(original.getPostId(), countAllComments(original));
+        }
+        model.addAttribute("postCommentCounts", postCommentCounts);
+
+        //count reposts for each post
+        Map<Integer, Long> repostCounts = new HashMap<>();
+        // Compter les reposts pour les posts normaux
+        for (Post post : posts) {
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post.getPostId(), repostCount);
+        }
+        // Compter les reposts pour les posts originaux dans les reposts
+        for (Post original : originalPosts) {
+            long repostCount = repostRepository.countByOriginalPost(original);
+            repostCounts.put(original.getPostId(), repostCount);
+        }
+        model.addAttribute("repostCounts", repostCounts);
+        
+        model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);
         model.addAttribute("user", user);
+        model.addAttribute("repostedPostIds", repostedPostIds);
+        model.addAttribute("following", "posts");
         model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("repostDisplays", repostDisplays);
 
         return "index";
     }

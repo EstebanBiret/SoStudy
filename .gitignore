@@ -34,3 +34,8 @@ build/
 
 ### Base de données ###
 /db/
+db/sostudy.db
+*.db
+
+### Images ###
+src/main/resources/static/images/

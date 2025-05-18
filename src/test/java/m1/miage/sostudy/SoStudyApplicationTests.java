@@ -18,4 +18,9 @@ class SoStudyApplicationTests {
 		// or if a repository method returns the expected results
 	}
 
+    @Test
+    void testMain() {
+		SoStudyApplication.main(new String[] {});
+    }
+
 }

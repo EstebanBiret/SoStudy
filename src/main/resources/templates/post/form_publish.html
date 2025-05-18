@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>SoStudy - Créer un post</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/form_publish.css}">
+    <title>SoStudy | Créer un post</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/post/form_publish.css}">
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
-    <div th:replace="navbar :: navbar(${currentUri})"></div>
+    <div th:replace="common/navbar :: navbar(${currentUri})"></div>
 
     <div class="form-container">
         <div class="form-content">
@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="community">Partager dans une communauté (optionnel)</label>
+                    <label for="community">Partager dans une de vos communautés (optionnel)</label>
                     <select id="community" name="communityId" class="form-control">
                         <option value="" selected>Ne pas partager dans une communauté</option>
                         <option th:each="community : ${userCommunities}"
@@ -38,7 +38,6 @@
 
                 <div class="form-actions">
                     <button type="submit" class="submit-btn">Publier</button>
-                    <a th:href="@{/}" class="cancel-btn">Annuler</a>
                 </div>
             </form>
         </div>

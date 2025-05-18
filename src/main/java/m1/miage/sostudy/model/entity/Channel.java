@@ -63,8 +63,8 @@ public class Channel {
 
     /**
      * Constructor of the Channel class
-     * @param channelName
-     * @param channelImagePath
+     * @param channelName the name of the channel
+     * @param channelImagePath the image path of the channel
      */
     public Channel(String channelName, String channelImagePath) {
         this.channelName = channelName;

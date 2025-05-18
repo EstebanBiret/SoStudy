@@ -59,9 +59,8 @@ public class User extends Person {
     /**
      * List of the channels that the user is creator of.
      */
-    @OneToMany
     @JsonIgnore
-    @JoinColumn(name = "channelId")
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Channel> createdChannels = new ArrayList<>();
 
     /**
@@ -83,6 +82,12 @@ public class User extends Person {
     private List<Post> repostedPosts = new ArrayList<>();
 
     /**
+=======
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> createdPosts = new ArrayList<>();
+
+    /**
+>>>>>>> 5c707cb319d6c0b121d526aec3554f70f66fc58d
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany
@@ -95,9 +100,8 @@ public class User extends Person {
     /**
      * List of the communities that the user is creator of.
      */
-    @OneToMany
     @JsonIgnore
-    @JoinColumn(name = "communityId")
+    @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
     private List<Community> createdCommunities = new ArrayList<>();
 
     /**
@@ -113,17 +117,15 @@ public class User extends Person {
     /**
      * List of the events that the user is creator of.
      */
-    @OneToMany
     @JsonIgnore
-    @JoinColumn(name = "eventId")
+    @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
     private List<Event> createdEvents = new ArrayList<>();
 
     /**
      * List of the messages that the user has sent.
      */
-    @OneToMany
     @JsonIgnore
-    @JoinColumn(name = "messageId")
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Message> sentMessages = new ArrayList<>();
 
     /**
@@ -301,30 +303,6 @@ public class User extends Person {
     }
 
     /**
-     * Getter for the list of posts that the user has reposted.
-     * @return the list of posts that the user has reposted.
-     */
-    public List<Post> getRepostedPosts() {
-        return repostedPosts;
-    }
-
-    /**
-     * Adds a post to the list of posts that the user has reposted.
-     * @param post the post to add to the list of posts that the user has reposted.
-     */
-    public void addRepostedPost(Post post) {
-        this.repostedPosts.add(post);
-    }
-
-    /**
-     * Removes a post from the list of posts that the user has reposted.
-     * @param post the post to remove from the list of posts that the user has reposted.
-     */
-    public void removeRepostedPost(Post post) {
-        this.repostedPosts.remove(post);
-    }
-
-    /**
      * Getter for the list of communities that the user is subscribed to.
      * @return the list of communities that the user is subscribed to.
      */
@@ -465,4 +443,5 @@ public class User extends Person {
     public int hashCode() {
         return Objects.hash(idUser);
     }
+    
 }

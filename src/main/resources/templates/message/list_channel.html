@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>SoStudy</title>
+    <title>SoStudy | Conversations</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/form_publish_post.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
@@ -10,29 +10,27 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
-    <div th:replace="navbar :: navbar(${currentUri})"></div>
-    <div class="full-chat-page">
-        <form th:action="@{/channels/new}" method="get">
-            <div class="list-chan-box">
-                <input type="text" placeholder="Rechercher..." class="search-bar full">
-
-                <ul class="full-card">
-                    <li class="user-card" th:each="entry : ${lastMessageMap}" th:id="'channel-' + ${entry.key.channelId}"
-                        th:data-channel-id="${entry.key.channelId}">
-                        <a class="user-info">
-                            <img th:if="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${entry.key.channelImagePath}}" alt="User" class="user-photo">
-                            <img th:unless="${entry.key.getUsers().size() > 2}" th:src="@{'/' + ${profPic[entry.key]}}" alt="User" class="user-photo" />
-                            <div class="text-placeholder">
-                                <h3 class="user-name" th:text="${entry.key.getChannelName()}">Nom de l'utilisateur</h3>
-                                <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}">Description de l'utilisateur</p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
+    <div th:replace="common/navbar :: navbar(${currentUri})"></div>
+    <form th:action="@{/channels/new}" method="get">
+        <div class="list-chan-box">
+            <input type="text" placeholder="Rechercher..." class="search-bar full">
+    
+            <ul class="full-card">
+                <li class="user-card" th:each="entry : ${lastMessageMap}">
+                    <a class="user-info">
+                        <img th:if="${entry.key.getUsers().size() > 2}" th:src="${entry.key.channelImagePath}" alt="User" class="user-photo">
+                        <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPicMap[entry.key]}" alt="User" class="user-photo" />
+                        <div class="text-placeholder">
+                            <h3 th:if="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${entry.key.getChannelName()}"></h3>
+                            <h3 th:unless="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${profPseudoMap[entry.key]}"></h3>
+                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}"></p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
                 <button type="submit" class="new-conv">
                     +
                 </button>

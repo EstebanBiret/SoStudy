@@ -112,6 +112,7 @@ public class AuthController {
         if (session.getAttribute("user") != null) {
             return"redirect:/";
         }
+        //TODO rajouter champs : - niveau d'études, - intitulé études et nom de la fac/école
         return "auth/register";
     }
 
@@ -119,17 +120,25 @@ public class AuthController {
      * Registers a new user.
      * @param model the model to be used in the view
      * @param session the HTTP session
+     * @param nom the name of the user
+     * @param prenom the first name of the user
+     * @param pseudo the pseudo of the user
+     * @param email the email address of the user
+     * @param password the password of the user
+     * @param birthdate the date of birth of the user
+     * @param bioUser the bio of the user
+     * @param image the image of the user
      * @return a redirect to the login page
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/register")
-    public String registerUser(Model model, HttpSession session, @RequestParam("nom") String nom,
-                               @RequestParam("prenom") String prenom,
-                               @RequestParam("pseudo") String pseudo,
-                               @RequestParam("email") String email,
-                               @RequestParam("password") String password,
-                               @RequestParam("birthdate") String birthdate,
-                               @RequestParam("bioUser") String bio,
-                               @RequestParam("image") MultipartFile image)throws IOException {
+    public String registerUser(Model model, HttpSession session, @RequestParam String nom, @RequestParam String prenom,
+@RequestParam String pseudo,
+@RequestParam String email,
+@RequestParam String password,
+@RequestParam String birthdate,
+@RequestParam String bioUser,
+@RequestParam MultipartFile image) throws IOException {
 
         String fileName = null;
         if (!image.isEmpty()) {
@@ -155,7 +164,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bio);
+        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bioUser);
         userRepo.save(user);
 
         session.setAttribute("user", user);

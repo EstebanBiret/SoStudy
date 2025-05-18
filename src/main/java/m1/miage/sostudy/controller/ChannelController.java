@@ -29,26 +29,37 @@ import java.util.stream.Collectors;
 @RequestMapping("/channels")
 public class ChannelController {
 
+    /**
+     * User repository for database operations.
+     */
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Channel repository for database operations.
+     */
     @Autowired
     private ChannelRepository channelRepository;
 
+    /**
+     * Message repository for database operations.
+     */
     @Autowired
     private MessageRepository messageRepository;
 
 
     /**
      * Displays the list of all channels.
-     *
+     * @param model the model to be used in the view
+     * @param request the HTTP request
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/")
     public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) {
         model.addAttribute("currentUri", request.getRequestURI());
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         List<Channel> chans = ((User) session.getAttribute("user")).getSubscribedChannels();
 
@@ -58,32 +69,44 @@ public class ChannelController {
         }
 
         HashMap<Channel, Message> lastMessageMap = new HashMap<>();
-        HashMap<Channel, String> pathProfPicMap = new HashMap<>();
+        HashMap<Channel, String> profPicMap = new HashMap<>();
+        HashMap<Channel, String> profPseudoMap = new HashMap<>();
 
         for (Channel channel : chans) {
+
+            //have the path of the profile picture of the other user
             if (channel.getUsers().size() == 2) {
-                pathProfPicMap.put(channel, channel.getUsers().stream()
+                profPicMap.put(channel, channel.getUsers().stream()
                         .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
-                        .orElse("images/profiles_pictures/defaultProfilePic.png"));
+                        .orElse("/images/profiles_pictures/defaultProfilePic.png"));
+                //have the pseudo of the other user
+                profPseudoMap.put(channel, channel.getUsers().stream()
+                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .findFirst()
+                        .map(User::getPseudo)
+                        .orElse("Utilisateur anonyme"));
             }
+
             Message lastMessage = channelRepository.findLastMessageByChannel(channel);
             lastMessageMap.put(channel, lastMessage);
         }
 
         model.addAttribute("currentUser", sessionUser);
 
-        model.addAttribute("profPic", pathProfPicMap);
+        model.addAttribute("profPicMap", profPicMap);
         model.addAttribute("lastMessageMap", lastMessageMap);
-
+        model.addAttribute("profPseudoMap", profPseudoMap);
 
         return "message/list_channel";
     }
 
     /**
      * Displays the form to create a new channel.
-     *
+     * @param model the model to be used in the view
+     * @param request the HTTP request
+     * @param session the HTTP session
      * @return the name of the view to be rendered
      */
     @GetMapping("/new")
@@ -91,7 +114,7 @@ public class ChannelController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         User userConnected = userRepository.findById(sessionUser.getIdUser())
                 .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
@@ -104,13 +127,18 @@ public class ChannelController {
 
     /**
      * Saves the new channel.
-     *
+     * @param selectedUsersCsv the list of selected users
+     * @param firstMessage the first message of the channel
+     * @param channelName the name of the channel
+     * @param session the HTTP session
+     * @param model the model to be used in the view
+     * @param redirectAttributes the redirect attributes
      * @return a redirect to the list of channels
      */
     @PostMapping("/new")
     public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/login";
+        if (sessionUser == null) return "redirect:/auth/login";
 
         List<Integer> selectedUserIds = Arrays.stream(selectedUsersCsv.split(","))
                 .map(Integer::parseInt)
@@ -125,11 +153,15 @@ public class ChannelController {
 
         // Check if a private channel already exists between the users
         for (User user : selectedUsers) {
-            if (hasACanalAlreayd(sessionUser, user)) {
+            if (hasACanalAlready(sessionUser, user)) {
                 redirectAttributes.addFlashAttribute("error", "Un canal privé existe déjà entre vous et " + user.getPseudo());
                 return "redirect:/channels/new"; // Redirect to the list of channels if a private channel already exists
             }
         }
+
+        //todo régler soucis quand on créé un canal avec un user avec qui on est déjà en discussion et un autre nouveau, ça bloque sur celui avec qui on est déjà en discussion
+        //todo quand on vient de créer un canal à 2, l'image du canal ne marche pas, mais marche quand on se déco-reco
+        //todo ajouter dans form quand c'est > 2 un champ pour mettre l'image du canal
 
         Channel channel = new Channel();
         channel.setChannelName(
@@ -138,10 +170,10 @@ public class ChannelController {
                         .map(User::getPseudo)
                         .collect(Collectors.joining(", "))
                         : selectedUsers.size() == 1
-                        ? selectedUsers.get(0).getPseudo()
+                        ? selectedUsers.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
-        channel.setChannelImagePath("default.png");
+        channel.setChannelImagePath("/images/channel/defaultChannelImage.png");
         channel.setCreator(sessionUser);
 
         channel = channelRepository.save(channel);
@@ -188,9 +220,10 @@ public class ChannelController {
     /**
      * Checks if the user already has a channel.
      * @param user the user to check
+     * @param user2 the other user to check
      * @return true if the user has a channel, false otherwise
      */
-    public boolean hasACanalAlreayd(User user, User user2) {
+    public boolean hasACanalAlready(User user, User user2) {
         List<Channel> existing = channelRepository.findPrivateChannelBetween(user.getIdUser(), user2.getIdUser());
         return !existing.isEmpty();
     }

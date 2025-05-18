@@ -6,16 +6,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Classe de test pour la classe Message
+ * Class testing the Message class
  */
 class MessageTest {
     /**
-     * Objet Message à tester
+     * Object Message to test
      */
     private Message message;
 
     /**
-     * Initialisation de l'objet Message avant chaque test
+     * Initialization of the Message object before each test
      */
     @BeforeEach
     void setUp() {
@@ -23,7 +23,7 @@ class MessageTest {
     }
 
     /**
-     * Test du constructeur vide
+     * Test of the empty constructor
      */
     @Test
     void testEmptyConstructor() {
@@ -35,7 +35,7 @@ class MessageTest {
     }
 
     /**
-     * Test du constructeur paramétré
+     * Test of the parameterized constructor
      */
     @Test
     void testParameterizedConstructor() {
@@ -45,7 +45,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode getIdMessage
+     * Test of getIdMessage method
      */
     @Test
     void testGetAndSetIdMessage() {
@@ -53,7 +53,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode getContent et setContent
+     * Test of getContent and setContent methods
      */
     @Test
     void testGetAndSetContent() {
@@ -62,7 +62,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode getDateMessage et setDateMessage
+     * Test of getDateMessage and setDateMessage methods
      */
     @Test
     void testGetAndSetDateMessage() {
@@ -78,7 +78,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode getChannel et setChannel
+     * Test of getChannel and setChannel methods
      */
     @Test
     void testGetAndSetChannel() {
@@ -88,7 +88,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode equals
+     * Test of equals method
      */
     @Test
     void testEquals() {
@@ -98,7 +98,7 @@ class MessageTest {
     }
 
     /**
-     * Test de la méthode equals avec un objet différent
+     * Test of equals method with a different object
      */
     @Test
     void testEqualsWithDifferentObject() {
@@ -106,6 +106,16 @@ class MessageTest {
         String differentObject = "Not a message";
 
         assertNotEquals(msg1, differentObject);
+    }
+
+    /**
+     * Test of hashCode method
+     */
+    @Test
+    void testHashCode() {
+        Message msg1 = new Message("Hello", "2024-01-01");
+        Message msg2 = new Message("Hello", "2024-01-01");
+        assertEquals(msg1.hashCode(), msg2.hashCode());
     }
 
 }
