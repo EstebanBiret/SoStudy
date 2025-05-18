@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +33,7 @@ import m1.miage.sostudy.model.entity.Community;
 import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.CommunityRepository;
 import m1.miage.sostudy.repository.PostRepository;
@@ -214,6 +216,28 @@ public class PostController {
         // Check if current user has reposted this post
         User currentUser = (User) session.getAttribute("user");
         boolean hasReposted = repostRepository.findByUser(currentUser).stream().anyMatch(r -> r.getOriginalPost().getPostId().equals(post.getPostId()));
+
+        // Récupérer toutes les réactions de l'utilisateur
+        Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
+        // Create the composite ID
+        UserPostReactionID reactionId = new UserPostReactionID();
+        reactionId.setUserId(currentUser.getIdUser());
+        reactionId.setPostId(post.getPostId());
+        
+        // Get the reaction type from the repository
+        List<UserPostReaction> reactions2 = userPostReactionRepository.findByPost_PostId(post.getPostId());
+        if (reactions2 != null && !reactions2.isEmpty()) {
+            // Find the reaction for this user
+            for (UserPostReaction r : reactions2) {
+                if (r.getUser().equals(currentUser)) {
+                    userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                    break;
+                }
+            }
+        }
+        
+        model.addAttribute("userReactedPosts", userReactedPosts);
+
 
         // Add all data to model
         model.addAttribute("post", post);

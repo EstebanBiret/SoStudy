@@ -36,3 +36,6 @@ build/
 /db/
 db/sostudy.db
 *.db
+
+### Images ###
+src/main/resources/static/images/

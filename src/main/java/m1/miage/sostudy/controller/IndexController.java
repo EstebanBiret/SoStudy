@@ -7,8 +7,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.entity.dto.RepostDisplay;
 import m1.miage.sostudy.model.enums.ReactionType;
@@ -158,6 +161,28 @@ public class IndexController {
             reposts.addAll(repostRepository.findByUser(user2));
         }
 
+        // Récupérer toutes les réactions de l'utilisateur
+        Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
+        for (Post post : posts) {
+            // Create the composite ID
+            UserPostReactionID reactionId = new UserPostReactionID();
+            reactionId.setUserId(user.getIdUser());
+            reactionId.setPostId(post.getPostId());
+            
+            // Get the reaction type from the repository
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            if (reactions != null && !reactions.isEmpty()) {
+                // Find the reaction for this user
+                for (UserPostReaction r : reactions) {
+                    if (r.getUser().equals(user)) {
+                        userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                        break;
+                    }
+                }
+            }
+        }
+        model.addAttribute("userReactedPosts", userReactedPosts);
+
         //if user has following but they have no posts or reposts
         if (posts.isEmpty() && reposts.isEmpty()) {
             model.addAttribute("posts", posts);
@@ -195,7 +220,6 @@ public class IndexController {
                 .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
                 .count();
 
-            // store counters in post
             post.setLikeCount(likeCount);
             post.setLoveCount(loveCount);
             post.setLaughCount(laughCount);
@@ -316,6 +340,7 @@ public class IndexController {
         model.addAttribute("posts", posts);
         model.addAttribute("user", user);
         model.addAttribute("repostedPostIds", repostedPostIds);
+        model.addAttribute("following", "posts");
         model.addAttribute("currentUri", request.getRequestURI());
         model.addAttribute("repostDisplays", repostDisplays);
 
