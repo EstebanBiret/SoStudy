@@ -170,9 +170,15 @@ public class IndexController {
             reactionId.setPostId(post.getPostId());
             
             // Get the reaction type from the repository
-            Optional<UserPostReaction> reaction = userPostReactionRepository.findById(reactionId);
-            if (reaction.isPresent()) {
-                userReactedPosts.put(post.getPostId(), reaction.get().getReaction().getReactionType());
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            if (reactions != null && !reactions.isEmpty()) {
+                // Find the reaction for this user
+                for (UserPostReaction r : reactions) {
+                    if (r.getUser().equals(user)) {
+                        userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                        break;
+                    }
+                }
             }
         }
         model.addAttribute("userReactedPosts", userReactedPosts);

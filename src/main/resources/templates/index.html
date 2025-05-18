@@ -47,6 +47,7 @@
         <div class="container">
             <div class="posts-container">
                 <div th:each="post : ${posts}" class="post-card">
+
                     <div class="post-header">
                         <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
                         <div class="post-user-info">
@@ -86,23 +87,24 @@
                     </div>
                     <div class="post-actions">
                         <div class="reaction-buttons">
-                            <button class="reaction-btn" th:attr="data-post-id=${post.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[post.postId]?.name() == 'LIKE' ? 'active' : ''}" onclick="submitReaction(this)" data-original-count="${post.likeCount}">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LIKE'} ? ' active' : ''"
+                            onclick="submitReaction(this)" data-original-count="${post.likeCount}">
                                 <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
                                 <span th:text="${post.likeCount}">0</span>
                             </button>
-                            <button class="reaction-btn" th:attr="data-post-id=${post.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[post.postId]?.name() == 'LOVE' ? 'active' : ''}" onclick="submitReaction(this)" data-original-count="${post.loveCount}">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LOVE'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.loveCount}">
                                 <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
                                 <span th:text="${post.loveCount}">0</span>
                             </button>
-                            <button class="reaction-btn" th:attr="data-post-id=${post.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[post.postId]?.name() == 'LAUGH' ? 'active' : ''}" onclick="submitReaction(this)" data-original-count="${post.laughCount}">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LAUGH'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.laughCount}">
                                 <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
                                 <span th:text="${post.laughCount}">0</span>
                             </button>
-                            <button class="reaction-btn" th:attr="data-post-id=${post.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[post.postId]?.name() == 'CRY' ? 'active' : ''}" onclick="submitReaction(this)" data-original-count="${post.cryCount}">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'CRY'} ? 'active' : ''" onclick="submitReaction(this)" data-original-count="${post.cryCount}">
                                 <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
                                 <span th:text="${post.cryCount}">0</span>
                             </button>
-                            <button class="reaction-btn" th:attr="data-post-id=${post.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[post.postId]?.name() == 'ANGRY' ? 'active' : ''}" onclick="submitReaction(this)">
+                            <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'ANGRY'} ? 'active' : ''" onclick="submitReaction(this)">
                                 <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
                                 <span th:text="${post.angryCount}">0</span>
                             </button>
@@ -179,10 +181,11 @@
                             </div>
                             <div class="post-actions">
                                 <div class="reaction-buttons">
-                                    <button class="reaction-btn">
+                                    <!-- <button class="reaction-btn">
                                         <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
                                         <span th:text="${repostDisplay.originalPost.likeCount}">0</span>
-                                    </button>
+                                    </button> 
+
                                     <button class="reaction-btn">
                                         <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
                                         <span th:text="${repostDisplay.originalPost.loveCount}">0</span>
@@ -196,6 +199,36 @@
                                         <span th:text="${repostDisplay.originalPost.cryCount}">0</span>
                                     </button>
                                     <button class="reaction-btn">
+                                        <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
+                                    </button>-->
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LIKE'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.likeCount}">
+                                        <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.likeCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LOVE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LOVE'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.loveCount}">
+                                        <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.loveCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LAUGH" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LAUGH'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.laughCount}">
+                                        <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.laughCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="CRY" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'CRY'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.cryCount}">
+                                        <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
+                                        <span th:text="${repostDisplay.originalPost.cryCount}">0</span>
+                                    </button>
+
+                                    <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="ANGRY" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'ANGRY'} ? ' active' : ''"
+                                        onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.angryCount}">
                                         <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
                                         <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
                                     </button>

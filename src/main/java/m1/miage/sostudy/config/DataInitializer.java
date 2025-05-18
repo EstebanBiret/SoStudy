@@ -488,15 +488,6 @@ public class DataInitializer implements CommandLineRunner {
         upr5.setPost(post2);
         upr5.setReaction(reaction5);
 
-        UserPostReaction upr6 = new UserPostReaction();
-        upr6.setId(new UserPostReactionID());
-        upr6.getId().setUserId(user3.getIdUser());
-        upr6.getId().setPostId(post2.getPostId());
-        upr6.getId().setReactionId(reaction1.getReactionId());
-        upr6.setUser(user3);
-        upr6.setPost(post2);
-        upr6.setReaction(reaction1);
-
         UserPostReaction upr7 = new UserPostReaction();
         upr7.setId(new UserPostReactionID());
         upr7.getId().setUserId(user1.getIdUser());
@@ -557,7 +548,6 @@ public class DataInitializer implements CommandLineRunner {
         userPostReactionRepository.save(upr3);
         userPostReactionRepository.save(upr4);
         userPostReactionRepository.save(upr5);
-        userPostReactionRepository.save(upr6);
         userPostReactionRepository.save(upr7);
         userPostReactionRepository.save(upr8);
         userPostReactionRepository.save(upr9);

@@ -1,9 +1,11 @@
 function submitReaction(button) {
-    const postId = button.getAttribute("data-post-id");
+    const postId = button.getAttribute("data-reactions-post-id");
     const reactionType = button.getAttribute("data-reaction-type");
+    const isRemoving = button.classList.contains('active');
     
     console.log('Post ID:', postId);
     console.log('Reaction Type:', reactionType);
+    console.log('Is removing:', isRemoving);
 
     if (!postId || !reactionType) {
         console.error('Post ID ou Reaction Type manquant');
@@ -16,44 +18,52 @@ function submitReaction(button) {
         credentials: 'same-origin'
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Update all reaction buttons for this post
-        document.querySelectorAll(`[data-post-id="${postId}"]`).forEach(button => {
-            const countElement = button.querySelector('span');
-            console.log('Count Element:', countElement);
+        if (response.ok) {
+            // Update all reaction buttons for this post
+            // First, find all occurrences of this post in the feed
+            const allPostButtons = document.querySelectorAll(`[data-reactions-post-id="${postId}"]`);
+            
+            // Find the current active reaction (if any) for each occurrence
+            const currentActiveButtons = new Set();
+            allPostButtons.forEach(button => {
+                if (button.classList.contains('active')) {
+                    currentActiveButtons.add(button);
+                }
+            });
 
-            const currentCount = parseInt(countElement.textContent) || 0;
-            const buttonReactionType = button.getAttribute('data-reaction-type');
+            // Update all occurrences of this post
+            allPostButtons.forEach(button => {
+                const countElement = button.querySelector('span');
+                const currentCount = parseInt(countElement.textContent) || 0;
+                const buttonReactionType = button.getAttribute('data-reaction-type');
 
-            if (buttonReactionType === reactionType) {
-                // If this is the clicked reaction
-                if (data.removed) {
-                    // If the reaction was removed
-                    countElement.textContent = currentCount - 1;
-                    button.classList.remove('active');
+                if (buttonReactionType === reactionType) {
+                    // If this is the clicked reaction
+                    if (isRemoving) {
+                        // If the reaction was removed
+                        countElement.textContent = currentCount - 1;
+                        button.classList.remove('active');
+                    } else {
+                        // If the reaction was added
+                        countElement.textContent = currentCount + 1;
+                        button.classList.add('active');
+                    }
                 } else {
-                    // If the reaction was added
-                    countElement.textContent = currentCount + 1;
-                    button.classList.add('active');
+                    // If this is a different reaction
+                    if (!isRemoving) {
+                        // If a different reaction was added
+                        button.classList.remove('active');
+                        // If this was the previous active reaction, decrease its count
+                        if (currentActiveButtons.has(button)) {
+                            countElement.textContent = currentCount - 1;
+                        }
+                    }
                 }
-            } else {
-                // If this is a different reaction
-                if (!data.removed) {
-                    // If a different reaction was added, remove active class from other buttons
-                    button.classList.remove('active');
-                    // Reset the count to its original value (since we're not changing this reaction)
-                    const originalCount = parseInt(button.dataset.originalCount) || 0;
-                    countElement.textContent = originalCount;
-                }
-            }
-        });
+            });
+        }
     })
     .catch(error => {
         console.error('Error:', error);
+        alert("Erreur lors de la reaction");
     });
 }
