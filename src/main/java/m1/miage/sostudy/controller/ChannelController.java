@@ -72,6 +72,8 @@ public class ChannelController {
             lastMessageMap.put(channel, lastMessage);
         }
 
+        model.addAttribute("currentUser", sessionUser);
+
         model.addAttribute("profPic", pathProfPicMap);
         model.addAttribute("lastMessageMap", lastMessageMap);
 

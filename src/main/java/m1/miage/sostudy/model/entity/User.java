@@ -1,5 +1,6 @@
 package m1.miage.sostudy.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class User extends Person {
      * List of the users that the user is following.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "id_user_following"),
             inverseJoinColumns = @JoinColumn(name = "id_user_followed"))
@@ -38,6 +40,7 @@ public class User extends Person {
      * List of the users that are following the user.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "followers",
             joinColumns = @JoinColumn(name = "id_user_followed"),
             inverseJoinColumns = @JoinColumn(name = "id_user_following"))
@@ -47,6 +50,7 @@ public class User extends Person {
      * List of the channels that the user is subscribed to.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "channel_suscribed",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
@@ -56,6 +60,7 @@ public class User extends Person {
      * List of the channels that the user is creator of.
      */
     @OneToMany
+    @JsonIgnore
     @JoinColumn(name = "channelId")
     private List<Channel> createdChannels = new ArrayList<>();
 
@@ -63,6 +68,7 @@ public class User extends Person {
      * List of the posts that the user has created.
      */
     @OneToMany
+    @JsonIgnore
     @JoinColumn(name = "postId")
     private List<Post> createdPosts = new ArrayList<>();
 
@@ -70,6 +76,7 @@ public class User extends Person {
      * List of the posts that the user has reposted.
      */
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "reposted_posts",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
@@ -79,6 +86,7 @@ public class User extends Person {
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "subscribed_communities",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_community"))
@@ -88,6 +96,7 @@ public class User extends Person {
      * List of the communities that the user is creator of.
      */
     @OneToMany
+    @JsonIgnore
     @JoinColumn(name = "communityId")
     private List<Community> createdCommunities = new ArrayList<>();
 
@@ -95,6 +104,7 @@ public class User extends Person {
      * List of the events that the user is subscribed to.
      */
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "subscribed_events",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_event"))
@@ -104,6 +114,7 @@ public class User extends Person {
      * List of the events that the user is creator of.
      */
     @OneToMany
+    @JsonIgnore
     @JoinColumn(name = "eventId")
     private List<Event> createdEvents = new ArrayList<>();
 
@@ -111,6 +122,7 @@ public class User extends Person {
      * List of the messages that the user has sent.
      */
     @OneToMany
+    @JsonIgnore
     @JoinColumn(name = "messageId")
     private List<Message> sentMessages = new ArrayList<>();
 

@@ -1,3 +1,6 @@
+
+let currentSubscription = null;
+
 const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/ws'
 });
@@ -37,30 +40,36 @@ function connect() {
 }
 
 function disconnect() {
-    if (stompClient.connected) {
-        stompClient.deactivate();
+    if (currentSubscription) {
+        currentSubscription.unsubscribe();
+        currentSubscription = null;
     }
     setConnected(false);
     console.log("Disconnected");
 }
 
 function subscribeToChannel(channelId) {
-    if (stompClient.subscription) {
-        stompClient.unsubscribe(stompClient.subscription.id);
+    console.log("Subscribing to channel:", channelId);
+    if (currentSubscription) {
+        currentSubscription.unsubscribe();
     }
-    stompClient.subscribe(`/topic/messages/${channelId}`, (message) => {
+
+    currentSubscription = stompClient.subscribe(`/topic/messages/${channelId}`, (message) => {
         const msg = JSON.parse(message.body);
+        console.log("Received message:", msg);
         showMessage(msg.sender.pseudo, msg.content, msg.dateMessage);
     });
 }
 
 function sendMessage(channelId) {
     const content = $("#message_sender").val();
+    const userId = $("#current-user-id").val();
+    console.log("Sending message:", content);
     if (!content || !channelId) return;
 
     stompClient.publish({
-        destination: `/app/send/${channelId}`,
-        body: JSON.stringify({ content: content })
+        destination: `/app/channels/${channelId}/send`,
+        body: JSON.stringify({ content: content , userId: userId })
     });
     $("#message_sender").val("");
 }
@@ -111,5 +120,6 @@ $(function () {
             // Optionnel: ajouter une classe active à la sélection visuelle
             $(".user-card").removeClass("active");
             $(this).addClass("active");
+
         }});
 });

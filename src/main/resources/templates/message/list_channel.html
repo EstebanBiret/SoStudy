@@ -46,6 +46,8 @@
                     <img src="/images/logos/repost.png" alt="Settings" class="settings-icon" id="connect">
                 </button>
             </div>
+            <input type="hidden" id="current-user-id" th:value="${currentUser.getIdUser()}"/>
+
 
             <!-- Chat messages en grid -->
             <div class="chat-messages" id="chat-messages">
