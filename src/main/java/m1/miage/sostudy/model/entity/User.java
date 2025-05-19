@@ -138,23 +138,6 @@ public class User extends Person {
      * @param birthDate           Birth date of the user.
      * @param personImagePath   Path of the image of the profile picture of the user.
      * @param bioUser             Biography of the user.
-     */
-    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath, String bioUser) {
-        super(name, firstName, email, password,pseudo, birthDate, personImagePath);
-        this.bioUser = bioUser;
-    }
-
-    /**
-     * Constructor for the User class.
-     *
-     * @param name                Name of the user.
-     * @param firstName           First name of the user.
-     * @param email               Email of the user.
-     * @param password            Password of the user.
-     * @param pseudo              Pseudo of the user.
-     * @param birthDate           Birth date of the user.
-     * @param personImagePath   Path of the image of the profile picture of the user.
-     * @param bioUser             Biography of the user.
      * @param studyLevel          Study level of the user.
      * @param studyDomain         Study domain of the user.
      * @param university          University of the user.
