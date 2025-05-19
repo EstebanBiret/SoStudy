@@ -252,7 +252,12 @@ public class UserController {
         }
         
         model.addAttribute("userReactedPosts", userReactedPosts);
-        
+
+        String follow = "s'abonner";
+        String unfollow = "se désabonner";
+        model.addAttribute("follow", follow);
+        model.addAttribute("unfollow", unfollow);
+
         //add attributes to model
         model.addAttribute("posts", posts);
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
@@ -357,20 +362,71 @@ public class UserController {
 
     /**
      * Displays the follow user page for a specific user identified by their pseudo.
+     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param pseudo the pseudo of the user to follow
      * @return the name of the follow user view
      */
     @PostMapping("/follow/{pseudo}")
-    public String followUser() {
-        return "redirect:/user";
+    public String followUser(Model model, HttpSession session, @PathVariable String pseudo) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        User user = (User) session.getAttribute("user");
+        User userToFollow = userRepository.findByPseudo(pseudo);
+        if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
+            return "redirect:/";
+        }
+        // Check if the user is already following the user to follow
+        if (user.getFollowing().contains(userToFollow)) {
+            // User is already following, do nothing or show a message
+            return "redirect:/";
+        }
+        // Add the user to the following list
+        user.addFollowing(userToFollow);
+        userToFollow.addFollowers(user);
+
+        // Save the changes to the database
+        userRepository.save(user);
+        userRepository.save(userToFollow);
+        // Update the session attribute
+        session.setAttribute("user", user);
+        return "redirect:/";
     }
 
     /**
      * Displays the unfollow user page for a specific user identified by their pseudo.
+     * * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param pseudo the pseudo of the user to unfollow
      * @return the name of the unfollow user view
      */
     @PostMapping("/unfollow/{pseudo}")
-    public String unfollowUser() {
-        return "redirect:/user";
+    public String unfollowUser(Model model, HttpSession session, @PathVariable String pseudo) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        User user = (User) session.getAttribute("user");
+        User userToFollow = userRepository.findByPseudo(pseudo);
+        if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
+            return "redirect:/";
+        }
+        // Check if the user is not following the user to unfollow
+        if (!user.getFollowing().contains(userToFollow)) {
+            // User is not following, do nothing or show a message
+            return "redirect:/";
+        }
+        // Remove the user from the following list
+        user.removeFollowing(userToFollow);
+        userToFollow.removeFollowers(user);
+
+        // Save the changes to the database
+        userRepository.save(user);
+        userRepository.save(userToFollow);
+        // Update the session attribute
+        session.setAttribute("user", user);
+        return "redirect:/";
     }
 
 
