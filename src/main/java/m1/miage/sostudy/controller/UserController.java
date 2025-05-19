@@ -7,7 +7,6 @@ import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.entity.dto.RepostDisplay;
-import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.RepostRepository;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static m1.miage.sostudy.controller.AuthController.hashPassword;
 import static m1.miage.sostudy.controller.IndexController.*;
+import static m1.miage.sostudy.model.entity.User.STUDY_LEVELS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -276,6 +276,7 @@ public class UserController {
         if (session.getAttribute("user") == null) {
             return"redirect:/auth/login";
         }
+        model.addAttribute("niveauxEtude", STUDY_LEVELS);
         return "profile/form_edit_profile";
     }
 
@@ -299,7 +300,10 @@ public class UserController {
                                @RequestParam String password,
                                @RequestParam String birthdate,
                                @RequestParam String bioUser,
-                               @RequestParam MultipartFile image) throws IOException {
+                               @RequestParam MultipartFile image,
+                               @RequestParam String niveauEtude,
+                               @RequestParam String studyDomain,
+                               @RequestParam String university) throws IOException {
 
         if (session.getAttribute("user") == null) {
             return "redirect:/auth/login";
@@ -312,6 +316,9 @@ public class UserController {
         user.setPassword(hashPassword(password));
         user.setBirthDate(birthdate);
         user.setBioUser(bioUser);
+        user.setStudyLevel(niveauEtude);
+        user.setStudyDomain(studyDomain);
+        user.setUniversity(university);
 
         if (!image.isEmpty()) {
             // Supprimer l'ancienne image si elle n'est pas la photo par défaut
