@@ -38,6 +38,19 @@ public class CommunityController {
     private UserRepository userRepository;
 
     /**
+     * Get the name of the month in French
+     * @param month the month
+     * @return the name of the month in French
+     */
+    private String getMonthName(int month) {
+        String[] months = {
+            "janvier", "février", "mars", "avril", "mai", "juin",
+            "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+        };
+        return months[month - 1];
+    }
+
+    /**
      * Get all communities
      * @param model the model of the view
      * @param session the session of the user
@@ -72,12 +85,55 @@ public class CommunityController {
         return "community/list";
     }
 
-    private String getMonthName(int month) {
-        String[] months = {
-            "janvier", "février", "mars", "avril", "mai", "juin",
-            "juillet", "août", "septembre", "octobre", "novembre", "décembre"
-        };
-        return months[month - 1];
+    /**
+     * Join a community
+     * @param communityId the ID of the community
+     * @param session the session of the user
+     * @param request the request of the user
+     * @return the name of the view to be rendered
+     */
+    @PostMapping("/join/{communityId}")
+    public String joinCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
+
+        // Check if user is logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
+
+        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
+        if (optionalCommunity.isPresent() && !user.getSubscribedCommunities().contains(optionalCommunity.get())) {
+            user.getSubscribedCommunities().add(optionalCommunity.get());
+            optionalCommunity.get().getUsers().add(user);
+            userRepository.save(user);
+            communityRepository.save(optionalCommunity.get());
+        }
+
+        return "redirect:/community";
+    }
+
+    /**
+     * Leave a community
+     * @param communityId the ID of the community
+     * @param session the session of the user
+     * @param request the request of the user
+     * @return the name of the view to be rendered
+     */
+    @PostMapping("/leave/{communityId}")
+    public String leaveCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
+        
+        // Check if user is logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
+        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
+        if (optionalCommunity.isPresent() && user.getSubscribedCommunities().contains(optionalCommunity.get())) {
+            user.getSubscribedCommunities().remove(optionalCommunity.get());
+            optionalCommunity.get().getUsers().remove(user);
+            userRepository.save(user);
+            communityRepository.save(optionalCommunity.get());
+        }
+
+        return "redirect:/community";
     }
 
     /**
@@ -179,57 +235,6 @@ public class CommunityController {
         model.addAttribute("user", user);
         model.addAttribute("currentUri", request.getRequestURI());
         return "community/form_delete";
-    }
-
-    /**
-     * Join a community
-     * @param communityId the ID of the community
-     * @param session the session of the user
-     * @param request the request of the user
-     * @return the name of the view to be rendered
-     */
-    @PostMapping("/join/{communityId}")
-    public String joinCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
-
-        // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        User user = (User) session.getAttribute("user");
-
-        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-        if (optionalCommunity.isPresent() && !user.getSubscribedCommunities().contains(optionalCommunity.get())) {
-            user.getSubscribedCommunities().add(optionalCommunity.get());
-            optionalCommunity.get().getUsers().add(user);
-            userRepository.save(user);
-            communityRepository.save(optionalCommunity.get());
-        }
-
-        return "redirect:/community";
-    }
-
-    /**
-     * Leave a community
-     * @param communityId the ID of the community
-     * @param session the session of the user
-     * @param request the request of the user
-     * @return the name of the view to be rendered
-     */
-    @PostMapping("/leave/{communityId}")
-    public String leaveCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
-        
-        // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        User user = (User) session.getAttribute("user");
-        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-        if (optionalCommunity.isPresent() && user.getSubscribedCommunities().contains(optionalCommunity.get())) {
-            user.getSubscribedCommunities().remove(optionalCommunity.get());
-            optionalCommunity.get().getUsers().remove(user);
-            userRepository.save(user);
-            communityRepository.save(optionalCommunity.get());
-        }
-
-        return "redirect:/community";
     }
 
     /**
