@@ -20,6 +20,11 @@
                 <img th:unless="${currentUri.contains('/channels')}" th:src="@{/images/logos/message-grey.svg}" alt="Messagerie">
             </a>
 
+            <a th:href="@{/community}" class="nav-item">
+                <img th:if="${currentUri.contains('/community')}" th:src="@{/images/logos/community-active.svg}" alt="Communities">
+                <img th:unless="${currentUri.contains('/community')}" th:src="@{/images/logos/community-grey.svg}" alt="Communities">
+            </a>
+
             <a th:href="@{/events}" class="nav-item">
                 <img th:if="${currentUri.contains('/events')}" th:src="@{/images/logos/event-active.svg}" alt="Events">
                 <img th:unless="${currentUri == '/events'}" th:src="@{/images/logos/event-grey.svg}" alt="Events" id="events-img">

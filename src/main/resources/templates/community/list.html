@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Communautés - SoStudy</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
+        <link rel="stylesheet" th:href="@{/css/community/list.css}">
+        <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    </head>
+    <body>
+        <!-- Navbar -->
+        <div th:replace="common/navbar :: navbar(${currentUri})"></div>
+
+        <div class="container">
+            <h1 style="text-align: center;">Communautés</h1>
+            
+            <div class="community-list">
+                <div th:each="community : ${communities}" class="community-card">
+                    <div class="community-image">
+                        <img th:src="${community.communityImagePath}" alt="Image de la communauté">
+                    </div>
+                    <div class="community-info">
+                        <h2 th:text="${community.communityName}"></h2>
+                        <p th:text="${community.communityDescription}"></p>
+                        <div class="community-meta">
+                            <span class="creation-info">
+                                <span class="label">Créée par</span>
+                                <a href="" th:href="@{/user/{pseudo}(pseudo=${community.userCreator.pseudo})}" class="creator-link">
+                                    <span th:text="${community.userCreator.pseudo}"></span>
+                                </a>
+                                <span class="label">le</span>
+                                <span class="date" th:text="${community.communityCreationDate}"></span>
+                            </span>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat">
+                                <span th:text="${community.numberOfMembers}" th:data-community-id="${community.communityId}">0</span>
+                                <span>membre(s)</span>
+                            </div>
+                            <div class="stat">
+                                <span th:text="${community.numberOfPosts}">0</span>
+                                <span>post(s)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="community-actions" th:data-community-id="${community.communityId}">
+                        <!-- Creator actions -->
+                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="edit" th:href="@{/community/edit/{id}(id=${community.communityId})}">
+                            Modifier
+                        </a>
+                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="delete" th:href="@{/community/delete/{id}(id=${community.communityId})}">
+                            Supprimer
+                        </a>
+                        
+                        <!-- Member actions -->
+                        <a th:if="${user.subscribedCommunities.contains(community) && user.idUser != community.userCreator.idUser}" 
+                           href="" 
+                           class="btn" 
+                           id="leave" 
+                           th:data-community-id="${community.communityId}"
+                           data-is-member="true"
+                           onclick="event.preventDefault(); toggleCommunityMembership(this)">
+                            Quitter
+                        </a>
+                        
+                        <!-- Not a member actions -->
+                        <a th:if="${!user.subscribedCommunities.contains(community) && user.idUser != community.userCreator.idUser}" 
+                           href="" 
+                           class="btn" 
+                           id="join" 
+                           th:data-community-id="${community.communityId}"
+                           data-is-member="false"
+                           onclick="event.preventDefault(); toggleCommunityMembership(this)">
+                            Rejoindre
+                        </a>
+                        
+                        <!-- View action -->
+                        <a th:if="${user.subscribedCommunities.contains(community)}" 
+                           th:href="@{/community/{id}(id=${community.communityId})}" 
+                           class="btn" id="voir"
+                           th:data-community-id="${community.communityId}">
+                            Voir la communauté
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script th:src="@{/js/community/community.js}"></script>
+    </body>
+</html>
