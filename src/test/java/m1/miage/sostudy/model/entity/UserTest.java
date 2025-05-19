@@ -16,7 +16,7 @@ class UserTest {
      */
     @BeforeEach
     void setUp() {
-        user = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio");
+        user = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio", "M1", "info", "TLS1");
     }
 
     /**
@@ -177,11 +177,62 @@ class UserTest {
     }
 
     /**
+     * Test getStudyLevel method.
+     */
+    @Test
+    void testGetStudyLevel() {
+        assertEquals("M1", user.getStudyLevel());
+    }
+
+    /**
+     * Test setStudyLevel method.
+     */
+    @Test
+    void testSetStudyLevel() {
+        user.setStudyLevel("M2");
+        assertEquals("M2", user.getStudyLevel());
+    }
+
+    /**
+     * Test studyDomain method.
+     */
+    @Test
+    void testGetStudyDomain() {
+        assertEquals("info", user.getStudyDomain());
+    }
+
+    /**
+     * Test setStudyDomain method.
+     */
+    @Test
+    void testSetStudyDomain() {
+        user.setStudyDomain("newDomain");
+        assertEquals("newDomain", user.getStudyDomain());
+    }
+
+    /**
+     * Test getUniversity method.
+     */
+    @Test
+    void testGetUniversity() {
+        assertEquals("TLS1", user.getUniversity());
+    }
+
+    /**
+     * Test setUniversity method.
+     */
+    @Test
+    void testSetUniversity() {
+        user.setUniversity("newUniversity");
+        assertEquals("newUniversity", user.getUniversity());
+    }
+
+    /**
      * Test the equals and hashCode methods of the User class.
      */
     @Test
     void testEqualsAndHashCode() {
-        User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio");
+        User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio", "M1", "info", "TLS1");
         otherUser.setIdUser(user.getIdUser()+1);
         assertNotEquals(user, otherUser);
     }
@@ -191,7 +242,7 @@ class UserTest {
      */
     @Test
     void testHashCode() {
-        User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio");
+        User otherUser = new User("Doe", "John", "john.doe@example.com", "password", "jdoe", "1990-01-01", "http://example.com/image.jpg", "Bio", "M1", "info", "TLS1");
         otherUser.setIdUser(user.getIdUser()+1);
         assertNotEquals(user.hashCode(), otherUser.hashCode());
     }

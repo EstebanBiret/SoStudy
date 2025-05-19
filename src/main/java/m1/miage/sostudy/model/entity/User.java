@@ -12,6 +12,10 @@ import java.util.*;
 @Table(name = "users")
 public class User extends Person {
 
+    /**
+     * static list of all study levels.
+     */
+    public static final List<String> STUDY_LEVELS = Arrays.asList("BTS", "CPGE1", "CPGE2","BUT1", "BUT2", "BUT3", "L1", "L2", "L3", "M1", "M2", "LP", "Doctorat" );
 
     /**
      * Unique identifier for the user.
@@ -101,6 +105,24 @@ public class User extends Person {
     private List<Message> sentMessages = new ArrayList<>();
 
     /**
+     * study level of the user.
+     */
+    @Column(name = "study_level")
+    private String studyLevel;
+
+    /**
+     * study domain of the user.
+     */
+    @Column(name = "study_domain")
+    private String studyDomain;
+
+    /**
+     * university of the user.
+     */
+    @Column(name = "university")
+    private String university;
+
+    /**
      * Default constructor for the User class.
      */
     public User() {super();}
@@ -116,10 +138,16 @@ public class User extends Person {
      * @param birthDate           Birth date of the user.
      * @param personImagePath   Path of the image of the profile picture of the user.
      * @param bioUser             Biography of the user.
+     * @param studyLevel          Study level of the user.
+     * @param studyDomain         Study domain of the user.
+     * @param university          University of the user.
      */
-    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath, String bioUser) {
+    public User(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath, String bioUser, String studyLevel, String studyDomain, String university) {
         super(name, firstName, email, password,pseudo, birthDate, personImagePath);
         this.bioUser = bioUser;
+        this.studyLevel = studyLevel;
+        this.studyDomain = studyDomain;
+        this.university = university;
     }
 
     /**
@@ -392,6 +420,56 @@ public class User extends Person {
      */
     public void removeSentMessage(Message message) {
         this.sentMessages.remove(message);
+    }
+
+    /**
+     * Getter for the study level of the user.
+     * @return the study level of the user.
+     */
+    public String getStudyLevel() {
+        return studyLevel;
+    }
+
+    /**
+     * Setter for the study level of the user.
+     * @param studyLevel the new study level of the user.
+     */
+    public void setStudyLevel(String studyLevel) {
+        if (STUDY_LEVELS.contains(studyLevel)) {
+            this.studyLevel = studyLevel;
+        }
+    }
+
+    /**
+     * Getter for the study domain of the user.
+     * @return the study domain of the user.
+     */
+    public String getStudyDomain() {
+        return studyDomain;
+    }
+
+    /**
+     * Setter for the study domain of the user.
+     * @param studyDomain the new study domain of the user.
+     */
+    public void setStudyDomain(String studyDomain) {
+        this.studyDomain = studyDomain;
+    }
+
+    /**
+     * Getter for the university of the user.
+     * @return the university of the user.
+     */
+    public String getUniversity() {
+        return university;
+    }
+
+    /**
+     * Setter for the university of the user.
+     * @param university the new university of the user.
+     */
+    public void setUniversity(String university) {
+        this.university = university;
     }
 
     /**

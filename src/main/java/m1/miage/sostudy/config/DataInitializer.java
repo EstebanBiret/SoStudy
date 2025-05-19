@@ -101,7 +101,10 @@ public class DataInitializer implements CommandLineRunner {
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
         user1.setPersonImagePath("/images/profiles_pictures/1.jpeg");
-        
+        user1.setStudyLevel("M2");
+        user1.setStudyDomain("Informatique");
+        user1.setUniversity("Université Toulouse 1");
+
         User user2 = new User();
         user2.setName("Martin");
         user2.setFirstName("Marie");
@@ -111,7 +114,10 @@ public class DataInitializer implements CommandLineRunner {
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
         user2.setPersonImagePath("/images/profiles_pictures/2.jpeg");
-        
+        user2.setStudyLevel("M1");
+        user2.setStudyDomain("Informatique");
+        user2.setUniversity("Université Toulouse 3");
+
         User user3 = new User();
         user3.setName("Leroy");
         user3.setFirstName("Pierre");
@@ -121,6 +127,10 @@ public class DataInitializer implements CommandLineRunner {
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
         user3.setPersonImagePath("/images/profiles_pictures/3.jpeg");
+        user3.setStudyLevel("L3");
+        user3.setStudyDomain("Droit");
+        user3.setUniversity("Université Toulouse 1");
+
         
         // Sauvegarde des utilisateurs
         user1 = userRepository.save(user1);
@@ -249,6 +259,9 @@ public class DataInitializer implements CommandLineRunner {
         user4.setBirthDate("1998-03-15");
         user4.setBioUser("Débutante en programmation");
         user4.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
+        user4.setStudyLevel("M1");
+        user4.setStudyDomain("Informatique");
+        user4.setUniversity("Université Toulouse 1");
         user4 = userRepository.save(user4);
 
         // Création du 5ème utilisateur
@@ -261,6 +274,9 @@ public class DataInitializer implements CommandLineRunner {
         user5.setBirthDate("1996-07-22");
         user5.setBioUser("Développeur Full Stack");
         user5.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
+        user5.setStudyLevel("M2");
+        user5.setStudyDomain("Informatique");
+        user5.setUniversity("Université Toulouse 1");
         user5 = userRepository.save(user5);
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5
