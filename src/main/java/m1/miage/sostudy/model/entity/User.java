@@ -1,5 +1,6 @@
 package m1.miage.sostudy.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -33,6 +34,7 @@ public class User extends Person {
      * List of the users that the user is following.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "following",
             joinColumns = @JoinColumn(name = "id_user_following"),
             inverseJoinColumns = @JoinColumn(name = "id_user_followed"))
@@ -42,6 +44,7 @@ public class User extends Person {
      * List of the users that are following the user.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "followers",
             joinColumns = @JoinColumn(name = "id_user_followed"),
             inverseJoinColumns = @JoinColumn(name = "id_user_following"))
@@ -51,6 +54,7 @@ public class User extends Person {
      * List of the channels that the user is subscribed to.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "subscribed_channels",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
@@ -60,18 +64,21 @@ public class User extends Person {
      * List of the channels that the user is creator of.
      */
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Channel> createdChannels = new ArrayList<>();
 
     /**
      * List of the posts that the user has created.
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Post> createdPosts = new ArrayList<>();
 
     /**
      * List of the communities that the user is subscribed to.
      */
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "subscribed_communities",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_community"))
@@ -81,12 +88,15 @@ public class User extends Person {
      * List of the communities that the user is creator of.
      */
     @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Community> createdCommunities = new ArrayList<>();
 
     /**
      * List of the events that the user is subscribed to.
      */
+
     @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinTable(name = "subscribed_events",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_event"))
@@ -96,11 +106,13 @@ public class User extends Person {
      * List of the events that the user is creator of.
      */
     @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Event> createdEvents = new ArrayList<>();
 
     /**
      * List of the messages that the user has sent.
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Message> sentMessages = new ArrayList<>();
 

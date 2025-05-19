@@ -36,10 +36,17 @@ public class Message {
     private String dateMessage;
 
     /**
+     * ID of the user who sent the message (for transient use).
+     */
+    @Transient
+    private Integer userId;
+
+
+    /**
      * Channel associated with the message.
      */
     @ManyToOne
-    @JoinColumn(name = "idChannel")
+    @JoinColumn(name = "channelId")
     private Channel channel;
 
     /**
@@ -136,6 +143,21 @@ public class Message {
      */
     public void setSender(User user) {
         this.sender = user;
+    }
+
+    /**
+     * Getter for the user ID (transient).
+     * @return the user ID.
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+    /**
+     * Setter for the user ID (transient).
+     * @param userId the new user ID.
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     /**

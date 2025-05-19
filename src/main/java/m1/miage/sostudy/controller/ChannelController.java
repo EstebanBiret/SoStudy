@@ -15,8 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -47,6 +53,12 @@ public class ChannelController {
     @Autowired
     private MessageRepository messageRepository;
 
+    /**
+     * Default path for uploading files.
+     */
+    private final String UPLOAD_DIR = "./src/main/resources/static/images/channel/";
+
+
 
     /**
      * Displays the list of all channels.
@@ -61,7 +73,7 @@ public class ChannelController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/auth/login";
 
-        List<Channel> chans = ((User) session.getAttribute("user")).getSubscribedChannels();
+        List<Channel> chans = sessionUser.getSubscribedChannels();
 
         if (chans.isEmpty()) {
             model.addAttribute("NoChannel", "Vous n'avez pas encore de canal");
@@ -72,18 +84,19 @@ public class ChannelController {
         HashMap<Channel, String> profPicMap = new HashMap<>();
         HashMap<Channel, String> profPseudoMap = new HashMap<>();
 
-        for (Channel channel : chans) {
+        System.out.println("chans: " + chans);
 
+        for (Channel channel : chans) {
             //have the path of the profile picture of the other user
             if (channel.getUsers().size() == 2) {
                 profPicMap.put(channel, channel.getUsers().stream()
-                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .filter(user -> user.getIdUser() != sessionUser.getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
                         .orElse("/images/profiles_pictures/defaultProfilePic.png"));
                 //have the pseudo of the other user
                 profPseudoMap.put(channel, channel.getUsers().stream()
-                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .filter(user -> user.getIdUser() != sessionUser.getIdUser())
                         .findFirst()
                         .map(User::getPseudo)
                         .orElse("Utilisateur anonyme"));
@@ -92,6 +105,9 @@ public class ChannelController {
             Message lastMessage = channelRepository.findLastMessageByChannel(channel);
             lastMessageMap.put(channel, lastMessage);
         }
+
+        System.out.println("lastMessageMap: " + lastMessageMap);
+        model.addAttribute("currentUser", sessionUser);
 
         model.addAttribute("profPicMap", profPicMap);
         model.addAttribute("lastMessageMap", lastMessageMap);
@@ -134,9 +150,20 @@ public class ChannelController {
      * @return a redirect to the list of channels
      */
     @PostMapping("/new")
-    public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+    public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("channelImage") MultipartFile image, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/auth/login";
+
+        String fileName = null;
+        if (!image.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/channel/" + rawFileName;
+        } else {
+            fileName = "/images/channel/defaultChannelImage.png";
+        }
 
         List<Integer> selectedUserIds = Arrays.stream(selectedUsersCsv.split(","))
                 .map(Integer::parseInt)
@@ -151,7 +178,7 @@ public class ChannelController {
 
         // Check if a private channel already exists between the users
         for (User user : selectedUsers) {
-            if (hasACanalAlready(sessionUser, user)) {
+            if (hasACanalAlready(sessionUser, user) && selectedUsers.size() == 1) {
                 redirectAttributes.addFlashAttribute("error", "Un canal privé existe déjà entre vous et " + user.getPseudo());
                 return "redirect:/channels/new"; // Redirect to the list of channels if a private channel already exists
             }
@@ -162,6 +189,7 @@ public class ChannelController {
         //todo ajouter dans form quand c'est > 2 un champ pour mettre l'image du canal
 
         Channel channel = new Channel();
+        channel.setChannelImagePath(fileName);
         channel.setChannelName(
                 (selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))
                         ? "Groupe de discussion de " + sessionUser.getPseudo()+", " + selectedUsers.stream()
@@ -171,20 +199,17 @@ public class ChannelController {
                         ? selectedUsers.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
-        channel.setChannelImagePath("/images/channel/defaultChannelImage.png");
         channel.setCreator(sessionUser);
 
         channel = channelRepository.save(channel);
 
-        for (Integer id : selectedUserIds) {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+        for (User user : selectedUsers) {
+            channel.addUser(user);
             user.getSubscribedChannels().add(channel);
             userRepository.save(user);
-
-            channel.addUser(user);
         }
 
+        channel.addUser(sessionUser);
         sessionUser.getSubscribedChannels().add(channel);
         userRepository.save(sessionUser);
 
