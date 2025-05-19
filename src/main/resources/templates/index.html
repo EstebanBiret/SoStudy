@@ -18,9 +18,9 @@
                 <div class="no-following-content">
                     <h2>Commencez à suivre des utilisateurs</h2>
                     <p>Pour voir des posts, commencez par suivre des utilisateurs qui partagent vos intérêts.</p>
-                    <form th:action="@{/user/search}" method="get" class="search-form">
+                    <form onsubmit="redirectSearch(event)" class="search-form">
                         <div class="search-input-group">
-                            <input type="text" placeholder="Rechercher un utilisateur..." name="pseudo" required>
+                            <input type="text" id="searchInputBody" placeholder="Rechercher un utilisateur..." name="pseudo" required>
                             <button type="submit" class="search-btn">
                                 Rechercher
                             </button>
@@ -29,6 +29,7 @@
                 </div>
             </div>
         </div>
+
 
         <!-- If user has no posts -->
         <div th:if="${following == 'no_posts'}">
@@ -248,8 +249,9 @@
             </div>
         </div>
 
-        <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
+        <script th:src="@{/js/common/navbar.js}"></script>
+        <script th:src="@{/js/profile/searchProfile.js}"></script>
 
     </body>
 </html>

@@ -16,7 +16,7 @@ public class User extends Person {
     /**
      * static list of all study levels.
      */
-    public static final List<String> STUDY_LEVELS = Arrays.asList("BTS", "CPGE1", "CPGE2","BUT1", "BUT2", "BUT3", "L1", "L2", "L3", "M1", "M2", "LP", "Doctorat" );
+    public static final List<String> STUDY_LEVELS = Arrays.asList("BTS", "CPGE1", "CPGE2","BUT1", "BUT2", "BUT3", "L1", "L2", "L3", "M1", "M2", "LP", "Doctorat", "Autres" );
 
     /**
      * Unique identifier for the user.

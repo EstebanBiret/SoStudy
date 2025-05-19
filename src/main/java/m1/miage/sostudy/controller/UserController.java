@@ -424,5 +424,29 @@ public class UserController {
         return "redirect:/";
     }
 
+    /**
+     * search for users by pseudo
+     *
+     * @param pseudo the pseudo of the user to search for
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param request the HTTP request
+     * @return the list of users found
+     */
+    @GetMapping("/search/{pseudo}")
+    public String searchUser(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+
+        User user = (User) session.getAttribute("user");
+        List<User> users = userRepository.findByPseudoLike(pseudo);
+        if(users.contains(user)){
+            users.remove(user);
+        }
+        model.addAttribute("users", users);
+        model.addAttribute("currentUri", request.getRequestURI());
+        return "profile/search_profile";
+    }
 
 }

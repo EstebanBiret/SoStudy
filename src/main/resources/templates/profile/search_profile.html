@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SoStudy | Accueil</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/profile/searchprofile.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+</head>
+<body>
+<div th:replace="common/navbar :: navbar(${currentUri})"></div>
+
+    <div class="search-container">
+        <h1>Recherche de profils</h1>
+        <form id="searchForm" onsubmit="return redirectSearch(event)">
+            <input type="text" id="searchInputBody" name="pseudo" placeholder="Rechercher un profil..." required>
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+
+    <div class="results-container">
+        <h2>Résultats de la recherche</h2>
+        <ul class="results-list">
+            <div th:each="user : ${users}">
+                <a th:href="@{/user/{pseudo}(pseudo=${user.pseudo})}" class="result-item">
+                    <img th:src="${user.personImagePath}" alt="Profil" class="result-image">
+                    <span class="result-name" th:text="${user.pseudo}"></span>
+                </a>
+            </div>
+        </ul>
+    </div>
+
+    <div class="no-results" th:if="${#lists.isEmpty(users)}">
+        <p>Aucun profil trouvé.</p>
+    </div>
+
+</body>
+<script th:src="@{/js/common/navbar.js}"></script>
+<script th:src="@{/js/profile/searchProfile.js}"></script>
+</html>
