@@ -168,34 +168,38 @@ public class CommunityController {
 
     /**
      * Create a new community
-     * @param name the name of the community
-     * @param description the description of the community
-     * @param image the image of the community
-     * @param model the model of the view
+     * @param communityName the name of the community
+     * @param communityDescription the description of the community
+     * @param communityImage the image of the community
      * @param session the session of the user
      * @return the name of the view to be rendered
      * @throws IOException if an I/O error occurs
      */
     @PostMapping("/new")
-    public String createCommunity(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, Model model, HttpSession session) throws IOException {
+    public String createCommunity(@RequestParam String communityName, @RequestParam String communityDescription, @RequestParam MultipartFile communityImage, HttpSession session) throws IOException {
 
         //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
-        User user = (User) session.getAttribute("user");
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
 
         Community community = new Community();
-        community.setCommunityName(name);
-        community.setCommunityDescription(description);
+        community.setCommunityName(communityName);
+        community.setCommunityDescription(communityDescription);
 
         //image
         String fileName = null;
-        if (!image.isEmpty()) {
-            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+        if (!communityImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
             Files.createDirectories(filePath.getParent());
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
+            community.setCommunityImagePath(fileName);
+        }
+        else {
+            fileName = "/images/community/defaultCommunity.png";
             community.setCommunityImagePath(fileName);
         }
 
@@ -206,10 +210,12 @@ public class CommunityController {
         community.setUserCreator(user);
         community.setNumberOfMembers(1);
         community.setNumberOfPosts(0);
+        community.getUsers().add(user);
         communityRepository.save(community);
 
-        model.addAttribute("user", user);
-
+        user.getSubscribedCommunities().add(community);
+        user.addCreatedCommunity(community);
+        userRepository.save(user);
 
         // Add a small delay using a temporary redirect
         return "redirect:/community/temporary-redirect";

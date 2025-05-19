@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Communautés - SoStudy</title>
+        <title>SoStudy | Communautés</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" th:href="@{/css/community/list.css}">
@@ -143,16 +143,16 @@
         <!-- Modal de création -->
         <div id="createModal" class="modal-overlay" style="display:none;">
             <div class="modal">
-                <h2 id="createCommunityName">Créer une communauté</h2>
-                <form id="createCommunityForm">
+                <h2 id="createCommunityFormTitle">Créer une communauté</h2>
+                <form id="createCommunityForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
                     <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
                     <input type="file" id="communityImage" name="communityImage" accept="image/*">
+                    <div class="modal-actions">
+                        <button type="submit" class="btn createCommunityBtn">Créer</button>
+                        <button onclick="closeCreateModal()" class="btn btn-danger">Annuler</button>
+                    </div>
                 </form>
-                <div class="modal-actions">
-                    <button onclick="confirmCreate()" class="btn btn-danger">Créer</button>
-                    <button onclick="closeCreateModal()" class="btn">Annuler</button>
-                </div>
             </div>
         </div>
 

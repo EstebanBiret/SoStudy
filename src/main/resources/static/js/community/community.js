@@ -60,29 +60,87 @@ function confirmDelete() {
 }
 
 // confirm create
-function confirmCreate() {
-    const communityName = document.getElementById("communityName").value;
-    const communityDescription = document.getElementById("communityDescription").value;
-    const communityImage = document.getElementById("communityImage").files[0];
-    
-    const formData = new FormData();
-    formData.append("communityName", communityName);
-    formData.append("communityDescription", communityDescription);
-    formData.append("communityImage", communityImage);
-    
+document.getElementById("createCommunityForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
     fetch("/community/new", {
         method: "POST",
         body: formData
     })
-    .then(res => {
-        if (res.ok) {
-            // close modal
+    .then(res => res.json())
+    .then(community => {
+        if (community) {
+            form.reset();
             closeCreateModal();
+
+            // update community list
+            const communityList = document.querySelector('.community-list');
+            if (communityList) {
+                // Créer la nouvelle carte de communauté
+                const newCard = document.createElement('div');
+                newCard.className = 'community-card';
+                newCard.innerHTML = `
+                    <div class="community-image">
+                        <img src="${community.communityImagePath}" alt="Image de la communauté">
+                    </div>
+                    <div class="community-info">
+                        <h2>${community.communityName}</h2>
+                        <p>${community.communityDescription}</p>
+                        <div class="community-meta">
+                            <span class="creation-info">
+                                <span class="label">Créée par</span>
+                                <a href="/user/${community.userCreator.pseudo}" class="creator-link">
+                                    ${community.userCreator.pseudo}
+                                </a>
+                                <span class="label">le</span>
+                                <span class="date">${community.communityCreationDate}</span>
+                            </span>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat">
+                                <span>0</span>
+                                <span>membre(s)</span>
+                            </div>
+                            <div class="stat">
+                                <span>0</span>
+                                <span>post(s)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="community-actions">
+                        <a href="" class="btn" id="edit" 
+                           data-user-id="${user.idUser}"
+                           onclick="event.preventDefault(); openEditModal(this)">
+                            Modifier
+                        </a>
+                        <a href="" class="btn" id="delete" 
+                           data-user-id="${user.idUser}"
+                           data-community-id="${community.communityId}"
+                           data-community-name="${community.communityName}"
+                           onclick="event.preventDefault(); openDeleteModal(this)">
+                            Supprimer
+                        </a>
+                    </div>
+                `;
+
+                // Ajouter la nouvelle carte au début de la liste
+                communityList.insertBefore(newCard, communityList.firstChild);
+            }
+
         } else {
             alert("Erreur lors de la création de la communauté");
         }
+    })
+    .catch(error => {
+        console.error("Erreur:", error);
+        alert("Une erreur est survenue lors de la création de la communauté");
     });
-}
+});
+
 
 // toggle community membership
 function toggleCommunityMembership(button) {

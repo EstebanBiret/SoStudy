@@ -202,16 +202,16 @@ body {
     background: #862fb3;
 }
 
-#deleteModal .btn.btn-danger {
+.btn.btn-danger {
     background: #dc3545;
     color: white;
 }
 
-#deleteModal .btn.btn-danger:hover {
+.btn.btn-danger:hover {
     background: #c82333;
 }
 
-#deleteCommunityName {
+#deleteCommunityName, #createCommunityFormTitle {
     text-align: center;
     margin-bottom: 1rem;
 }
