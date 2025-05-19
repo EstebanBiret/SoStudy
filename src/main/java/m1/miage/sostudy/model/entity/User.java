@@ -67,7 +67,7 @@ public class User extends Person {
     /**
      * List of the communities that the user is subscribed to.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subscribed_communities",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_community"))
@@ -82,7 +82,7 @@ public class User extends Person {
     /**
      * List of the events that the user is subscribed to.
      */
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subscribed_events",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_event"))
