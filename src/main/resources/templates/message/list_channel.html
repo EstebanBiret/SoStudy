@@ -28,7 +28,7 @@
                         <div class="text-placeholder">
                             <h3 th:if="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${entry.key.getChannelName()}"></h3>
                             <h3 th:unless="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${profPseudoMap[entry.key]}"></h3>
-                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}"></p>
+                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}" th:id="'lastMessage-'+${entry.key.channelId}"></p>
                         </div>
                     </a>
                 </li>
@@ -43,20 +43,15 @@
         <div class="conv-box" id="conversation">
             <div class="conv-header">
                 <h2 class="conv-name">Nom de la conversation</h2>
-                <button class="conv-settings">
+                <!--<button class="conv-settings">
                     <img src="/images/logos/repost.png" alt="Settings" class="settings-icon" id="connect">
-                </button>
+                </button>-->
             </div>
             <input type="hidden" id="current-user-id" th:value="${currentUser.getIdUser()}"/>
 
 
             <div class="chat-messages" id="chat-messages">
-                <div class="message-row friend">
-                    <div class="bubble">Salut, ça va ? zeugvevaubuevurveuzvugzevfgzvgfvazhfbubfybdsiufhzuaihfuizegruifhrzeufgrzyagbuygazyfzeagbfyhzeabfy</div>
-                </div>
-                <div class="message-row me">
-                    <div class="bubble">Oui, et toi ? zaehzebahbeazbehbzabehzbehazbuieazbeizabhbzahebhzabehabzeibaziebzbeizabiebiazbieabaebzeabeizbezabiazeb</div>
-                </div>
+
             </div>
 
             <form class="message-input" id="form-message">

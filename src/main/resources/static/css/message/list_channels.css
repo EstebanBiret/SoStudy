@@ -15,7 +15,10 @@
     background-color: #f0f0f0;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
 
+.active {
+    background-color: #e0e0e0;
 }
 
 .new-conv {
@@ -50,7 +53,7 @@
     overflow-y: auto;            /* scroll interne si contenu trop grand */
     border-radius: 8px;
     overflow-x: hidden;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
 }

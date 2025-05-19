@@ -1,6 +1,8 @@
 
 let currentSubscription = null;
 
+let hasConnected = false;
+
 const stompClient = new StompJs.Client({
     brokerURL: 'ws://localhost:8080/ws'
 });
@@ -28,7 +30,8 @@ function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
-        $("#conversation").show();
+        $("#conversation").css("display", "flex");
+
     } else {
         $("#conversation").hide();
     }
@@ -64,7 +67,6 @@ function subscribeToChannel(channelId) {
 function sendMessage(channelId) {
     const content = $("#message_sender").val();
     const userId = $("#current-user-id").val();
-    console.log("Sending message:", content);
     if (!content || !channelId) return;
 
     stompClient.publish({
@@ -80,9 +82,6 @@ function showMessage(senderPseudo, id, message, date) {
 
     const messageElement = document.createElement("div");
 
-    console.log("Sender ID:", id);
-    console.log("Current User ID:", userId);
-
     if (userId != id) {
         messageElement.className = "message-row friend";
     } else {
@@ -90,10 +89,15 @@ function showMessage(senderPseudo, id, message, date) {
     }
 
 
+    const last = $("#lastMessage-"+currentChannelId).get(0);
+
+    console.log("last", last);
+    last.innerHTML = message
+
     messageElement.innerHTML = `
         <div class="bubble">
-            <strong>${senderPseudo}</strong> <small>${date}</small><br/>
-            ${message}
+            <div class="message-pseudo" ><strong>${senderPseudo}</strong> <small>${date}</small><br/></div>
+            <div class="message-text-body">${message}</div>
         </div>
     `;
 
@@ -116,11 +120,14 @@ $(function () {
         e.preventDefault();
         sendMessage(currentChannelId);
     });
-    $("#connect").click(() => connect());
     $("#disconnect").click(() => disconnect());
     $(".user-card").click(function() {
+        if (!hasConnected) {
+            connect();
+            hasConnected = true;
+        }
         const channelId = $(this).data("channel-id");
-        console.log("Channel ID clicked:", channelId);
+
         if (channelId) {
             changeChannel(channelId);
 

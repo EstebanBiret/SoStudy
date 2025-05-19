@@ -5,7 +5,6 @@
     padding: 20px;
     overflow-y: auto;
     row-gap: 10px;
-    background-color: #f9f9f9;
     max-height: 60vh; /* ajuste selon ton layout */
 }
 
@@ -30,7 +29,7 @@
 }
 
 .message-row.me .bubble {
-    background-color: #007bff;
+    background-color: #b226f8;
     color: white;
 }
 
@@ -47,6 +46,8 @@
     border: none;
     transition: transform 0.1s ease, background-color 0.3s ease;
     margin-right: 1rem;
+    display: block;
+    cursor: pointer;
 }
 
 .send-icon-hover {
@@ -56,5 +57,9 @@
     border: none;
     transition: transform 0.1s ease, background-color 0.3s ease;
     margin-right: 1rem;
+    cursor: pointer;
+}
 
+.message-text-body{
+    margin-top: 0.5rem;
 }
