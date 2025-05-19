@@ -51,7 +51,7 @@ public class User extends Person {
      */
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonIgnore
-    @JoinTable(name = "channel_suscribed",
+    @JoinTable(name = "subscribed_channels",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "channel_id"))
     private List<Channel> subscribedChannels = new ArrayList<>();
@@ -59,37 +59,17 @@ public class User extends Person {
     /**
      * List of the channels that the user is creator of.
      */
-    @JsonIgnore
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Channel> createdChannels = new ArrayList<>();
 
     /**
      * List of the posts that the user has created.
      */
-    @OneToMany
-    @JsonIgnore
-    @JoinColumn(name = "postId")
-    private List<Post> createdPosts = new ArrayList<>();
-
-    /**
-     * List of the posts that the user has reposted.
-     */
-    @ManyToMany
-    @JsonIgnore
-    @JoinTable(name = "reposted_posts",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "post_id"))
-    private List<Post> repostedPosts = new ArrayList<>();
-
-    /**
-=======
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Post> createdPosts = new ArrayList<>();
 
-    /**
->>>>>>> 5c707cb319d6c0b121d526aec3554f70f66fc58d
-     * List of the communities that the user is subscribed to.
-     */
     @ManyToMany
     @JsonIgnore
     @JoinTable(name = "subscribed_communities",
@@ -100,8 +80,8 @@ public class User extends Person {
     /**
      * List of the communities that the user is creator of.
      */
-    @JsonIgnore
     @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Community> createdCommunities = new ArrayList<>();
 
     /**
@@ -117,8 +97,8 @@ public class User extends Person {
     /**
      * List of the events that the user is creator of.
      */
-    @JsonIgnore
     @OneToMany(mappedBy = "userCreator", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Event> createdEvents = new ArrayList<>();
 
     /**

@@ -57,7 +57,7 @@ function subscribeToChannel(channelId) {
     currentSubscription = stompClient.subscribe(`/topic/messages/${channelId}`, (message) => {
         const msg = JSON.parse(message.body);
         console.log("Received message:", msg);
-        showMessage(msg.sender.pseudo, msg.content, msg.dateMessage);
+        showMessage(msg.sender.pseudo, msg.userId, msg.content, msg.dateMessage);
     });
 }
 
@@ -74,11 +74,21 @@ function sendMessage(channelId) {
     $("#message_sender").val("");
 }
 
-function showMessage(senderPseudo, message, date) {
+function showMessage(senderPseudo, id, message, date) {
+    const userId = $("#current-user-id").val();
     const chatMessages = document.getElementById("chat-messages");
 
     const messageElement = document.createElement("div");
-    messageElement.className = "message-row me";
+
+    console.log("Sender ID:", id);
+    console.log("Current User ID:", userId);
+
+    if (userId != id) {
+        messageElement.className = "message-row friend";
+    } else {
+        messageElement.className = "message-row me";
+    }
+
 
     messageElement.innerHTML = `
         <div class="bubble">
@@ -123,3 +133,16 @@ $(function () {
 
         }});
 });
+
+// changer l'icone quand on survole l'image pour envoyer
+let sendIcon = document.querySelector('.send-icon');
+let sendIconHover = document.querySelector('.send-icon-hover');
+sendIcon.addEventListener('mouseover', function() {
+    sendIcon.style.display = 'none';
+    sendIconHover.style.display = 'block';
+});
+sendIconHover.addEventListener('mouseout', function() {
+    sendIcon.style.display = 'block';
+    sendIconHover.style.display = 'none';
+});
+

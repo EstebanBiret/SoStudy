@@ -61,7 +61,7 @@ public class ChannelController {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/auth/login";
 
-        List<Channel> chans = ((User) session.getAttribute("user")).getSubscribedChannels();
+        List<Channel> chans = sessionUser.getSubscribedChannels();
 
         if (chans.isEmpty()) {
             model.addAttribute("NoChannel", "Vous n'avez pas encore de canal");
@@ -72,18 +72,19 @@ public class ChannelController {
         HashMap<Channel, String> profPicMap = new HashMap<>();
         HashMap<Channel, String> profPseudoMap = new HashMap<>();
 
-        for (Channel channel : chans) {
+        System.out.println("chans: " + chans);
 
+        for (Channel channel : chans) {
             //have the path of the profile picture of the other user
             if (channel.getUsers().size() == 2) {
                 profPicMap.put(channel, channel.getUsers().stream()
-                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .filter(user -> user.getIdUser() != sessionUser.getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
                         .orElse("/images/profiles_pictures/defaultProfilePic.png"));
                 //have the pseudo of the other user
                 profPseudoMap.put(channel, channel.getUsers().stream()
-                        .filter(user -> user.getIdUser() != ((User) session.getAttribute("user")).getIdUser())
+                        .filter(user -> user.getIdUser() != sessionUser.getIdUser())
                         .findFirst()
                         .map(User::getPseudo)
                         .orElse("Utilisateur anonyme"));
@@ -93,6 +94,7 @@ public class ChannelController {
             lastMessageMap.put(channel, lastMessage);
         }
 
+        System.out.println("lastMessageMap: " + lastMessageMap);
         model.addAttribute("currentUser", sessionUser);
 
         model.addAttribute("profPicMap", profPicMap);

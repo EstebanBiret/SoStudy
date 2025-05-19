@@ -40,3 +40,21 @@
     padding: 10px;
     background-color: #fff;
 }
+
+.send-icon{
+    width: 32px;
+    height: 32px;
+    border: none;
+    transition: transform 0.1s ease, background-color 0.3s ease;
+    margin-right: 1rem;
+}
+
+.send-icon-hover {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: none;
+    transition: transform 0.1s ease, background-color 0.3s ease;
+    margin-right: 1rem;
+
+}
