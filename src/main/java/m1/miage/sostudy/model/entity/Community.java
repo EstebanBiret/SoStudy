@@ -53,6 +53,18 @@ public class Community {
     private List<User> users = new ArrayList<>();
 
     /**
+     * Number of members in the community
+     */
+    @Transient
+    private Integer numberOfMembers;
+
+    /**
+     * Number of posts in the community
+     */
+    @Transient
+    private Integer numberOfPosts;
+
+    /**
      * List of posts of the community
      */
     @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
@@ -244,6 +256,38 @@ public class Community {
      */
     public void removePost(Post post) {
         this.posts.remove(post);
+    }
+
+    /**
+     * Get the number of members in the community
+     * @return the number of members in the community
+     */
+    public Integer getNumberOfMembers() {
+        return numberOfMembers;
+    }
+
+    /**
+     * Set the number of members in the community
+     * @param numberOfMembers the number of members in the community
+     */
+    public void setNumberOfMembers(Integer numberOfMembers) {
+        this.numberOfMembers = numberOfMembers;
+    }
+
+    /**
+     * Get the number of posts in the community
+     * @return the number of posts in the community
+     */
+    public Integer getNumberOfPosts() {
+        return numberOfPosts;
+    }
+
+    /**
+     * Set the number of posts in the community
+     * @param numberOfPosts the number of posts in the community
+     */
+    public void setNumberOfPosts(Integer numberOfPosts) {
+        this.numberOfPosts = numberOfPosts;
     }
 
     /**

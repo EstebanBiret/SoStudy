@@ -65,7 +65,7 @@ public class UserController {
      * @param mediaPath the path of the media file
      * @return true if the media file exists, false otherwise
      */
-    public boolean postMediaExists(String mediaPath) {
+    public static boolean postMediaExists(String mediaPath) {
         if (mediaPath == null) return false;
         try {
             return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
@@ -73,6 +73,7 @@ public class UserController {
             return false;
         }
     }
+
     /**
      * Displays the user profile page.
      * @param model the model to be used in the view
@@ -217,10 +218,10 @@ public class UserController {
             }
         }
 
-        // Récupérer toutes les réactions de l'utilisateur
+        // Get all reactions of the user
         Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
         
-        // Pour les posts normaux
+        // For normal posts
         for (Post post : posts) {
             // Get the reaction type from the repository
             List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
@@ -235,7 +236,7 @@ public class UserController {
             }
         }
         
-        // Pour les reposts
+        // For reposts
         for (Repost repost : repostsFromUser) {
             Post originalPost = repost.getOriginalPost();
             if (originalPost != null) {
@@ -251,7 +252,6 @@ public class UserController {
             }
         }
         
-        model.addAttribute("userReactedPosts", userReactedPosts);
         
         //add attributes to model
         model.addAttribute("posts", posts);
@@ -259,6 +259,7 @@ public class UserController {
         model.addAttribute("repostDisplays", repostDisplays);
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("repostedPostIds", repostedPostIds);
+        model.addAttribute("userReactedPosts", userReactedPosts);
 
         return "profile/profile";
     }
