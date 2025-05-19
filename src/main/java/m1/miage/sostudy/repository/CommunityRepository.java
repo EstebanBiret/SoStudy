@@ -2,7 +2,10 @@ package m1.miage.sostudy.repository;
 
 import m1.miage.sostudy.model.entity.Community;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -17,6 +20,29 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
      * @return the community
      */
     Community findById(int id);
+
+    /**
+     * Find all communities
+     * @return list of communities
+     */
+    @SuppressWarnings("null")
+    List<Community> findAll();
+    
+    /**
+     * Count the number of members in a community
+     * @param communityId the ID of the community
+     * @return the number of members
+     */
+    @Query("SELECT COUNT(u) FROM Community c JOIN c.users u WHERE c.communityId = :communityId")
+    int countUsersInCommunity(@Param("communityId") int communityId);
+
+    /**
+     * Count the number of posts in a community
+     * @param communityId the ID of the community
+     * @return the number of posts
+     */
+    @Query("SELECT COUNT(p) FROM Community c JOIN c.posts p WHERE c.communityId = :communityId")
+    Integer countPostsInCommunity(@Param("communityId") Integer communityId);
     
     /**
      * Find all communities that a user belongs to

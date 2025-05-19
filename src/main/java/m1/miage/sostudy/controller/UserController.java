@@ -7,7 +7,6 @@ import m1.miage.sostudy.model.entity.Repost;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.model.entity.UserPostReaction;
 import m1.miage.sostudy.model.entity.dto.RepostDisplay;
-import m1.miage.sostudy.model.entity.id.UserPostReactionID;
 import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.RepostRepository;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static m1.miage.sostudy.controller.AuthController.hashPassword;
 import static m1.miage.sostudy.controller.IndexController.*;
+import static m1.miage.sostudy.model.entity.User.STUDY_LEVELS;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,7 +65,7 @@ public class UserController {
      * @param mediaPath the path of the media file
      * @return true if the media file exists, false otherwise
      */
-    public boolean postMediaExists(String mediaPath) {
+    public static boolean postMediaExists(String mediaPath) {
         if (mediaPath == null) return false;
         try {
             return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
@@ -73,6 +73,7 @@ public class UserController {
             return false;
         }
     }
+
     /**
      * Displays the user profile page.
      * @param model the model to be used in the view
@@ -217,10 +218,10 @@ public class UserController {
             }
         }
 
-        // Récupérer toutes les réactions de l'utilisateur
+        // Get all reactions of the user
         Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
         
-        // Pour les posts normaux
+        // For normal posts
         for (Post post : posts) {
             // Get the reaction type from the repository
             List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
@@ -235,7 +236,7 @@ public class UserController {
             }
         }
         
-        // Pour les reposts
+        // For reposts
         for (Repost repost : repostsFromUser) {
             Post originalPost = repost.getOriginalPost();
             if (originalPost != null) {
@@ -251,14 +252,13 @@ public class UserController {
             }
         }
         
-        model.addAttribute("userReactedPosts", userReactedPosts);
-        
         //add attributes to model
         model.addAttribute("posts", posts);
         model.addAttribute("reposts", repostsFromUser.stream().map(Repost::getOriginalPost).toList());
         model.addAttribute("repostDisplays", repostDisplays);
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("repostedPostIds", repostedPostIds);
+        model.addAttribute("userReactedPosts", userReactedPosts);
 
         return "profile/profile";
     }
@@ -276,6 +276,7 @@ public class UserController {
         if (session.getAttribute("user") == null) {
             return"redirect:/auth/login";
         }
+        model.addAttribute("niveauxEtude", STUDY_LEVELS);
         return "profile/form_edit_profile";
     }
 
@@ -299,7 +300,10 @@ public class UserController {
                                @RequestParam String password,
                                @RequestParam String birthdate,
                                @RequestParam String bioUser,
-                               @RequestParam MultipartFile image) throws IOException {
+                               @RequestParam MultipartFile image,
+                               @RequestParam String niveauEtude,
+                               @RequestParam String studyDomain,
+                               @RequestParam String university) throws IOException {
 
         if (session.getAttribute("user") == null) {
             return "redirect:/auth/login";
@@ -312,6 +316,9 @@ public class UserController {
         user.setPassword(hashPassword(password));
         user.setBirthDate(birthdate);
         user.setBioUser(bioUser);
+        user.setStudyLevel(niveauEtude);
+        user.setStudyDomain(studyDomain);
+        user.setUniversity(university);
 
         if (!image.isEmpty()) {
             // Supprimer l'ancienne image si elle n'est pas la photo par défaut
@@ -350,20 +357,71 @@ public class UserController {
 
     /**
      * Displays the follow user page for a specific user identified by their pseudo.
+     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param pseudo the pseudo of the user to follow
      * @return the name of the follow user view
      */
     @PostMapping("/follow/{pseudo}")
-    public String followUser() {
-        return "redirect:/user";
+    public String followUser(Model model, HttpSession session, @PathVariable String pseudo) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        User user = (User) session.getAttribute("user");
+        User userToFollow = userRepository.findByPseudo(pseudo);
+        if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
+            return "redirect:/";
+        }
+        // Check if the user is already following the user to follow
+        if (user.getFollowing().contains(userToFollow)) {
+            // User is already following, do nothing or show a message
+            return "redirect:/";
+        }
+        // Add the user to the following list
+        user.addFollowing(userToFollow);
+        userToFollow.addFollowers(user);
+
+        // Save the changes to the database
+        userRepository.save(user);
+        userRepository.save(userToFollow);
+        // Update the session attribute
+        session.setAttribute("user", user);
+        return "redirect:/";
     }
 
     /**
      * Displays the unfollow user page for a specific user identified by their pseudo.
+     * * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param pseudo the pseudo of the user to unfollow
      * @return the name of the unfollow user view
      */
     @PostMapping("/unfollow/{pseudo}")
-    public String unfollowUser() {
-        return "redirect:/user";
+    public String unfollowUser(Model model, HttpSession session, @PathVariable String pseudo) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        User user = (User) session.getAttribute("user");
+        User userToFollow = userRepository.findByPseudo(pseudo);
+        if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
+            return "redirect:/";
+        }
+        // Check if the user is not following the user to unfollow
+        if (!user.getFollowing().contains(userToFollow)) {
+            // User is not following, do nothing or show a message
+            return "redirect:/";
+        }
+        // Remove the user from the following list
+        user.removeFollowing(userToFollow);
+        userToFollow.removeFollowers(user);
+
+        // Save the changes to the database
+        userRepository.save(user);
+        userRepository.save(userToFollow);
+        // Update the session attribute
+        session.setAttribute("user", user);
+        return "redirect:/";
     }
 
 

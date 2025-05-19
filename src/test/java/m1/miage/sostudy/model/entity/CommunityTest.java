@@ -108,7 +108,7 @@ class CommunityTest {
      */
     @Test
     void testGetUserCreator() {
-        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
+        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio", "M1", "info", "TLS1");
         community.setUserCreator(user);
         Assertions.assertEquals(user, community.getUserCreator());
     }
@@ -118,7 +118,7 @@ class CommunityTest {
      */
     @Test
     void testGetUsersMembers() {
-        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
+        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio", "M1", "info", "TLS1");
         List<User> users = new ArrayList<>(List.of(user));
         community.setUsers(users);
         Assertions.assertEquals(user, community.getUsers().get(0));
@@ -130,7 +130,7 @@ class CommunityTest {
     @Test
     void testSetUserMembers() {
         final List<User> expected = new ArrayList<>();
-        expected.add(new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio"));
+        expected.add(new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio", "M1", "info", "TLS1"));
         community.setUsers(expected);
         Assertions.assertEquals(expected, community.getUsers());
     }
@@ -171,7 +171,7 @@ class CommunityTest {
      */
     @Test
     void testAddUser() {
-        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
+        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio", "M1", "info", "TLS1");
         community.setUsers(new ArrayList<>());
         community.addUser(user);
         Assertions.assertEquals(user, community.getUsers().get(0));
@@ -182,7 +182,7 @@ class CommunityTest {
      */
     @Test
     void testRemoveUser() {
-        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio");
+        final User user = new User("name", "firstName", "email", "password", "login", "dateOfBirth", "personImagePath", "bio", "M1", "info", "TLS1");
         community.setUsers(new ArrayList<>(List.of(user)));
         community.removeUser(user);
         Assertions.assertTrue(community.getUsers().isEmpty());

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>SoStudy | Inscription</title>
@@ -10,69 +10,87 @@
 <div class="form">
     <h1 class="title">Inscription</h1>
     <form id="registerForm" action="/auth/register" method="post" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="input-container ic1">
+                <input id="nom" class="input" type="text" name="nom" placeholder=" " required/>
+                <div class="cut"></div>
+                <label for="nom" class="placeholder">Nom</label>
+            </div>
 
-        <div class="input-container ic1">
-            <input id="nom" class="input" type="text" name="nom" placeholder=" " required/>
-            <div class="cut"></div>
-            <label for="nom" class="placeholder">Nom</label>
+            <div class="input-container ic1">
+                <input id="prenom" class="input" type="text" name="prenom" placeholder=" " required/>
+                <div class="cut"></div>
+                <label for="prenom" class="placeholder">Prenom</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="email" class="input" type="email" name="email" placeholder=" " required/>
+                <span id="emailCheck" class="error"></span>
+                <div class="cut"></div>
+                <label for="email" class="placeholder">Email</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="pseudo" class="input" type="text" name="pseudo" placeholder=" " required/>
+                <span id="pseudoCheck" class="error"></span>
+                <div class="cut"></div>
+                <label for="pseudo" class="placeholder">Pseudo</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="password" class="input" type="password" name="password" placeholder=" " required pattern="^\S+$"/>
+                <div class="cut"></div>
+                <label for="password" class="placeholder">Mot de passe</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="birthdate" class="input" type="date" name="birthdate" placeholder=" " required/>
+                <div class="cut"></div>
+                <label for="birthdate" class="placeholder">Date de naissance</label>
+            </div>
+
+            <div class="input-container ic2 full-width">
+                <select id="niveauEtude" class="input" name="niveauEtude" required>
+                    <option value="" disabled selected>Choisir un niveau d'étude</option>
+                    <option th:each="niveau : ${niveauxEtude}" th:value="${niveau}" th:text="${niveau}"></option>
+                </select>
+                <div class="cut"></div>
+                <label for="niveauEtude" class="placeholder">Niveau d'étude</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="studyDomain" class="input" type="text" name="studyDomain" placeholder=" "/>
+                <div class="cut"></div>
+                <label for="studyDomain" class="placeholder">Domaine d'étude</label>
+            </div>
+
+            <div class="input-container ic2">
+                <input id="university" class="input" type="text" name="university" placeholder=" "/>
+                <div class="cut"></div>
+                <label for="university" class="placeholder">Université</label>
+            </div>
+
+            <div class="input-container ic2 full-width">
+                <input id="bioUser" class="input" type="text" name="bioUser" placeholder=" "/>
+                <div class="cut"></div>
+                <label for="bioUser" class="placeholder">Bio</label>
+            </div>
+
+            <div class="input-container ic2 full-width">
+                <input id="image" class="input" type="file" name="image" accept="image/*" />
+                <div class="cut"></div>
+                <label for="image" class="placeholder">Photo de profil</label>
+            </div>
         </div>
 
-        <div class="input-container ic2">
-            <input id="prenom" class="input" type="text" placeholder=" " name="prenom" required/>
-            <div class="cut"></div>
-            <label for="prenom" class="placeholder">Prenom</label>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="email" class="input" type="email" placeholder=" " name="email" required/>
-            <span id="emailCheck" class="error"></span>
-            <div class="cut"></div>
-            <label for="email" class="placeholder">Email</label>
-        </div>
-        <div th:if="${emailError} == true">
-            <p style="color:red;"> Erreur : Cette adresse mail est déjà utilisée</p>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="pseudo" class="input" type="text" placeholder=" " name="pseudo" required/>
-            <span id="pseudoCheck" class="error"></span>
-            <div class="cut"></div>
-            <label for="pseudo" class="placeholder">Pseudo</label>
-        </div>
-        <div th:if="${pseudoError} == true" class="error">
-            <p> Erreur : Ce pseudo est déjà utilisé</p>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="password" class="input" type="password" placeholder=" " name="password" required pattern="^\S+$"/>
-            <div class="cut"></div>
-            <label for="password" class="placeholder">Mot de passe</label>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="birthdate" class="input" type="date" placeholder=" " name="birthdate" required/>
-            <div class="cut"></div>
-            <label for="birthdate" class="placeholder">Date de naissance</label>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="bioUser" class="input" type="text" placeholder=" " name="bioUser"/>
-            <div class="cut"></div>
-            <label for="bioUser" class="placeholder">Bio</label>
-        </div>
-
-        <div class="input-container ic2">
-            <input id="image" class="input" type="file" name="image" accept="image/*" />
-            <div class="cut"></div>
-            <label for="image" class="placeholder">Photo de profil</label>
-        </div>
+        <div class="error" th:if="${emailError} == true">Erreur : Cette adresse mail est déjà utilisée</div>
+        <div class="error" th:if="${pseudoError} == true">Erreur : Ce pseudo est déjà utilisé</div>
 
         <button type="submit" class="submit">Créer le compte</button>
-        <p class="register-link">
-            Déjà un compte ? <a href="/auth/login">Se connecter</a>
-        </p>
+        <p class="register-link">Déjà un compte ? <a href="/auth/login">Se connecter</a></p>
     </form>
 </div>
+
 
 <div id="customModal" class="modal">
     <div class="modal-content">

@@ -101,7 +101,10 @@ public class DataInitializer implements CommandLineRunner {
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");
         user1.setPersonImagePath("/images/profiles_pictures/1.jpeg");
-        
+        user1.setStudyLevel("M2");
+        user1.setStudyDomain("Informatique");
+        user1.setUniversity("Université Toulouse 1");
+
         User user2 = new User();
         user2.setName("Martin");
         user2.setFirstName("Marie");
@@ -111,7 +114,10 @@ public class DataInitializer implements CommandLineRunner {
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
         user2.setPersonImagePath("/images/profiles_pictures/2.jpeg");
-        
+        user2.setStudyLevel("M1");
+        user2.setStudyDomain("Informatique");
+        user2.setUniversity("Université Toulouse 3");
+
         User user3 = new User();
         user3.setName("Leroy");
         user3.setFirstName("Pierre");
@@ -121,6 +127,10 @@ public class DataInitializer implements CommandLineRunner {
         user3.setBirthDate("1995-08-20");
         user3.setBioUser("Développeur Frontend");
         user3.setPersonImagePath("/images/profiles_pictures/3.jpeg");
+        user3.setStudyLevel("L3");
+        user3.setStudyDomain("Droit");
+        user3.setUniversity("Université Toulouse 1");
+
         
         // Sauvegarde des utilisateurs
         user1 = userRepository.save(user1);
@@ -146,31 +156,56 @@ public class DataInitializer implements CommandLineRunner {
         user3.getSubscribedChannels().add(channel1);
         
         // Création des communautés
-        Community community1 = new Community("Java Developers", "2025-01-01", " /images/community/java.png", "Communauté des développeurs Java");
-        Community community2 = new Community("Spring Framework", "2025-02-01", "/images/community/spring.png", "Communauté des développeurs Spring");
+        Community community1 = new Community("Scouts", "2024-01-01", " /images/community/scout.webp", "Les scouts de Montreuil");
+        Community community2 = new Community("Cuisine", "2025-02-01", "/images/community/cook.webp", "Cuisine désastreuse");
+        Community community3 = new Community("M1 MIAGE", "2025-05-01", "/images/community/m1miage.webp", "Promo M1 MIAGE");
+
+        Community community4 = new Community("Bricolage", "2025-05-01", "/images/community/bricolage.webp", "Bricolage et réparations");
+        Community community5 = new Community("Jardinage", "2025-07-01", "/images/community/jardinage.webp", "Jardinage et plantes");
+        Community community6 = new Community("Soirées", "2025-05-01", "/images/community/soirees.webp", "Soirées et événements");
 
         community1.setUserCreator(user1);
         community2.setUserCreator(user2);
+        community3.setUserCreator(user3);
+        community4.setUserCreator(user1);
+        community5.setUserCreator(user2);
+        community6.setUserCreator(user3);
 
         // Ajout des membres aux communautés
         community1.getUsers().add(user1);
         community1.getUsers().add(user2);
         community1.getUsers().add(user3);
+
         community2.getUsers().add(user1);
         community2.getUsers().add(user2);
         community2.getUsers().add(user3);
+        
+        community3.getUsers().add(user3);
+        community4.getUsers().add(user1);
+        community5.getUsers().add(user2);
+        community6.getUsers().add(user3);
 
         // Sauvegarde des communautés avec leurs membres
         community1 = communityRepository.save(community1);
         community2 = communityRepository.save(community2);
+        community3 = communityRepository.save(community3);
+        community4 = communityRepository.save(community4);
+        community5 = communityRepository.save(community5);
+        community6 = communityRepository.save(community6);
 
-        // Sauvegarde des utilisateurs avec leurs communautés
+        //utilisateurs avec leurs communautés
         user1.getSubscribedCommunities().add(community1);
+        user1.getSubscribedCommunities().add(community4);
+
         user2.getSubscribedCommunities().add(community1);
+        user2.getSubscribedCommunities().add(community5);
+
         user3.getSubscribedCommunities().add(community1);
         user1.getSubscribedCommunities().add(community2);
         user2.getSubscribedCommunities().add(community2);
         user3.getSubscribedCommunities().add(community2);
+        user3.getSubscribedCommunities().add(community3);
+        user3.getSubscribedCommunities().add(community6);
 
         // Création d'un événement
         Event event1 = new Event();
@@ -249,6 +284,9 @@ public class DataInitializer implements CommandLineRunner {
         user4.setBirthDate("1998-03-15");
         user4.setBioUser("Débutante en programmation");
         user4.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
+        user4.setStudyLevel("M1");
+        user4.setStudyDomain("Informatique");
+        user4.setUniversity("Université Toulouse 1");
         user4 = userRepository.save(user4);
 
         // Création du 5ème utilisateur
@@ -261,6 +299,9 @@ public class DataInitializer implements CommandLineRunner {
         user5.setBirthDate("1996-07-22");
         user5.setBioUser("Développeur Full Stack");
         user5.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
+        user5.setStudyLevel("M2");
+        user5.setStudyDomain("Informatique");
+        user5.setUniversity("Université Toulouse 1");
         user5 = userRepository.save(user5);
 
         // Faire suivre l'utilisateur 4 par l'utilisateur 5

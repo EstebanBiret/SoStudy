@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
+import static m1.miage.sostudy.model.entity.User.STUDY_LEVELS;
+
 
 /**
  * Controller for managing authentication.
@@ -112,7 +114,7 @@ public class AuthController {
         if (session.getAttribute("user") != null) {
             return"redirect:/";
         }
-        //TODO rajouter champs : - niveau d'études, - intitulé études et nom de la fac/école
+        model.addAttribute("niveauxEtude", STUDY_LEVELS);
         return "auth/register";
     }
 
@@ -138,7 +140,7 @@ public class AuthController {
 @RequestParam String password,
 @RequestParam String birthdate,
 @RequestParam String bioUser,
-@RequestParam MultipartFile image) throws IOException {
+@RequestParam MultipartFile image, @RequestParam String niveauEtude, @RequestParam String studyDomain, @RequestParam String university) throws IOException {
 
         String fileName = null;
         if (!image.isEmpty()) {
@@ -150,6 +152,7 @@ public class AuthController {
         } else {
             fileName = "/images/profiles_pictures/defaultProfilePic.jpg";
         }
+
         boolean error = false;
         // Check if the email and pseudo already exist
         if (checkEmailExists(email)) {
@@ -164,7 +167,7 @@ public class AuthController {
             return "auth/register";
         }
 
-        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bioUser);
+        User user = new User(nom, prenom,email,hashPassword(password), pseudo, birthdate,fileName, bioUser, niveauEtude, studyDomain, university);
         userRepo.save(user);
 
         session.setAttribute("user", user);

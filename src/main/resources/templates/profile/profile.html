@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <title>SoStudy | Profil</title>
@@ -19,12 +19,16 @@
 
                     <div class="profile-info">
                         <h2 th:text="${userProfile.pseudo}"></h2>
-                        <p class="bio" th:text="${userProfile.bioUser}"></p>
+                        <p class="bio" th:text="${userProfile.studyLevel}"></p>
+                        <p class="bio" th:text="${userProfile.studyDomain}"></p>
+                        <p class="bio" th:text="${userProfile.university}">
+                        <p class="bio" th:text="${userProfile.bioUser}">
+
 
                         <div class="profile-stats">
                             <p>
                                 <span id="user-posts-count" th:text="${posts.size() + reposts.size()}"></span>post(s)
-                                <span th:text="${userProfile.followers.size()}"></span>abonné(s)
+                                <span id="user-followers-count" th:text="${userProfile.followers.size()}"></span>abonné(s)
                                 <span th:text="${userProfile.following.size()}"></span>abonnement(s)
                             </p>
                         </div>
@@ -50,6 +54,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div th:if="${userProfile.pseudo != session.user.pseudo}">
+                        <button
+                                id="followBtn"
+                                class="follow-btn"
+                                th:classappend="${#lists.contains(userProfile.followers, session.user)} ? ' unfollow' : ''"
+                                th:attr="data-following=${#lists.contains(userProfile.followers, session.user)}, data-pseudo=${userProfile.pseudo}"
+                                th:text="${#lists.contains(userProfile.followers, session.user)} ? 'Ne plus suivre' : 'Suivre'">
+                        </button>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -67,7 +83,7 @@
                             </h3>
                             <p th:text="${post.formattedDate}"></p>
                         </div>
-                        
+
                         <!-- Repost button -->
                         <button class="repost-btn"
                                 th:id="'repost-btn-' + ${post.postId}"
@@ -99,26 +115,6 @@
                     <div class="post-actions">
                         <div class="reaction-buttons">
 
-                            <!-- <button class="reaction-btn">
-                                <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
-                                <span th:text="${post.likeCount}">0</span>
-                            </button>
-                            <button class="reaction-btn">
-                                <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
-                                <span th:text="${post.loveCount}">0</span>
-                            </button>
-                            <button class="reaction-btn">
-                                <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
-                                <span th:text="${post.laughCount}">0</span>
-                            </button>
-                            <button class="reaction-btn">
-                                <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
-                                <span th:text="${post.cryCount}">0</span>
-                            </button>
-                            <button class="reaction-btn">
-                                <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
-                                <span th:text="${post.angryCount}">0</span>
-                            </button> -->
                             <button class="reaction-btn" th:attr="data-reactions-post-id=${post.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[post.postId] != null and userReactedPosts[post.postId].name() == 'LIKE'} ? ' active' : ''"
                             onclick="submitReaction(this)" data-original-count="${post.likeCount}">
                                 <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
@@ -170,11 +166,11 @@
                         </div>
 
                     </div>
-                
+
                     <div class="repost-content">
                         <p th:text="${repostDisplay.repost.repostContent}">Contenu du repost</p>
                     </div>
-                
+
                     <div class="reposted-post">
                         <div class="repost-arrow">⬇</div>
                         <div class="post-card reposted">
@@ -217,26 +213,6 @@
                             </div>
                             <div class="post-actions">
                                 <div class="reaction-buttons">
-                                    <!-- <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/like.png}" alt="Like" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.likeCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/love.png}" alt="Love" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.loveCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/laugh.png}" alt="Laugh" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.laughCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/cry.png}" alt="Cry" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.cryCount}">0</span>
-                                    </button>
-                                    <button class="reaction-btn">
-                                        <img th:src="@{/images/reactions/angry.png}" alt="Angry" class="reaction-icon">
-                                        <span th:text="${repostDisplay.originalPost.angryCount}">0</span>
-                                    </button> -->
 
                                     <button class="reaction-btn" th:attr="data-reactions-post-id=${repostDisplay.originalPost.postId}" data-reaction-type="LIKE" th:classappend="${userReactedPosts[repostDisplay.originalPost.postId] != null and userReactedPosts[repostDisplay.originalPost.postId].name() == 'LIKE'} ? ' active' : ''"
                                         onclick="submitReaction(this)" data-original-count="${repostDisplay.originalPost.likeCount}">
@@ -287,7 +263,7 @@
 
             </div>
         </div>
-        
+
         <!-- Repost modal -->
         <div id="repostModal" class="modal-overlay" style="display:none;">
             <div class="modal">
@@ -304,14 +280,7 @@
 
         <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
-
+        <script th:src="@{/js/profile/profile.js}"></script>
     </body>
-
-    <script>
-        function toggleDropdown() {
-            const menu = document.getElementById("dropdownMenu");
-            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-        }
-    </script>
 
 </html>
