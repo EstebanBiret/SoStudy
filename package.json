@@ -61,5 +61,8 @@
   "main": "./bundles/stomp.umd.js",
   "browser": "./bundles/stomp.umd.js",
   "typings": "index.d.ts",
-  "sideEffects": false
+  "sideEffects": false,
+  "dependencies": {
+    "@stomp/stompjs": "file:"
+  }
 }

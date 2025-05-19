@@ -39,3 +39,6 @@ db/sostudy.db
 
 ### Images ###
 src/main/resources/static/images/
+
+### Websocket ###
+node_modules/

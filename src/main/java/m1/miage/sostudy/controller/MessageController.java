@@ -24,14 +24,21 @@ import java.time.format.DateTimeFormatter;
 @RequestMapping("/message")
 public class MessageController {
 
+    /**
+     * Channel repository
+     */
     @Autowired
     private ChannelRepository chan;
 
+    /**
+     * Message repository
+     */
     @Autowired
     private MessageRepository messageRepository;
 
-    @Autowired
-    private UserRepository user;
+    /**
+     * User repository
+     */
     @Autowired
     private UserRepository userRepository;
 
@@ -72,7 +79,5 @@ public class MessageController {
 
         return saved;
     }
-
-
 
 }
