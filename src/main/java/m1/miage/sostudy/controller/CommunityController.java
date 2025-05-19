@@ -14,11 +14,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Controller for the Community entity
@@ -44,6 +54,11 @@ public class CommunityController {
      */
     @Autowired
     private PostRepository postRepository;
+
+    /**
+     * Path for uploading files.
+     */
+    private final String UPLOAD_DIR = "./src/main/resources/static/images/community/";
 
     /**
      * Get the name of the month in French
@@ -152,41 +167,49 @@ public class CommunityController {
     }
 
     /**
-     * Formular to create a community
-     * @param model the model of the view
-     * @param session the session of the user
-     * @return the name of the view to be rendered
-     */
-    @GetMapping("/new")
-    public String newCommunity(Model model, HttpSession session) {
-
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        User user = (User) session.getAttribute("user");
-
-        model.addAttribute("user", user);
-        return "community/form_new";
-    }
-
-    /**
      * Create a new community
      * @param name the name of the community
      * @param description the description of the community
+     * @param image the image of the community
      * @param model the model of the view
      * @param session the session of the user
      * @return the name of the view to be rendered
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/new")
-    public String createCommunity(@RequestParam String name, @RequestParam String description, Model model, HttpSession session) {
+    public String createCommunity(@RequestParam String name, @RequestParam String description, @RequestParam MultipartFile image, Model model, HttpSession session) throws IOException {
 
         //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         User user = (User) session.getAttribute("user");
 
+        Community community = new Community();
+        community.setCommunityName(name);
+        community.setCommunityDescription(description);
+
+        //image
+        String fileName = null;
+        if (!image.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/community/" + rawFileName;
+            community.setCommunityImagePath(fileName);
+        }
+
+        //set creation date
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        community.setCommunityCreationDate(LocalDate.now().format(formatter));
+
+        community.setUserCreator(user);
+        community.setNumberOfMembers(1);
+        community.setNumberOfPosts(0);
+        communityRepository.save(community);
+
         model.addAttribute("user", user);
-        return "community/form_new";
+        return "redirect:/community";
     }
 
     /**

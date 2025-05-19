@@ -1,6 +1,6 @@
-// delete modal
 let currentCommunityId = null;
 
+// delete modal
 function openDeleteModal(button) {
     const communityId = button.getAttribute("data-community-id");
     const communityName = button.getAttribute("data-community-name");
@@ -18,14 +18,28 @@ function closeDeleteModal() {
     document.getElementById("deleteModal").style.display = "none";
 }
 
-// close modal when clicking outside
+// create modal
+function openCreateModal() {
+    document.getElementById("createModal").style.display = "flex";
+}
+
+function closeCreateModal() {
+    document.getElementById("createModal").style.display = "none";
+}
+
+// close or open modal when clicking outside
 window.addEventListener('click', function(event) {
-    const modalOverlay = document.getElementById('deleteModal');
-    if (event.target === modalOverlay) {
+    const deleteModalOverlay = document.getElementById('deleteModal');
+    if (event.target === deleteModalOverlay) {
         closeDeleteModal();
+    }
+    const createModalOverlay = document.getElementById('createModal');
+    if (event.target === createModalOverlay) {
+        closeCreateModal();
     }
 });
 
+// confirm delete
 function confirmDelete() {
     fetch(`/community/delete/${currentCommunityId}`, {
         method: "POST"
@@ -41,6 +55,31 @@ function confirmDelete() {
             closeDeleteModal();
         } else {
             alert("Erreur lors de la suppression de la communauté");
+        }
+    });
+}
+
+// confirm create
+function confirmCreate() {
+    const communityName = document.getElementById("communityName").value;
+    const communityDescription = document.getElementById("communityDescription").value;
+    const communityImage = document.getElementById("communityImage").files[0];
+    
+    const formData = new FormData();
+    formData.append("communityName", communityName);
+    formData.append("communityDescription", communityDescription);
+    formData.append("communityImage", communityImage);
+    
+    fetch("/community/new", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        if (res.ok) {
+            // close modal
+            closeCreateModal();
+        } else {
+            alert("Erreur lors de la création de la communauté");
         }
     });
 }

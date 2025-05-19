@@ -210,4 +210,30 @@ body {
 #deleteModal .btn.btn-danger:hover {
     background: #c82333;
 }
-    
+
+#deleteCommunityName {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.warning {
+    text-align: center;
+}
+
+.createCommunityBtn {
+    background: #b226f8;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+
+    &:hover {
+        background: #862fb3;
+    }
+}
