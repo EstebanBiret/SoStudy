@@ -3,10 +3,6 @@ function submitReaction(button) {
     const reactionType = button.getAttribute("data-reaction-type");
     const isRemoving = button.classList.contains('active');
     
-    console.log('Post ID:', postId);
-    console.log('Reaction Type:', reactionType);
-    console.log('Is removing:', isRemoving);
-
     if (!postId || !reactionType) {
         console.error('Post ID ou Reaction Type manquant');
         return;

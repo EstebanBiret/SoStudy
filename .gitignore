@@ -38,4 +38,4 @@ db/sostudy.db
 *.db
 
 ### Images ###
-src/main/resources/static/images/
+### src/main/resources/static/images/ ###

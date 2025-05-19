@@ -67,7 +67,7 @@ public class Community {
     /**
      * List of posts of the community
      */
-    @OneToMany(mappedBy = "community", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "community", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<Post> posts = new ArrayList<>();
 
     /**

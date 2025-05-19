@@ -116,13 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (isReply) {
                     // Trouver le commentaire parent
                     const parentComment = document.querySelector(`[data-comment-id="${parentId}"]`);
-                    console.log('Parent comment found:', parentComment);
                     if (parentComment) {
                         // Trouver le conteneur de réponses du parent
                         const repliesContainer = parentComment.querySelector('.comment-content .comment-replies');
                         if (repliesContainer) {
-
-                            console.log('Replies container found:', repliesContainer);
                             // Afficher le conteneur et ajouter le commentaire
                             repliesContainer.style.display = 'block';
                             // Créer le commentaire avec la structure simple
@@ -145,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                             `;
                             repliesContainer.appendChild(newComment);
-                            console.log('Comment added successfully');
                         } else {
                             // Créer un nouveau commentaire avec le conteneur intégré
                             const newCommentWithContainer = document.createElement('div');
@@ -177,11 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             `;
                             // Ajouter le nouveau commentaire avec son conteneur intégré dans le parent
                             parentComment.appendChild(newCommentWithContainer);
-                            console.log('New comment with container added successfully');
                         }
-                    } else {
-                        console.log('Parent comment not found');
-                    }
+                    } 
                 } else {
                     // Ajouter le commentaire à la fin de la liste
                     const commentsContainer = document.getElementById('post-comments');

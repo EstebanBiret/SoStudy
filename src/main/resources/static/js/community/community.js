@@ -1,8 +1,56 @@
+// delete modal
+let currentCommunityId = null;
+
+function openDeleteModal(button) {
+    const communityId = button.getAttribute("data-community-id");
+    const communityName = button.getAttribute("data-community-name");
+    
+    currentCommunityId = communityId;
+    
+    const modal = document.getElementById("deleteModal");
+    const deleteCommunityName = document.getElementById("deleteCommunityName");
+    
+    deleteCommunityName.textContent = communityName;
+    modal.style.display = "flex";
+}
+
+function closeDeleteModal() {
+    document.getElementById("deleteModal").style.display = "none";
+}
+
+// close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modalOverlay = document.getElementById('deleteModal');
+    if (event.target === modalOverlay) {
+        closeDeleteModal();
+    }
+});
+
+function confirmDelete() {
+    fetch(`/community/delete/${currentCommunityId}`, {
+        method: "POST"
+    })
+    .then(res => {
+        if (res.ok) {
+            // remove community card from DOM
+            const communityCard = document.querySelector(`.community-card[data-community-id-card="${currentCommunityId}"]`);
+            if (communityCard) {
+                communityCard.remove();
+            }
+            // close modal
+            closeDeleteModal();
+        } else {
+            alert("Erreur lors de la suppression de la communauté");
+        }
+    });
+}
+
+// toggle community membership
 function toggleCommunityMembership(button) {
     const communityId = button.getAttribute("data-community-id");
     const isMember = button.getAttribute("data-is-member") === "true";
     const url = `/community/${isMember ? 'leave' : 'join'}/${communityId}`;
-
+    
     fetch(url, {
         method: "POST"
     })

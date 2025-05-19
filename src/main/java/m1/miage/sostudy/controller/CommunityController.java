@@ -1,8 +1,10 @@
 package m1.miage.sostudy.controller;
 
 import m1.miage.sostudy.model.entity.Community;
+import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.repository.CommunityRepository;
+import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +38,12 @@ public class CommunityController {
      */
     @Autowired
     private UserRepository userRepository;
+
+    /**
+     * Post repository
+     */
+    @Autowired
+    private PostRepository postRepository;
 
     /**
      * Get the name of the month in French
@@ -99,13 +107,16 @@ public class CommunityController {
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         User user = (User) session.getAttribute("user");
-
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-        if (optionalCommunity.isPresent() && !user.getSubscribedCommunities().contains(optionalCommunity.get())) {
-            user.getSubscribedCommunities().add(optionalCommunity.get());
-            optionalCommunity.get().getUsers().add(user);
-            userRepository.save(user);
-            communityRepository.save(optionalCommunity.get());
+        
+        if (optionalCommunity.isPresent()) {
+            Community community = optionalCommunity.get();
+            if (!user.getSubscribedCommunities().contains(community)) {
+                user.getSubscribedCommunities().add(community);
+                community.getUsers().add(user);
+                userRepository.save(user);
+                communityRepository.save(community);
+            }
         }
 
         return "redirect:/community";
@@ -126,11 +137,15 @@ public class CommunityController {
 
         User user = (User) session.getAttribute("user");
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-        if (optionalCommunity.isPresent() && user.getSubscribedCommunities().contains(optionalCommunity.get())) {
-            user.getSubscribedCommunities().remove(optionalCommunity.get());
-            optionalCommunity.get().getUsers().remove(user);
-            userRepository.save(user);
-            communityRepository.save(optionalCommunity.get());
+        
+        if (optionalCommunity.isPresent()) {
+            Community community = optionalCommunity.get();
+            if (user.getSubscribedCommunities().contains(community)) {
+                user.getSubscribedCommunities().remove(community);
+                community.getUsers().remove(user);
+                userRepository.save(user);
+                communityRepository.save(community);
+            }
         }
 
         return "redirect:/community";
@@ -231,10 +246,40 @@ public class CommunityController {
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         User user = (User) session.getAttribute("user");
-        
-        model.addAttribute("user", user);
-        model.addAttribute("currentUri", request.getRequestURI());
-        return "community/form_delete";
+        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
+
+        // check if community exists
+        if (optionalCommunity.isPresent()) {
+            Community community = optionalCommunity.get();
+            
+            // check if user is the creator
+            if (user.getIdUser() == community.getUserCreator().getIdUser()) {
+
+                // remove column community_id from post
+                List<Post> posts = community.getPosts();
+                for (Post post : posts) {
+                    post.setCommunity(null);
+                    postRepository.save(post);
+                }
+
+                // remove user from community
+                List<User> users = community.getUsers();
+                for (User u : users) {
+                    u.getSubscribedCommunities().remove(community);
+                    userRepository.save(u);
+                }
+                
+                // delete community
+                communityRepository.deleteById(communityId);
+                communityRepository.flush();
+
+                // Recharger l'utilisateur pour éviter les références obsolètes
+                user = userRepository.findById(user.getIdUser()).orElse(null);
+                session.setAttribute("user", user);
+            }
+        }
+
+        return "redirect:/community";
     }
 
     /**
