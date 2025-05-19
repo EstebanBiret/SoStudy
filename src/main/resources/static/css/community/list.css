@@ -159,3 +159,55 @@ body {
 #voir:hover {
     background-color: #862fb3;
 }
+
+#deleteModal .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animation d'apparition */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#deleteModal .modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+#deleteModal .btn {
+    flex: 1;
+    padding: .8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#deleteModal .btn:not(.btn-danger) {
+    background: #b226f8;
+    color: white;
+}
+
+#deleteModal .btn:not(.btn-danger):hover {
+    background: #862fb3;
+}
+
+#deleteModal .btn.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+#deleteModal .btn.btn-danger:hover {
+    background: #c82333;
+}
+    

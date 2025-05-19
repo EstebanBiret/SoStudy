@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" th:href="@{/css/community/list.css}">
+        <link rel="stylesheet" th:href="@{/css/index.css}">
         <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
     </head>
     <body>
@@ -16,7 +17,7 @@
             <h1 style="text-align: center;">Communautés</h1>
             
             <div class="community-list">
-                <div th:each="community : ${communities}" class="community-card">
+                <div th:each="community : ${communities}" class="community-card" th:data-community-id-card="${community.communityId}">
                     <div class="community-image">
                         <img th:src="${community.communityImagePath}" alt="Image de la communauté">
                     </div>
@@ -47,10 +48,16 @@
                     <hr>
                     <div class="community-actions" th:data-community-id="${community.communityId}">
                         <!-- Creator actions -->
-                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="edit" th:href="@{/community/edit/{id}(id=${community.communityId})}">
+                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="edit" 
+                           th:data-user-id="${user.idUser}"
+                           th:href="@{/community/edit/{id}(id=${community.communityId})}">
                             Modifier
                         </a>
-                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="delete" th:href="@{/community/delete/{id}(id=${community.communityId})}">
+                        <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="delete" 
+                           th:data-user-id="${user.idUser}"
+                           th:data-community-id="${community.communityId}"
+                           th:data-community-name="${community.communityName}"
+                           onclick="event.preventDefault(); openDeleteModal(this)">
                             Supprimer
                         </a>
                         
@@ -80,13 +87,25 @@
                         <a th:if="${user.subscribedCommunities.contains(community)}" 
                            th:href="@{/community/{id}(id=${community.communityId})}" 
                            class="btn" id="voir"
-                           th:data-community-id="${community.communityId}">
+                           th:data-user-id="${user.idUser}">
                             Voir la communauté
                         </a>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Modal de suppression -->
+        <div id="deleteModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="deleteCommunityName"></h2>
+                <p class="warning">Êtes-vous sûr de vouloir supprimer cette communauté ? Cette action est irréversible.</p>
+                <div class="modal-actions">
+                    <button onclick="confirmDelete()" class="btn btn-danger">Supprimer</button>
+                    <button onclick="closeDeleteModal()" class="btn">Annuler</button>
+                </div>
+            </div>
+        </div>
+
         <script th:src="@{/js/community/community.js}"></script>
     </body>
 </html>
