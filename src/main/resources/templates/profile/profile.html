@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
         <title>SoStudy | Profil</title>
@@ -28,7 +28,7 @@
                         <div class="profile-stats">
                             <p>
                                 <span id="user-posts-count" th:text="${posts.size() + reposts.size()}"></span>post(s)
-                                <span th:text="${userProfile.followers.size()}"></span>abonné(s)
+                                <span id="user-followers-count" th:text="${userProfile.followers.size()}"></span>abonné(s)
                                 <span th:text="${userProfile.following.size()}"></span>abonnement(s)
                             </p>
                         </div>
@@ -54,6 +54,18 @@
                             </div>
                         </div>
                     </div>
+
+                    <div th:if="${userProfile.pseudo != session.user.pseudo}">
+                        <button
+                                id="followBtn"
+                                class="follow-btn"
+                                th:classappend="${#lists.contains(userProfile.followers, session.user)} ? ' unfollow' : ''"
+                                th:attr="data-following=${#lists.contains(userProfile.followers, session.user)}, data-pseudo=${userProfile.pseudo}"
+                                th:text="${#lists.contains(userProfile.followers, session.user)} ? 'Ne plus suivre' : 'Suivre'">
+                        </button>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -268,14 +280,7 @@
 
         <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
-
+        <script th:src="@{/js/profile/profile.js}"></script>
     </body>
-
-    <script>
-        function toggleDropdown() {
-            const menu = document.getElementById("dropdownMenu");
-            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-        }
-    </script>
 
 </html>

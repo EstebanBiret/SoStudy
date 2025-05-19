@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/post/form_publish_post.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/modal.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/chat.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_new_conv.css}">
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
@@ -19,10 +20,16 @@
 </div>
 
 <div class="centered-box">
-    <input type="text" placeholder="Rechercher..." class="search-bar full">
+    <div class="new-conv-header">
+        <a th:href="@{/channels/}">
+            <img src="/images/logos/back-grey.svg" alt="Logo" class="send-icon">
+            <img src="/images/logos/back-purple.svg" alt="Logo" class="send-icon-hover">
+        </a>
+        <input type="text" placeholder="Rechercher..." class="search-bar full">
+    </div>
 
     <ul class="full-card">
-
+        <h2 class="title-card">Mes abonnements :</h2>
         <li th:if="${following.isEmpty()}" style="list-style-type: none;">
             <p class="no-user">Aucun utilisateur suivi.</p>
         </li>
@@ -59,7 +66,7 @@
         <h2>Créer un nouveau canal de discussion</h2>
         <p>Envoie un message pour démarrer la conversation !</p>
 
-        <form th:action="@{/channels/new}" method="post">
+        <form th:action="@{/channels/new}" method="post" enctype="multipart/form-data">
 
             <div id="channelNameWrapper" style="display: none;">
                 <h4>Nom du channel</h4>
@@ -69,16 +76,24 @@
                 </div>
             </div>
 
-
             <h4>Premier message</h4>
             <div class="share-link">
                 <input type="text" id="firstMessage" name="firstMessage" placeholder="Premier Message" value="">
                 <div class="copy-icon">💬</div>
             </div>
+
+            <div id="channelImageWrapper" style="display: none;">
+                <h4>Nom du channel</h4>
+                <div class="share-link">
+                    <input type="file" name="channelImage" id="channelImage" accept="image/*">
+                    <img id="preview" src="#" alt="Prévisualisation" style="display:none; max-width: 100px; margin-top: 10px;">
+                </div>
+            </div>
+
             <input type="hidden" name="selectedUsers" id="selectedUsersInput">
 
             <div class="buttons">
-                <button class="btn cancel" onclick="closeModal()">Annuler</button>
+                <button type="button" class="btn cancel" onclick="closeModal()">Annuler</button>
                 <input type="submit" class="btn confirm">
             </div>
         </form>

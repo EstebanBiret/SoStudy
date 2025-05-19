@@ -1,5 +1,6 @@
 package m1.miage.sostudy.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -35,12 +36,14 @@ public class Channel {
      * List of users in the channel
      */
     @ManyToMany(mappedBy = "subscribedChannels",fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> users = new ArrayList<>();
 
     /**
      * Creator of the channel
      */
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "idUser")
     private User creator;
 
@@ -49,6 +52,7 @@ public class Channel {
      * List of messages in the channel
      */
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Message> messages = new ArrayList<>();
 
     /**

@@ -3,38 +3,66 @@
 <head>
     <title>SoStudy | Conversations</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/post/form_publish_post.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/post/form_publish.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_channels.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_new_conv.css}">
-
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/chat.css}">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
 </head>
 <body>
     <div th:replace="common/navbar :: navbar(${currentUri})"></div>
-    <form th:action="@{/channels/new}" method="get">
+    <div class="full-chat-page">
         <div class="list-chan-box">
-            <input type="text" placeholder="Rechercher..." class="search-bar full">
 
+            <input type="text" placeholder="Rechercher..." class="search-bar full">
+    
             <ul class="full-card">
-                <li class="user-card" th:each="entry : ${lastMessageMap}">
+                <li class="user-card" th:each="entry : ${lastMessageMap}" th:id="'channel-' + ${entry.key.channelId}"
+                    th:data-channel-id="${entry.key.channelId}">
                     <a class="user-info">
                         <img th:if="${entry.key.getUsers().size() > 2}" th:src="${entry.key.channelImagePath}" alt="User" class="user-photo">
                         <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPicMap[entry.key]}" alt="User" class="user-photo" />
                         <div class="text-placeholder">
                             <h3 th:if="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${entry.key.getChannelName()}"></h3>
                             <h3 th:unless="${entry.key.getUsers().size() > 2}" class="user-name" th:text="${profPseudoMap[entry.key]}"></h3>
-                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}"></p>
+                            <p class="user-description" th:if="${entry.value != null}" th:text="${entry.value.getContent()}" th:id="'lastMessage-'+${entry.key.channelId}"></p>
                         </div>
                     </a>
                 </li>
             </ul>
+        <form th:action="@{/channels/new}" method="get">
+            <button type="submit" class="new-conv">
+                +
+            </button>
+        </form>
+    </div>
+
+        <div class="conv-box" id="conversation">
+            <div class="conv-header">
+                <h2 class="conv-name">Nom de la conversation</h2>
+                <!--<button class="conv-settings">
+                    <img src="/images/logos/repost.png" alt="Settings" class="settings-icon" id="connect">
+                </button>-->
+            </div>
+            <input type="hidden" id="current-user-id" th:value="${currentUser.getIdUser()}"/>
+
+
+            <div class="chat-messages" id="chat-messages">
+
+            </div>
+
+            <form class="message-input" id="form-message">
+                <input type="text" placeholder="Écrire un message..." class="message-text" id="message_sender">
+                <button type="submit" class="send-button" id="send">
+                    <img src="/images/logos/send-grey.svg" alt="Send" class="send-icon">
+                    <img src="/images/logos/send-purple.svg" alt="Send" class="send-icon-hover">
+                </button>
+            </form>
         </div>
-
-
-        <button type="submit" class="new-conv">
-            +
-        </button>
-    </form>
+    </div>
+    <script th:src="@{/js/message/chat.js}"></script>
 </body>
 </html>
