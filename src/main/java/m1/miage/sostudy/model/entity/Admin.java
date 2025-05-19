@@ -2,6 +2,8 @@ package m1.miage.sostudy.model.entity;
 
 import jakarta.persistence.*;
 
+//TODO voir si on supprime car admin = user avec le pseudo admin
+
 /**
  * class representing an admin
  */

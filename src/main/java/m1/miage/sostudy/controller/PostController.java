@@ -319,7 +319,9 @@ public class PostController {
         }
 
         postRepository.save(post);
-        return "redirect:/";
+        
+        // Add a small delay using a temporary redirect
+        return "redirect:/post/temporary-redirect/" + post.getPostId();
     }
 
     /**
@@ -383,5 +385,17 @@ public class PostController {
         postRepository.deleteById(id);
         return "redirect:/";
     }
-    
+
+    /**
+     * Temporary redirect to ensure the image is properly saved
+     * @param postId the id of the post
+     * @return redirect to post details
+     * @throws InterruptedException
+     */
+    @GetMapping("/temporary-redirect/{postId}")
+    public String temporaryRedirect(@PathVariable Integer postId) throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
+        return "redirect:/post/" + postId;
+    }
 }

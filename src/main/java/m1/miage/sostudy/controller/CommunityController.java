@@ -209,6 +209,21 @@ public class CommunityController {
         communityRepository.save(community);
 
         model.addAttribute("user", user);
+
+
+        // Add a small delay using a temporary redirect
+        return "redirect:/community/temporary-redirect";
+    }
+
+    /**
+     * Temporary redirect to ensure the image is properly saved
+     * @return redirect to community list
+     * @throws InterruptedException
+     */
+    @GetMapping("/temporary-redirect")
+    public String temporaryRedirect() throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
         return "redirect:/community";
     }
 

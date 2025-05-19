@@ -343,7 +343,22 @@ public class UserController {
 
         userRepository.save(user);
         session.setAttribute("user", user);
-        return "redirect:/user/" + user.getPseudo();
+
+        // Add a small delay using a temporary redirect
+        return "redirect:/user/temporary-redirect/" + user.getPseudo();
+    }
+
+    /**
+     * Temporary redirect to ensure the image is properly saved
+     * @param pseudo the pseudo of the user
+     * @return redirect to user profile
+     * @throws InterruptedException
+     */
+    @GetMapping("/temporary-redirect/{pseudo}")
+    public String temporaryRedirect(@PathVariable String pseudo) throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
+        return "redirect:/user/" + pseudo;
     }
 
     /**
