@@ -6,7 +6,11 @@ import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.repository.CommunityRepository;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -126,7 +131,7 @@ public class CommunityController {
         
         if (optionalCommunity.isPresent()) {
             Community community = optionalCommunity.get();
-            if (!user.getSubscribedCommunities().contains(community)) {
+            if (!communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
                 user.getSubscribedCommunities().add(community);
                 community.getUsers().add(user);
                 userRepository.save(user);
@@ -155,7 +160,7 @@ public class CommunityController {
         
         if (optionalCommunity.isPresent()) {
             Community community = optionalCommunity.get();
-            if (user.getSubscribedCommunities().contains(community)) {
+            if (communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
                 user.getSubscribedCommunities().remove(community);
                 community.getUsers().remove(user);
                 userRepository.save(user);
@@ -175,11 +180,15 @@ public class CommunityController {
      * @return the name of the view to be rendered
      * @throws IOException if an I/O error occurs
      */
-    @PostMapping("/new")
-    public String createCommunity(@RequestParam String communityName, @RequestParam String communityDescription, @RequestParam MultipartFile communityImage, HttpSession session) throws IOException {
-
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+    @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<Community> createCommunity(@RequestParam String communityName,
+                                                 @RequestParam String communityDescription,
+                                                 @RequestParam MultipartFile communityImage,
+                                                 HttpSession session) throws IOException {
+        if(session.getAttribute("user") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
         User sessionUser = (User) session.getAttribute("user");
         User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
@@ -188,22 +197,18 @@ public class CommunityController {
         community.setCommunityName(communityName);
         community.setCommunityDescription(communityDescription);
 
-        //image
-        String fileName = null;
+        String fileName;
         if (!communityImage.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
-            community.setCommunityImagePath(fileName);
-        }
-        else {
+        } else {
             fileName = "/images/community/defaultCommunity.png";
-            community.setCommunityImagePath(fileName);
         }
+        community.setCommunityImagePath(fileName);
 
-        //set creation date
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         community.setCommunityCreationDate(LocalDate.now().format(formatter));
 
@@ -217,8 +222,7 @@ public class CommunityController {
         user.addCreatedCommunity(community);
         userRepository.save(user);
 
-        // Add a small delay using a temporary redirect
-        return "redirect:/community/temporary-redirect";
+        return ResponseEntity.ok(community);
     }
 
     /**

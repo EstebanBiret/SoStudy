@@ -50,5 +50,14 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
      * @return list of communities
      */
     List<Community> findByUsers_IdUser(Integer userId);
+
+    /**
+     * Check if a user is a member of a community
+     * @param userId the id of the user
+     * @param communityId the id of the community
+     * @return true if the user is a member of the community, false otherwise
+     */
+    boolean existsByUsers_IdUserAndCommunityId(Integer userId, Integer communityId);
+
     
 }
