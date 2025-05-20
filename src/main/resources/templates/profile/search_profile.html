@@ -11,27 +11,34 @@
 
     <div class="search-container">
         <h1>Recherche de profils</h1>
-        <form id="searchForm" onsubmit="return redirectSearch(event)">
+        <form id="searchForm" onsubmit="return redirectSearchBody(event)">
             <input type="text" id="searchInputBody" name="pseudo" placeholder="Rechercher un profil..." required>
             <button type="submit">Rechercher</button>
         </form>
     </div>
 
-    <div class="results-container">
-        <h2>Résultats de la recherche</h2>
-        <ul class="results-list">
-            <div th:each="user : ${users}">
-                <a th:href="@{/user/{pseudo}(pseudo=${user.pseudo})}" class="result-item">
-                    <img th:src="${user.personImagePath}" alt="Profil" class="result-image">
-                    <span class="result-name" th:text="${user.pseudo}"></span>
-                </a>
-            </div>
-        </ul>
-    </div>
-
+<div class="results-container">
+    <h2>Résultats de la recherche</h2>
+    <ul class="results-list">
+        <div th:each="user, iterStat : ${users}">
+            <a th:href="@{/user/{pseudo}(pseudo=${user.pseudo})}" class="result-item">
+                <img th:src="${user.personImagePath}" alt="Profil" class="result-image">
+                <span class="result-name" th:text="${user.pseudo}"></span>
+                <div class="result-stats">
+                    <span class="stat" th:text="${nbPost[iterStat.index] + ' post(s)'}"></span>
+                    <span class="stat" th:text="${user.followers.size() + ' abonné(s)'}"></span>
+                    <span class="stat" th:text="${user.following.size() + ' abonnement(s)'}"></span>
+                </div>
+            </a>
+        </div>
+    </ul>
     <div class="no-results" th:if="${#lists.isEmpty(users)}">
         <p>Aucun profil trouvé.</p>
     </div>
+</div>
+
+
+
 
 </body>
 <script th:src="@{/js/common/navbar.js}"></script>

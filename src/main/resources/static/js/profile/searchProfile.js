@@ -1,4 +1,4 @@
-function redirectSearch(event) {
+function redirectSearchBody(event) {
     event.preventDefault();
     const input = document.getElementById("searchInputBody");
     const query = input.value.trim();

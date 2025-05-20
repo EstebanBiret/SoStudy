@@ -444,6 +444,19 @@ public class UserController {
         if(users.contains(user)){
             users.remove(user);
         }
+        List<Integer> nbPost = new ArrayList<>();
+        List<Repost> repostsFromUser = new ArrayList<>();
+        int nbRepost = 0;
+        for(User u : users){
+            repostsFromUser = repostRepository.findByUser(u);
+            nbPost.add(postRepository.findByUser_IdUserAndCommentFatherIsNull(u.getIdUser()).size() + repostsFromUser.size());
+        }
+
+        if(!nbPost.isEmpty()){
+          model.addAttribute("nbPost", nbPost);
+        }
+
+
         model.addAttribute("users", users);
         model.addAttribute("currentUri", request.getRequestURI());
         return "profile/search_profile";

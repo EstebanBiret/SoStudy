@@ -8,7 +8,7 @@ body {
     max-width: 800px;
     margin: 20px auto 20px auto;
     background: white;
-    padding: 10px;
+    padding: 5px 20px 20px 20px;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -85,7 +85,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
-    background-color: #fafafa;
+    background-color: #efeff3;
     padding: 1rem;
     border-radius: 12px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -109,6 +109,8 @@ body {
     font-size: 1.1rem;
     color: #333;
     text-align: center;
+    padding-bottom: 5px;
+    font-weight: bold;
 }
 
 .no-results {
@@ -120,5 +122,12 @@ body {
     background: white;
     padding: 2rem;
     border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
 }
+
+.result-stats .stat {
+    font-size: 0.9rem;
+    color: #666;
+    padding: 4px 4px;
+
+}
+
