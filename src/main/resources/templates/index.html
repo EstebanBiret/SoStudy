@@ -4,6 +4,7 @@
         <title>SoStudy | Accueil</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
@@ -83,7 +84,15 @@
                     <div class="post-content">
                         <p th:text="${post.postContent}">Contenu du post</p>
                         <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">
-                            <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                            <div class="media-wrapper">
+                                <img th:src="@{${post.postMediaPath}}"
+                                     alt="Media du post"
+                                     class="post-media-image"
+                                     onclick="openImageModal(this.src)">
+                            </div>
+                            <button class="expand-button" th:attr="data-src=${post.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                            </button>
                         </div>
                     </div>
                     <div class="post-actions">
@@ -177,7 +186,16 @@
                             <div class="post-content">
                                 <p th:text="${repostDisplay.originalPost.postContent}"></p>
                                 <div th:if="${postMediaExistsMap[repostDisplay.originalPost.postId]}" class="post-media">
-                                    <img th:src="@{${repostDisplay.originalPost.postMediaPath}}" alt="Media du post" class="post-media-image">
+                                    <div class="media-wrapper">
+                                        <img th:src="@{${repostDisplay.originalPost.postMediaPath}}"
+                                             alt="Media du post"
+                                             class="post-media-image"
+                                             onclick="openImageModal(this.src)">
+                                    </div>
+                                    <button class="expand-button" th:attr="data-src=${repostDisplay.originalPost.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                        <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                                    </button>
+
                                 </div>
                             </div>
                             <div class="post-actions">
@@ -249,10 +267,17 @@
             </div>
         </div>
 
+        <!-- Modale d'image -->
+        <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+
         <script th:src="@{/js/reaction/reaction.js}"></script>
         <script th:src="@{/js/common/navbar.js}"></script>
         <script th:src="@{/js/profile/searchProfile.js}"></script>
         <script th:src="@{/js/repost/repost.js}"></script>
+        <script th:src="@{/js/common/common.js}"></script>
 
     </body>
 </html>

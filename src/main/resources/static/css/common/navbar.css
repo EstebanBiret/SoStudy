@@ -41,3 +41,18 @@
 #events-img {
     height: 50px !important;
 }
+
+@media (max-width: 935px) {
+    .logo {
+        height: 20px !important;
+    }
+
+    .nav-item img {
+        height: 20px !important;
+        width: 20px !important;
+    }
+
+    #events-img {
+        height: 30px !important;
+    }
+}
