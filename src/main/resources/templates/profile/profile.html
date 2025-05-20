@@ -35,8 +35,14 @@
                         <div class="profile-stats">
                             <p>
                                 <span id="user-posts-count" th:text="${posts.size() + reposts.size()}"></span>post(s)
-                                <span id="user-followers-count" th:text="${userProfile.followers.size()}"></span>abonné(s)
-                                <span th:text="${userProfile.following.size()}"></span>abonnement(s)
+
+                                <button id="openFollowersModal" class="link-like" th:disabled="${userProfile.followers.size() == 0}">
+                                    <span th:text="${userProfile.followers.size()}"></span> abonné(s)
+                                </button>
+
+                                <button id="openFollowModal" class="link-like" th:disabled="${userProfile.following.size() == 0}">
+                                    <span th:text="${userProfile.following.size()}"></span> abonnement(s)
+                                </button>
                             </p>
                         </div>
                     </div>
@@ -299,6 +305,42 @@
                         <button type="button" class="cancel" onclick="closeRepostModal()">Annuler</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Followers modal -->
+        <div id="followersModal" class="modal-overlay" style="display: none;">
+            <div class="modal followers-modal">
+                <h2 class="modal-title">Liste des abonnés</h2>
+                <ul class="followers-list">
+                    <li class="follower-item" th:each="follower : ${userProfile.followers}">
+                        <a class="follower-link" th:href="@{/user/{pseudo}(pseudo=${follower.pseudo})}">
+                            <img th:src="@{${follower.personImagePath}}" alt="Avatar" class="avatar-small follower-avatar">
+                            <span class="follower-name" th:text="${follower.pseudo}"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel" onclick="closeFollowersModal()">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Follow modal -->
+        <div id="followModal" class="modal-overlay" style="display: none;">
+            <div class="modal followers-modal">
+                <h2 class="modal-title">Liste des abonnements</h2>
+                <ul class="followers-list">
+                    <li class="follower-item" th:each="follow : ${userProfile.following}">
+                        <a class="follower-link" th:href="@{/user/{pseudo}(pseudo=${follow.pseudo})}">
+                            <img th:src="@{${follow.personImagePath}}" alt="Avatar" class="avatar-small follower-avatar">
+                            <span class="follower-name" th:text="${follow.pseudo}"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel" onclick="closeFollowModal()">Fermer</button>
+                </div>
             </div>
         </div>
 
