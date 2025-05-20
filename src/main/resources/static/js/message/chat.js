@@ -11,7 +11,6 @@ let currentChannelId = null;
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
-    console.log('Connected: ' + frame);
     if (currentChannelId) {
         subscribeToChannel(currentChannelId);
     }
@@ -48,19 +47,16 @@ function disconnect() {
         currentSubscription = null;
     }
     setConnected(false);
-    console.log("Disconnected");
 }
 
 function subscribeToChannel(channelId) {
-    console.log("Subscribing to channel:", channelId);
     if (currentSubscription) {
         currentSubscription.unsubscribe();
     }
 
     currentSubscription = stompClient.subscribe(`/topic/messages/${channelId}`, (message) => {
         const msg = JSON.parse(message.body);
-        console.log("Received message:", msg);
-        showMessage(msg.sender.pseudo, msg.userId, msg.content, msg.dateMessage);
+        showMessage(msg.sender, msg.content, msg.dateMessage);
     });
 }
 
@@ -76,42 +72,116 @@ function sendMessage(channelId) {
     $("#message_sender").val("");
 }
 
-function showMessage(senderPseudo, id, message, date) {
+function showMessage(sender, message, date) {
     const userId = $("#current-user-id").val();
     const chatMessages = document.getElementById("chat-messages");
 
     const messageElement = document.createElement("div");
 
-    if (userId != id) {
+    let profileImageSrc = ""
+
+    console.log(checkToShowDate(date));
+
+    if (parseInt(userId) !== sender.idUser) {
         messageElement.className = "message-row friend";
+            profileImageSrc = `
+                    <a href="/user/${sender.pseudo}" class="prof-pic-container">
+                        <img src="${sender.personImagePath}" alt="Photo de profil" class="profile-pic">
+                    </a>
+                    <div class="full-message">
+                        <div class="message-pseudo">
+                            <strong>${sender.pseudo}</strong>
+                        </div>
+                `;
+
     } else {
         messageElement.className = "message-row me";
+        profileImageSrc = `
+                    <div class="full-message">
+                `;
     }
 
 
-    const last = $("#lastMessage-"+currentChannelId).get(0);
 
-    console.log("last", last);
+    const last = $("#lastMessage-"+currentChannelId).get(0);
     last.innerHTML = message
 
-    messageElement.innerHTML = `
-        <div class="bubble">
-            <div class="message-pseudo" ><strong>${senderPseudo}</strong> <small>${date}</small><br/></div>
-            <div class="message-text-body">${message}</div>
+    messageElement.innerHTML =
+        profileImageSrc +`
+        
+            <div class="bubble">
+                <div class="message-text-body">${message}</div>
+                <span class="message-date">
+                    ${date}
+                </span>
+            </div>
+            
         </div>
     `;
 
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Add long press behavior
+    const bubble = messageElement.querySelector('.bubble');
+
+    const dateSpan = bubble.querySelector('.message-date');
+
+    console.log(dateSpan);
+    console.log(bubble);
+
+    let pressTimer = null;
+
+    bubble.addEventListener('mousedown', () => {
+        pressTimer = setTimeout(() => {
+            bubble.classList.add('show-date');
+        }, 500);
+    });
+
+    bubble.addEventListener('mouseup', () => {
+        clearTimeout(pressTimer);
+        bubble.classList.remove('show-date');
+    });
+
+    bubble.addEventListener('mouseleave', () => {
+        clearTimeout(pressTimer);
+        bubble.classList.remove('show-date');
+    });
+
+    bubble.addEventListener('touchstart', () => {
+        pressTimer = setTimeout(() => {
+            bubble.classList.add('show-date');
+        }, 500);
+    });
+
+    bubble.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+        bubble.classList.remove('show-date');
+    });
 }
 
 function changeChannel(channelId) {
     currentChannelId = channelId;
 
+    $("#chat-messages").html("");
+    $.ajax({
+        url: "/api/messages/channel/" + channelId,
+        method: "GET",
+        success: function (messages) {
+            messages.forEach(function (msg) {
+                showMessage(msg.sender, msg.content, msg.dateMessage);
+            });
+        },
+        error: function () {
+            console.error("Erreur lors du chargement des messages");
+        }
+    });
     if (stompClient.connected) {
         subscribeToChannel(channelId);
-        $("#chat-messages").html(""); // vide les anciens messages affichés
-        // Tu peux ici aussi faire un appel AJAX pour charger l’historique si besoin
+    } else {
+        stompClient.activate({}, function () {
+            subscribeToChannel(channelId);
+        });
     }
 }
 
@@ -122,26 +192,32 @@ $(function () {
     });
     $("#disconnect").click(() => disconnect());
     $(".user-card").click(function() {
+
+        const channelName = $(this).find(".user-name").text();
+        $(".conv-name").text(channelName);
+
+        $(".user-card").removeClass("active");
+        $(this).addClass("active");
+
         if (!hasConnected) {
             connect();
             hasConnected = true;
         }
         const channelId = $(this).data("channel-id");
+        const isGroup = $(this).data("is-group");
+
+        if (isGroup) {
+            $(".conv-settings").show()
+        }
+        else {
+            $(".conv-settings").hide()
+        }
 
         if (channelId) {
             changeChannel(channelId);
-
-            const channelName = $(this).find(".user-name").text();
-            $(".conv-name").text(channelName);
-
-            // Optionnel: ajouter une classe active à la sélection visuelle
-            $(".user-card").removeClass("active");
-            $(this).addClass("active");
-
         }});
 });
 
-// changer l'icone quand on survole l'image pour envoyer
 let sendIcon = document.querySelector('.send-icon');
 let sendIconHover = document.querySelector('.send-icon-hover');
 sendIcon.addEventListener('mouseover', function() {
@@ -152,4 +228,21 @@ sendIconHover.addEventListener('mouseout', function() {
     sendIcon.style.display = 'block';
     sendIconHover.style.display = 'none';
 });
+
+
+function checkToShowDate(date){
+    const now = new Date();
+    const messageDate = new Date(date);
+    const diff = now - messageDate;
+    const diffHours = Math.floor(diff / (1000 * 60 * 60));
+    console.log(diffHours);
+
+    if (diffHours > 5) {
+        return messageDate.toLocaleString();
+    } else {
+        return "";
+    }
+}
+
+
 

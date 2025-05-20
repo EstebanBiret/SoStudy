@@ -8,6 +8,13 @@
     max-height: 60vh; /* ajuste selon ton layout */
 }
 
+.full-message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    max-width: 60%;
+}
+
 .message-row {
     display: flex;
 }
@@ -21,9 +28,9 @@
 }
 
 .bubble {
+    position: relative;
     padding: 10px 15px;
     border-radius: 20px;
-    max-width: 60%;
     word-break: break-word;
     background-color: #e0e0e0;
 }
@@ -61,5 +68,46 @@
 }
 
 .message-text-body{
-    margin-top: 0.5rem;
+    padding: 0.2rem;
 }
+.profile-pic {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.prof-pic-container{
+    display: flex;
+    align-items: center;
+}
+
+.message-pseudo{
+    margin-right: 0.2rem;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.message-date {
+    display: none;
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    font-size: 0.75rem;
+    color: #888;
+    padding: 4px 8px;
+    border-radius: 12px;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.bubble.show-date .message-date {
+    display: block;
+    opacity: 1;
+}
+

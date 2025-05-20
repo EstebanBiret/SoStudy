@@ -21,7 +21,7 @@
     
             <ul class="full-card">
                 <li class="user-card" th:each="entry : ${lastMessageMap}" th:id="'channel-' + ${entry.key.channelId}"
-                    th:data-channel-id="${entry.key.channelId}">
+                    th:data-channel-id="${entry.key.channelId}" th:data-is-group="${entry.key.getUsers().size() > 2 ? true : false}">
                     <a class="user-info">
                         <img th:if="${entry.key.getUsers().size() > 2}" th:src="${entry.key.channelImagePath}" alt="User" class="user-photo">
                         <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPicMap[entry.key]}" alt="User" class="user-photo" />
@@ -43,9 +43,9 @@
         <div class="conv-box" id="conversation">
             <div class="conv-header">
                 <h2 class="conv-name">Nom de la conversation</h2>
-                <!--<button class="conv-settings">
+                <button class="conv-settings">
                     <img src="/images/logos/repost.png" alt="Settings" class="settings-icon" id="connect">
-                </button>-->
+                </button>
             </div>
             <input type="hidden" id="current-user-id" th:value="${currentUser.getIdUser()}"/>
 
@@ -55,7 +55,7 @@
             </div>
 
             <form class="message-input" id="form-message">
-                <input type="text" placeholder="Écrire un message..." class="message-text" id="message_sender">
+                <input type="text" placeholder="Écrire un message..." class="message-text" id="message_sender" autocomplete="off">
                 <button type="submit" class="send-button" id="send">
                     <img src="/images/logos/send-grey.svg" alt="Send" class="send-icon">
                     <img src="/images/logos/send-purple.svg" alt="Send" class="send-icon-hover">
