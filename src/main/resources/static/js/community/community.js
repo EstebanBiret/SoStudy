@@ -1,7 +1,6 @@
 let currentCommunityId = null;
 
 // --- Modals management ---
-
 function openModal(modalId) {
     document.getElementById(modalId).style.display = "flex";
     console.log(currentCommunityId);
@@ -58,7 +57,6 @@ window.addEventListener('click', (event) => {
 });
 
 // --- Delete community ---
-
 function confirmDelete() {
     if (!currentCommunityId) return;
 
@@ -71,8 +69,8 @@ function confirmDelete() {
         const communityList = communityCard.closest('.community-list');
         communityCard.remove();
 
-        // Si dernière communauté supprimée
-        if (communityList && communityList.children.length === 1) {
+        // If last community deleted
+        if (communityList && communityList.children.length === 1) { //(1 because of title 'Communautés')
             communityList.remove();
 
             const noCommunityContainer = document.createElement('div');
@@ -141,7 +139,7 @@ document.getElementById("editCommunityForm").addEventListener("submit", function
         communityCard.querySelector(".community-info p").textContent = community.communityDescription;
         communityCard.querySelector(".community-image img").src = community.communityImagePath;
 
-        //edit les data-id
+        //edit data-id
         communityCard.querySelector(".community-actions a#edit").setAttribute("data-community-name", community.communityName);
         communityCard.querySelector(".community-actions a#edit").setAttribute("data-community-description", community.communityDescription);
         communityCard.querySelector(".community-actions a#delete").setAttribute("data-community-name", community.communityName);
@@ -155,8 +153,7 @@ document.getElementById("editCommunityForm").addEventListener("submit", function
     });
 });
 
-
-// Fonction pour formater une date au format YYYY-MM-DD en format français
+// Format date
 function formatDate(dateString) {
     const months = [
         "janvier", "février", "mars", "avril", "mai", "juin",
@@ -164,12 +161,12 @@ function formatDate(dateString) {
     ];
     const dateParts = dateString.split("-");
     const day = parseInt(dateParts[2]);
-    const month = parseInt(dateParts[1]) - 1; // Les mois en JavaScript commencent à 0
+    const month = parseInt(dateParts[1]) - 1;
     const year = dateParts[0];
     return `${day} ${months[month]} ${year}`;
 }
 
-// Fonction auxiliaire pour insérer la nouvelle communauté dans le DOM
+// Add community card
 function addCommunityCard(community) {
     const newCard = document.createElement('div');
     newCard.className = 'community-card';
@@ -235,14 +232,14 @@ function addCommunityCard(community) {
             communityList.insertBefore(newCard, communityList.firstChild);
         }
     } else {
-        // Supprimer la div "Aucune communauté"
+        // Remove "Aucune communauté" div
         const noCommunityContainer = document.querySelector('.no-following-container');
         if (noCommunityContainer) noCommunityContainer.remove();
 
         const newCommunityList = document.createElement('div');
         newCommunityList.className = 'community-list';
 
-        // Bouton créer communauté
+        // Create community button
         const createButton = document.createElement('a');
         createButton.className = 'createCommunityBtn2';
         createButton.href = '#';
@@ -260,7 +257,6 @@ function addCommunityCard(community) {
 }
 
 // --- Toggle membership ---
-
 function toggleCommunityMembership(button) {
     const communityId = button.getAttribute("data-community-id");
     const isMember = button.getAttribute("data-is-member") === "true";
@@ -270,7 +266,7 @@ function toggleCommunityMembership(button) {
     .then(res => {
         if (!res.ok) throw new Error("Erreur lors de la mise à jour de l'appartenance à la communauté");
 
-        // Mise à jour bouton
+        // Update button
         const newButtonHtml = `
             <a href="#" class="btn" id="${isMember ? 'join' : 'leave'}"
                data-community-id="${communityId}"
@@ -286,13 +282,13 @@ function toggleCommunityMembership(button) {
         `;
         button.outerHTML = newButtonHtml;
 
-        // Mise à jour du compteur membres
+        // Update member count
         const memberCount = document.querySelector(`span[data-community-id="${communityId}"]`);
         if (memberCount) {
             memberCount.textContent = parseInt(memberCount.textContent) + (isMember ? -1 : 1);
         }
 
-        // Suppression du bouton "voir" si l'utilisateur quitte la communauté
+        // Remove "voir" button if user leaves the community
         if (isMember) {
             const actions = document.querySelector(`.community-actions[data-community-id="${communityId}"]`);
             if (actions) {

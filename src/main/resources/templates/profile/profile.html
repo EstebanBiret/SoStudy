@@ -128,8 +128,8 @@
                             <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
                             Ne plus reposter
                         </button>
-
                     </div>
+                    
                     <div class="post-content">
                         <p th:text="${post.postContent}">Contenu du post</p>
                         <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">

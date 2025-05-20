@@ -3,8 +3,13 @@ package m1.miage.sostudy.controller;
 import m1.miage.sostudy.model.entity.Community;
 import m1.miage.sostudy.model.entity.Post;
 import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.UserPostReaction;
+import m1.miage.sostudy.model.entity.id.UserPostReactionID;
+import m1.miage.sostudy.model.enums.ReactionType;
 import m1.miage.sostudy.repository.CommunityRepository;
 import m1.miage.sostudy.repository.PostRepository;
+import m1.miage.sostudy.repository.RepostRepository;
+import m1.miage.sostudy.repository.UserPostReactionRepository;
 import m1.miage.sostudy.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,8 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import static m1.miage.sostudy.controller.IndexController.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +38,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +69,18 @@ public class CommunityController {
      */
     @Autowired
     private PostRepository postRepository;
+
+    /**
+     * Autowired RepostRepository
+     */
+    @Autowired
+    private RepostRepository repostRepository;
+
+    /**
+     * Autowired UserPostReactionRepository
+     */
+    @Autowired
+    private UserPostReactionRepository userPostReactionRepository;
 
     /**
      * Path for uploading files.
@@ -326,7 +348,7 @@ public class CommunityController {
                 communityRepository.deleteById(communityId);
                 communityRepository.flush();
 
-                // Recharger l'utilisateur pour éviter les références obsolètes
+                // Reload user to avoid null pointer exception
                 user = userRepository.findById(user.getIdUser()).orElse(null);
                 session.setAttribute("user", user);
             }
@@ -336,7 +358,7 @@ public class CommunityController {
     }
 
     /**
-     * Get a community
+     * Get a community to see its posts
      * @param communityId the ID of the community
      * @param model the model of the view
      * @param session the session of the user
@@ -351,13 +373,116 @@ public class CommunityController {
 
         User user = (User) session.getAttribute("user");
         
+        //reload user to avoid null pointer exception
+        user = userRepository.findById(user.getIdUser()).orElse(null);
+        session.setAttribute("user", user);
+
+        //community doesn't exist
+        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
+        if (!optionalCommunity.isPresent()) {
+            return "redirect:/community";
+        }
+
+        //user is not subscribed to the community
+        if (!communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
+            return "redirect:/community";
+        }
+
+        List<Post> posts = communityRepository.findById(communityId).get().getPosts();
+
+        //community has no posts yet
+        if(posts.isEmpty()) {
+            model.addAttribute("posts", new ArrayList<>());
+            model.addAttribute("user", user);
+            model.addAttribute("currentUri", request.getRequestURI());
+            return "community/details";
+        }
+
+        Map<Integer, ReactionType> userReactedPosts = new HashMap<>();
+        Map<Integer, Boolean> postMediaExistsMap = new HashMap<>();
+        Map<Integer, Integer> postCommentCounts = new HashMap<>();
+        Map<Integer, Long> repostCounts = new HashMap<>();
+        Map<Integer, Boolean> repostedPostIds = new HashMap<>();
+
+        for (Post post : posts) {
+            //create the composite ID
+            UserPostReactionID reactionId = new UserPostReactionID();
+            reactionId.setUserId(user.getIdUser());
+            reactionId.setPostId(post.getPostId());
+            
+            //get the reaction type from the repository
+            List<UserPostReaction> reactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            post.setReactions(reactions);
+            if (reactions != null && !reactions.isEmpty()) {
+                // Find the reaction for this user
+                for (UserPostReaction r : reactions) {
+                    if (r.getUser().equals(user)) {
+                        userReactedPosts.put(post.getPostId(), r.getReaction().getReactionType());
+                        break;
+                    }
+                }
+
+                // count reactions by type
+                long likeCount = reactions.stream()
+                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LIKE)
+                    .count();
+                long loveCount = reactions.stream()
+                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LOVE)
+                    .count();
+                long laughCount = reactions.stream()
+                    .filter(r -> r.getReaction().getReactionType() == ReactionType.LAUGH)
+                    .count();
+                long cryCount = reactions.stream()
+                    .filter(r -> r.getReaction().getReactionType() == ReactionType.CRY)
+                    .count();
+                long angryCount = reactions.stream()
+                    .filter(r -> r.getReaction().getReactionType() == ReactionType.ANGRY)
+                    .count();
+
+                post.setLikeCount(likeCount);
+                post.setLoveCount(loveCount);
+                post.setLaughCount(laughCount);
+                post.setCryCount(cryCount);
+                post.setAngryCount(angryCount);
+            }
+
+            //format date
+            LocalDate date = LocalDate.parse(post.getPostPublicationDate());
+            post.setFormattedDate(formatPostDate(date));
+
+            //map of post media presence
+            postMediaExistsMap.put(post.getPostId(), postMediaExists(post.getPostMediaPath()));
+
+            //count comments
+            postCommentCounts.put(post.getPostId(), countAllComments(post));
+
+            //count reposts
+            long repostCount = repostRepository.countByOriginalPost(post);
+            repostCounts.put(post.getPostId(), repostCount);
+
+            //check if user has reposted this post
+            boolean hasReposted = repostRepository.findByUser(user)
+            .stream()
+            .anyMatch(repost -> repost.getOriginalPost().getPostId().equals(post.getPostId()));
+            repostedPostIds.put(post.getPostId(), hasReposted);
+        }
+        
+        // sort posts by date
+        posts.sort((post1, post2) -> {
+            LocalDate date1 = LocalDate.parse(post1.getPostPublicationDate());
+            LocalDate date2 = LocalDate.parse(post2.getPostPublicationDate());
+            return date2.compareTo(date1);
+        });
+
         model.addAttribute("user", user);
         model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute("postMediaExistsMap", postMediaExistsMap);
+        model.addAttribute("posts", posts);
+        model.addAttribute("userReactedPosts", userReactedPosts);
+        model.addAttribute("postCommentCounts", postCommentCounts);
+        model.addAttribute("repostCounts", repostCounts);
+        model.addAttribute("repostedPostIds", repostedPostIds);
         
-        Optional<Community> optionalCommunity = communityRepository.findById(communityId);
-        if (optionalCommunity.isPresent()) {
-            model.addAttribute("community", optionalCommunity.get());
-        }
-        return "community";
+        return "community/details";
     }
 }
