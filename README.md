@@ -40,19 +40,14 @@
 | /channels/{idChannel}               | GET     | ChannelController  | Détail d’une conversation                         | id                      |
 | /message/{idChannel}/send               | POST     | MessageController  | Envoyer un message dans une conversation    | id                      |
 | /community                    | GET     | CommunityController| Affiche la liste des communautés                     |                         |
-| /community/new                | GET     | CommunityController| Formulaire de création de communauté                    |                         |
 | /community/new                | POST    | CommunityController| Traite la création de communauté                        | Formulaire              |
-| /community/edit/{communityId} | GET     | CommunityController| Formulaire de modification d'une communauté             | communityId             |
 | /community/edit/{communityId} | POST    | CommunityController| Sauvegarde les modifications                            | communityId, Formulaire |
 | /community/delete/{communityId} | POST  | CommunityController| Supprime une communauté                                 | communityId             |
 | /community/join/{communityId} | POST    | CommunityController| Rejoindre une communauté                                | communityId             |
 | /community/leave/{communityId}| POST    | CommunityController| Quitter une communauté                                  | communityId             |
-| /community/{communityId}      | GET     | CommunityController| Détails d'une communauté + liste des posts associés     | communityId             |
+| /community/{communityId}      | GET     | CommunityController| Liste des posts associés à cette communauté    | communityId             |
 | /event                       | GET     | EventController    | Liste des événements                                 |                  |
-| /event/{eventId}             | GET     | EventController    | Détails d’un événement                                  | eventId                 |
-| /event/new                   | GET     | EventController    | Formulaire de création d'événement                      |                         |
 | /event/new                   | POST    | EventController    | Traite la création d’un événement                       | Formulaire              |
-| /event/edit/{eventId}        | GET     | EventController    | Formulaire d’édition d’un événement                     | eventId                 |
 | /event/edit/{eventId}        | POST    | EventController    | Sauvegarde des modifications                            | eventId, Formulaire     |
 | /event/delete/{eventId}      | POST    | EventController    | Supprime un événement                                   | eventId                 |
 | /event/join/{eventId}        | POST    | EventController    | Rejoindre un événement                                  | eventId                 |
