@@ -61,7 +61,7 @@
                                 <form th:action="@{'/user/edit'}" method="get">
                                     <button type="submit">Modifier</button>
                                 </form>
-                                <form th:action="@{'/profile/delete/' + ${userProfile.pseudo}}" method="post">
+                                <form th:action="@{'/user/delete'}" method="post">
                                     <button type="submit" onclick="return confirm('Supprimer ce profil ?')">Supprimer</button>
                                 </form>
                             </div>
@@ -89,7 +89,7 @@
                 <!-- Section des posts -->
 
                 <!-- Si 0 post sur le profil d'un autre utilisateur -->
-                <div th:if="${posts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
+                <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
                     <p>Cet utilisateur n'a pas encore posté, revenez plus tard !</p>
                 </div>
 
