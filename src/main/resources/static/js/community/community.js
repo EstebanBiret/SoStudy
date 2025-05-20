@@ -4,6 +4,7 @@ let currentCommunityId = null;
 
 function openModal(modalId) {
     document.getElementById(modalId).style.display = "flex";
+    console.log(currentCommunityId);
 }
 
 function closeModal(modalId) {
@@ -12,6 +13,7 @@ function closeModal(modalId) {
 
 // Delete modal
 function openDeleteModal(button) {
+    console.log(button);
     currentCommunityId = button.getAttribute("data-community-id");
     const communityName = button.getAttribute("data-community-name");
     document.getElementById("deleteCommunityName").textContent = communityName;
@@ -24,6 +26,7 @@ function closeDeleteModal() {
 
 // Create modal
 function openCreateModal() {
+    currentCommunityId = null;
     openModal("createModal");
 }
 
@@ -31,9 +34,24 @@ function closeCreateModal() {
     closeModal("createModal");
 }
 
+// Edit modal
+function openEditModal(button) {
+    console.log(button);
+    currentCommunityId = button.getAttribute("data-community-id");
+    const communityName = button.getAttribute("data-community-name");
+    const communityDescription = button.getAttribute("data-community-description");
+    document.getElementById("communityName").value = communityName;
+    document.getElementById("communityDescription").value = communityDescription;
+    openModal("editModal");
+}
+
+function closeEditModal() {
+    closeModal("editModal");
+}
+
 // Close modal when clicking outside
 window.addEventListener('click', (event) => {
-    ["deleteModal", "createModal"].forEach(modalId => {
+    ["deleteModal", "createModal", "editModal"].forEach(modalId => {
         const modal = document.getElementById(modalId);
         if (event.target === modal) closeModal(modalId);
     });
@@ -77,7 +95,6 @@ function confirmDelete() {
 }
 
 // --- Create community ---
-
 document.getElementById("createCommunityForm").addEventListener("submit", function(event) {
     event.preventDefault();
     const form = event.target;
@@ -101,6 +118,43 @@ document.getElementById("createCommunityForm").addEventListener("submit", functi
         alert("Une erreur est survenue lors de la création de la communauté");
     });
 });
+
+// --- Edit community ---
+document.getElementById("editCommunityForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch(`/community/edit/${currentCommunityId}`, {
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erreur lors de la modification de la communauté");
+        return res.json();
+    })
+    .then(community => {
+        const communityCard = document.querySelector(`.community-card[data-community-id-card="${community.communityId}"]`);
+        if (!communityCard) return;
+
+        communityCard.querySelector(".community-info h2").textContent = community.communityName;
+        communityCard.querySelector(".community-info p").textContent = community.communityDescription;
+        communityCard.querySelector(".community-image img").src = community.communityImagePath;
+
+        //edit les data-id
+        communityCard.querySelector(".community-actions a#edit").setAttribute("data-community-name", community.communityName);
+        communityCard.querySelector(".community-actions a#edit").setAttribute("data-community-description", community.communityDescription);
+        communityCard.querySelector(".community-actions a#delete").setAttribute("data-community-name", community.communityName);
+        communityCard.querySelector(".community-actions a#delete").setAttribute("data-community-description", community.communityDescription);
+        
+        closeEditModal();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Une erreur est survenue lors de la modification de la communauté");
+    });
+});
+
 
 // Fonction pour formater une date au format YYYY-MM-DD en format français
 function formatDate(dateString) {
@@ -150,6 +204,9 @@ function addCommunityCard(community) {
         <div class="community-actions" data-community-id="${community.communityId}">
             <a href="#" class="btn" id="edit"
                 data-user-id="${community.userCreator.idUser}"
+                data-community-id="${community.communityId}"
+                data-community-name="${community.communityName}"
+                data-community-description="${community.communityDescription}"
                 onclick="event.preventDefault(); openEditModal(this)">
                 Modifier
             </a>

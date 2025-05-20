@@ -66,7 +66,10 @@
                     <div class="community-actions" th:data-community-id="${community.communityId}">
                         <!-- Creator actions -->
                         <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="edit" 
-                           th:data-user-id="${user.idUser}"
+                           th:data-user-id="${user.idUser}" 
+                           th:data-community-id="${community.communityId}"
+                           th:data-community-name="${community.communityName}"
+                           th:data-community-description="${community.communityDescription}"
                            onclick="event.preventDefault(); openEditModal(this)">
                             Modifier
                         </a>
@@ -127,17 +130,17 @@
         <!-- Modal de modification -->
         <div id="editModal" class="modal-overlay" style="display:none;">
             <div class="modal">
-                <h2 id="editCommunityName"></h2>
-                <form id="editCommunityForm">
+                <h2 id="editCommunityName">Modifier la communauté</h2>
+                <form id="editCommunityForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
                     <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
                     <input type="file" id="communityImage" name="communityImage" accept="image/*">
                     <small>Moins de 2 Mo</small>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn editCommunityBtn">Modifier</button>
+                        <button onclick="closeEditModal()" class="btn btn-danger">Annuler</button>
+                    </div>
                 </form>
-                <div class="modal-actions">
-                    <button onclick="confirmEdit()" class="btn btn-danger">Modifier</button>
-                    <button onclick="closeEditModal()" class="btn">Annuler</button>
-                </div>
             </div>
         </div>
 

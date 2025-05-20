@@ -100,7 +100,7 @@ body {
 }
 
 /* Styles pour le formulaire de création */
-#createCommunityForm {
+#createCommunityForm, #editCommunityForm {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -109,7 +109,9 @@ body {
 }
 
 #createCommunityForm input[type="text"],
-#createCommunityForm input[type="file"] {
+#createCommunityForm input[type="file"],
+#editCommunityForm input[type="text"],
+#editCommunityForm input[type="file"] {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -119,15 +121,12 @@ body {
 }
 
 #createCommunityForm input[type="text"]:focus,
-#createCommunityForm input[type="file"]:focus {
+#createCommunityForm input[type="file"]:focus,
+#editCommunityForm input[type="text"]:focus,
+#editCommunityForm input[type="file"]:focus {
     outline: none;
     border-color: #b529e4;
     box-shadow: 0 0 0 2px rgba(181, 41, 228, 0.1);
-}
-
-#createCommunityForm input[type="file"] {
-    padding: 0.5rem;
-    background: #f8f9fa;
 }
 
 .btn {
@@ -137,15 +136,6 @@ body {
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
-}
-
-.createCommunityBtn {
-    background-color: #b529e4;
-    color: white;
-}
-
-.createCommunityBtn:hover {
-    background-color: #9c23c9;
 }
 
 .btn-danger {
@@ -260,7 +250,7 @@ body {
 #deleteModal .btn:not(.btn-danger):hover {
     background: #862fb3;
 }
-#deleteCommunityName, #createCommunityFormTitle {
+#deleteCommunityName, #createCommunityFormTitle, #editCommunityName {
     text-align: center;
     margin-bottom: 1rem;
 }
@@ -270,7 +260,7 @@ body {
     margin-bottom: 1rem;
 }
 
-.createCommunityBtn {
+.createCommunityBtn, .editCommunityBtn {
     background: #b226f8;
     color: white;
     border: none;
