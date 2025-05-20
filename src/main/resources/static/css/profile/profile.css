@@ -187,6 +187,8 @@ body {
     margin: 0 0 10px;
     font-size: 1.5rem;
     color: #333;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .bio {
@@ -194,6 +196,8 @@ body {
     color: #666;
     margin: 0;
     white-space: pre-line;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .buttons {
@@ -530,4 +534,21 @@ body {
     background: #862fb3;
     transform: scale(1.05);
 }
+
+.profile-detail-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #666;
+    margin: 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.profile-detail-line .icon {
+    width: 18px;
+    height: 18px;
+}
+
 

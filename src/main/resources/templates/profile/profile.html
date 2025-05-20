@@ -19,11 +19,18 @@
 
                     <div class="profile-info">
                         <h2 th:text="${userProfile.pseudo}"></h2>
-                        <p class="bio" th:text="${userProfile.studyLevel}"></p>
-                        <p class="bio" th:text="${userProfile.studyDomain}"></p>
-                        <p class="bio" th:text="${userProfile.university}">
-                        <p class="bio" th:text="${userProfile.bioUser}">
 
+                        <div class="profile-detail-line">
+                            <img src="/images/logos/university.svg" alt="Niveau et domaine" class="icon">
+                            <span th:text="${userProfile.studyLevel + ', ' + userProfile.studyDomain}"></span>
+                        </div>
+
+                        <div class="profile-detail-line">
+                            <img src="/images/logos/building.svg" alt="Université" class="icon">
+                            <span th:text="${userProfile.university}"></span>
+                        </div>
+
+                        <p class="bio" th:text="${userProfile.bioUser}"></p>
 
                         <div class="profile-stats">
                             <p>
@@ -32,8 +39,8 @@
                                 <span th:text="${userProfile.following.size()}"></span>abonnement(s)
                             </p>
                         </div>
-
                     </div>
+
 
                     <div th:if="${userProfile.pseudo == session.user.pseudo}" class="profile-actions">
 
