@@ -130,6 +130,9 @@ public class AuthController {
      * @param birthdate the date of birth of the user
      * @param bioUser the bio of the user
      * @param image the image of the user
+     * @param niveauEtude the study level of the user
+     * @param studyDomain the study domain of the user
+     * @param university the university of the user
      * @return a redirect to the login page
      * @throws IOException if an I/O error occurs
      */
@@ -180,7 +183,7 @@ public class AuthController {
      * Temporary redirect to ensure the image is properly saved
      * @param pseudo the pseudo of the user
      * @return redirect to user profile
-     * @throws InterruptedException
+     * @throws InterruptedException if the thread is interrupted
      */
     @GetMapping("/temporary-redirect/{pseudo}")
     public String temporaryRedirect(@PathVariable String pseudo) throws InterruptedException {

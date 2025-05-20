@@ -137,12 +137,14 @@ public class PostController {
 
     /**
      * Redirect to home page if the post id is empty
+     * @return redirect to home page
      */
     @GetMapping("")
     public String getPostEmpty() {return "redirect:/";}
 
     /**
      * Redirect to home page if the post id is empty
+     * @return redirect to home page
      */
     @GetMapping("/")
     public String getPostEmpty2() {return "redirect:/";}
@@ -390,7 +392,7 @@ public class PostController {
      * Temporary redirect to ensure the image is properly saved
      * @param postId the id of the post
      * @return redirect to post details
-     * @throws InterruptedException
+     * @throws InterruptedException if the thread is interrupted
      */
     @GetMapping("/temporary-redirect/{postId}")
     public String temporaryRedirect(@PathVariable Integer postId) throws InterruptedException {

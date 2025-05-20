@@ -235,7 +235,7 @@ public class CommunityController {
     /**
      * Temporary redirect to ensure the image is properly saved
      * @return redirect to community list
-     * @throws InterruptedException
+     * @throws InterruptedException if the thread is interrupted
      */
     @GetMapping("/temporary-redirect")
     public String temporaryRedirect() throws InterruptedException {

@@ -141,13 +141,15 @@ public class ChannelController {
 
     /**
      * Saves the new channel.
-     * @param selectedUsersCsv the list of selected users
+     * @param selectedUsers the list of selected users
+     * @param channelImage the image of the channel
      * @param firstMessage the first message of the channel
      * @param channelName the name of the channel
      * @param session the HTTP session
      * @param model the model to be used in the view
      * @param redirectAttributes the redirect attributes
      * @return a redirect to the list of channels
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/new")
     public String saveChannel(@RequestParam String selectedUsers, @RequestParam MultipartFile channelImage, @RequestParam String firstMessage, @RequestParam(required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
@@ -232,8 +234,8 @@ public class ChannelController {
 
     /**
      * Temporary redirect to ensure the image is properly saved
-     * @return redirect to channel
-     * @throws InterruptedException
+     * @return redirect to channel list
+     * @throws InterruptedException if the thread is interrupted
      */
     @GetMapping("/temporary-redirect")
     public String temporaryRedirect() throws InterruptedException {
