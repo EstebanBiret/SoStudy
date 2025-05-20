@@ -102,6 +102,19 @@ document.getElementById("createCommunityForm").addEventListener("submit", functi
     });
 });
 
+// Fonction pour formater une date au format YYYY-MM-DD en format français
+function formatDate(dateString) {
+    const months = [
+        "janvier", "février", "mars", "avril", "mai", "juin",
+        "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+    ];
+    const dateParts = dateString.split("-");
+    const day = parseInt(dateParts[2]);
+    const month = parseInt(dateParts[1]) - 1; // Les mois en JavaScript commencent à 0
+    const year = dateParts[0];
+    return `${day} ${months[month]} ${year}`;
+}
+
 // Fonction auxiliaire pour insérer la nouvelle communauté dans le DOM
 function addCommunityCard(community) {
     const newCard = document.createElement('div');
@@ -119,7 +132,7 @@ function addCommunityCard(community) {
                     <span class="label">Créée par</span>
                     <a href="/user/${community.userCreator.pseudo}" class="creator-link">${community.userCreator.pseudo}</a>
                     <span class="label">le</span>
-                    <span class="date">${community.communityCreationDate}</span>
+                    <span class="date">${formatDate(community.communityCreationDate)}</span>
                 </span>
             </div>
             <div class="community-stats">
@@ -147,12 +160,13 @@ function addCommunityCard(community) {
                 onclick="event.preventDefault(); openDeleteModal(this)">
                 Supprimer
             </a>
+            <a class="btn" id="voir"
+                href="/community/${community.communityId}"
+                data-user-id="${community.userCreator.idUser}">
+                Voir la communauté
+            </a>
         </div>
     `;
-
-    // Forcer le refresh de l'image (cache-buster)
-    const img = newCard.querySelector('img');
-    img.src = community.communityImagePath + "?t=" + new Date().getTime();
 
     const communityList = document.querySelector('.community-list');
 

@@ -91,7 +91,7 @@ public class CommunityController {
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
         
         User user = (User) session.getAttribute("user");
-        List<Community> communities = communityRepository.findAll();
+        List<Community> communities = communityRepository.findAllOrderByCreationDate();
         
         //update number of members and posts
         for (Community community : communities) {
@@ -104,6 +104,11 @@ public class CommunityController {
                 getMonthName(Integer.parseInt(dateParts[1])) + " " +
                 dateParts[0];
             community.setCommunityCreationDate(formattedDate);
+            
+            // Check if user is member of this community
+            if(communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), community.getCommunityId())) {
+                community.addUser(user);
+            }
         }
 
         model.addAttribute("communities", communities);
@@ -221,6 +226,8 @@ public class CommunityController {
         user.getSubscribedCommunities().add(community);
         user.addCreatedCommunity(community);
         userRepository.save(user);
+
+        session.setAttribute("user", user);
 
         return ResponseEntity.ok(community);
     }

@@ -99,6 +99,64 @@ body {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* Styles pour le formulaire de création */
+#createCommunityForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    align-items: center;
+}
+
+#createCommunityForm input[type="text"],
+#createCommunityForm input[type="file"] {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+#createCommunityForm input[type="text"]:focus,
+#createCommunityForm input[type="file"]:focus {
+    outline: none;
+    border-color: #b529e4;
+    box-shadow: 0 0 0 2px rgba(181, 41, 228, 0.1);
+}
+
+#createCommunityForm input[type="file"] {
+    padding: 0.5rem;
+    background: #f8f9fa;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.createCommunityBtn {
+    background-color: #b529e4;
+    color: white;
+}
+
+.createCommunityBtn:hover {
+    background-color: #9c23c9;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
 .stat-number {
     font-size: 1.2rem;
     font-weight: bold;
@@ -113,7 +171,6 @@ body {
 .community-actions {
     margin-top: 1rem;
     padding: 1rem;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -135,6 +192,7 @@ body {
 #edit {
     background-color: #fad233;
 }
+
 #edit:hover {
     background-color: #e0a800;
 }
@@ -142,6 +200,7 @@ body {
 #delete, #leave {
     background-color: #dc3545;
 }
+
 #delete:hover, #leave:hover {
     background-color: #c82333;
 }
@@ -156,6 +215,7 @@ body {
 #voir {
     background-color: #b529e4;
 }
+
 #voir:hover {
     background-color: #862fb3;
 }
@@ -176,10 +236,9 @@ body {
     to { opacity: 1; transform: scale(1); }
 }
 
-#deleteModal .modal-actions {
+.modal-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 1.5rem;
 }
 
 #deleteModal .btn {
@@ -201,16 +260,6 @@ body {
 #deleteModal .btn:not(.btn-danger):hover {
     background: #862fb3;
 }
-
-.btn.btn-danger {
-    background: #dc3545;
-    color: white;
-}
-
-.btn.btn-danger:hover {
-    background: #c82333;
-}
-
 #deleteCommunityName, #createCommunityFormTitle {
     text-align: center;
     margin-bottom: 1rem;
@@ -218,6 +267,7 @@ body {
 
 .warning {
     text-align: center;
+    margin-bottom: 1rem;
 }
 
 .createCommunityBtn {
@@ -259,9 +309,8 @@ body {
     background: #862fb3;
 }
 
-/* Pour centrer ce bouton même dans le .community-list en grid */
 .community-list > .createCommunityBtn2 {
-    grid-column: 1 / -1; /* Occupe toute la rangée */
+    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
 }
