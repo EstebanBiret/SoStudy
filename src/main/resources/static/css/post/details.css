@@ -156,22 +156,6 @@ body {
     line-height: 1.5;
 }
 
-.post-media {
-    margin-top: 1rem;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.post-media-image {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
 .post-actions {
     display: flex;
     justify-content: space-between;
@@ -385,6 +369,7 @@ body {
     text-align: center;
     color: #6b7280;
     font-size: 0.95rem;
+    margin-bottom: 20px;
 }
 
 .modal-overlay {

@@ -186,10 +186,6 @@ public class ChannelController {
             }
         }
 
-        //todo régler soucis quand on créé un canal avec un user avec qui on est déjà en discussion et un autre nouveau, ça bloque sur celui avec qui on est déjà en discussion
-        //todo quand on vient de créer un canal à 2, l'image du canal ne marche pas, mais marche quand on se déco-reco
-        //todo ajouter dans form quand c'est > 2 un champ pour mettre l'image du canal
-
         Channel channel = new Channel();
         channel.setChannelImagePath(fileName);
         channel.setChannelName(

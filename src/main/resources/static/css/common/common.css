@@ -7,3 +7,78 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.post-media {
+    display: flex;
+    justify-content: center;
+    background-color: #efeff3;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    margin-top: 20px;
+    position: relative;
+}
+
+.post-media-image {
+    object-fit: contain;
+    max-height: 700px;
+    max-width: 900px;
+    display: block;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+}
+
+.media-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.expand-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    border: none;
+    background: transparent;
+    margin-top: 20px;
+}
+
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.image-modal .modal-content {
+    display: block;
+    margin: auto;
+    max-width: 90%;
+    max-height: 80vh;
+}
+
+.image-modal .close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.expand-icon {
+    width: 20px;
+    height: 20px;
+}

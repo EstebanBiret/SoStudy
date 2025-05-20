@@ -101,7 +101,7 @@ public class IndexController {
      * @param mediaPath the path of the media file
      * @return true if the media file exists, false otherwise
      */
-    public boolean postMediaExists(String mediaPath) {
+    public static boolean postMediaExists(String mediaPath) {
         if (mediaPath == null) return false;
         try {
             return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));

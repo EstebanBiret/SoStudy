@@ -309,7 +309,6 @@ public class PostController {
         }
     
         // if we have attached an image to the post, we save it
-        //TODO si j'ai le temps mettre une taille max de l'image sinon erreur 413
         String fileName = null;
         if (!image.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
