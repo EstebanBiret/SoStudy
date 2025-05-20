@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Communautés - SoStudy</title>
+        <title>SoStudy | Communautés</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" th:href="@{/css/community/list.css}">
@@ -16,7 +16,24 @@
         <div class="container">
             <h1 style="text-align: center;">Communautés</h1>
             
-            <div class="community-list">
+            <div th:if="${communities.isEmpty()}">
+                <div class="no-following-container">
+                    <div class="no-following-content">
+                        <h2>Aucune communauté</h2>
+                        <p>Il n'y a pas encore de communauté. Soyez le premier à en créer une !</p>
+                        <a onclick="event.preventDefault(); openCreateModal()" class="createCommunityBtn">
+                            Créer une communauté
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:unless= "${communities.isEmpty()}" class="community-list">
+                <!-- TODO à voir où on le place -->
+                 <a onclick="event.preventDefault(); openCreateModal()" class="createCommunityBtn2">
+                    Créer une communauté
+                </a>
+
                 <div th:each="community : ${communities}" class="community-card" th:data-community-id-card="${community.communityId}">
                     <div class="community-image">
                         <img th:src="${community.communityImagePath}" alt="Image de la communauté">
@@ -50,7 +67,7 @@
                         <!-- Creator actions -->
                         <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="edit" 
                            th:data-user-id="${user.idUser}"
-                           th:href="@{/community/edit/{id}(id=${community.communityId})}">
+                           onclick="event.preventDefault(); openEditModal(this)">
                             Modifier
                         </a>
                         <a th:if="${user.idUser == community.userCreator.idUser}" href="" class="btn" id="delete" 
@@ -94,6 +111,7 @@
                 </div>
             </div>
         </div>
+
         <!-- Modal de suppression -->
         <div id="deleteModal" class="modal-overlay" style="display:none;">
             <div class="modal">
@@ -103,6 +121,40 @@
                     <button onclick="confirmDelete()" class="btn btn-danger">Supprimer</button>
                     <button onclick="closeDeleteModal()" class="btn">Annuler</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal de modification -->
+        <div id="editModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="editCommunityName"></h2>
+                <form id="editCommunityForm">
+                    <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
+                    <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
+                    <input type="file" id="communityImage" name="communityImage" accept="image/*">
+                    <small>Moins de 2 Mo</small>
+                </form>
+                <div class="modal-actions">
+                    <button onclick="confirmEdit()" class="btn btn-danger">Modifier</button>
+                    <button onclick="closeEditModal()" class="btn">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de création -->
+        <div id="createModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="createCommunityFormTitle">Créer une communauté</h2>
+                <form id="createCommunityForm" method="post" enctype="multipart/form-data">
+                    <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
+                    <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
+                    <input type="file" id="communityImage" name="communityImage" accept="image/*">
+                    <small>Moins de 2 Mo</small>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn createCommunityBtn">Créer</button>
+                        <button onclick="closeCreateModal()" class="btn btn-danger">Annuler</button>
+                    </div>
+                </form>
             </div>
         </div>
 

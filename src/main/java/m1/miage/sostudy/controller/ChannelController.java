@@ -141,44 +141,46 @@ public class ChannelController {
 
     /**
      * Saves the new channel.
-     * @param selectedUsersCsv the list of selected users
+     * @param selectedUsers the list of selected users
+     * @param channelImage the image of the channel
      * @param firstMessage the first message of the channel
      * @param channelName the name of the channel
      * @param session the HTTP session
      * @param model the model to be used in the view
      * @param redirectAttributes the redirect attributes
      * @return a redirect to the list of channels
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping("/new")
-    public String saveChannel(@RequestParam("selectedUsers") String selectedUsersCsv, @RequestParam("channelImage") MultipartFile image, @RequestParam("firstMessage") String firstMessage, @RequestParam(value = "channelName", required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
+    public String saveChannel(@RequestParam String selectedUsers, @RequestParam MultipartFile channelImage, @RequestParam String firstMessage, @RequestParam(required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/auth/login";
 
         String fileName = null;
-        if (!image.isEmpty()) {
-            String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+        if (!channelImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + channelImage.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
             Files.createDirectories(filePath.getParent());
-            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;
         } else {
             fileName = "/images/channel/defaultChannelImage.png";
         }
 
-        List<Integer> selectedUserIds = Arrays.stream(selectedUsersCsv.split(","))
+        List<Integer> selectedUserIds = Arrays.stream(selectedUsers.split(","))
                 .map(Integer::parseInt)
                 .toList();
 
-        List<User> selectedUsers = new ArrayList<>();
+        List<User> selectedUsersList = new ArrayList<>();
         for (Integer id : selectedUserIds) {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
-            selectedUsers.add(user);
+            selectedUsersList.add(user);
         }
 
         // Check if a private channel already exists between the users
-        for (User user : selectedUsers) {
-            if (hasACanalAlready(sessionUser, user) && selectedUsers.size() == 1) {
+        for (User user : selectedUsersList) {
+            if (hasACanalAlready(sessionUser, user) && selectedUsersList.size() == 1) {
                 redirectAttributes.addFlashAttribute("error", "Un canal privé existe déjà entre vous et " + user.getPseudo());
                 return "redirect:/channels/new"; // Redirect to the list of channels if a private channel already exists
             }
@@ -192,18 +194,18 @@ public class ChannelController {
         channel.setChannelImagePath(fileName);
         channel.setChannelName(
                 (selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))
-                        ? "Groupe de discussion de " + sessionUser.getPseudo()+", " + selectedUsers.stream()
+                        ? sessionUser.getPseudo()+", " + selectedUsersList.stream()
                         .map(User::getPseudo)
                         .collect(Collectors.joining(", "))
-                        : selectedUsers.size() == 1
-                        ? selectedUsers.get(0).getPseudo() + " - " + sessionUser.getPseudo()
+                        : selectedUsersList.size() == 1
+                        ? selectedUsersList.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
         channel.setCreator(sessionUser);
 
         channel = channelRepository.save(channel);
 
-        for (User user : selectedUsers) {
+        for (User user : selectedUsersList) {
             channel.addUser(user);
             user.getSubscribedChannels().add(channel);
             userRepository.save(user);
@@ -226,7 +228,20 @@ public class ChannelController {
         channel.addMessage(message);
         channelRepository.save(channel);
 
-        return "redirect:/channels/"; // Redirect to the list of channels after saving
+        // Add a small delay using a temporary redirect
+        return "redirect:/channels/temporary-redirect";
+    }
+
+    /**
+     * Temporary redirect to ensure the image is properly saved
+     * @return redirect to channel list
+     * @throws InterruptedException if the thread is interrupted
+     */
+    @GetMapping("/temporary-redirect")
+    public String temporaryRedirect() throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
+        return "redirect:/channels/";
     }
 
     /**

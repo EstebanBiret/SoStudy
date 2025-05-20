@@ -96,7 +96,7 @@ public class DataInitializer implements CommandLineRunner {
         user1.setName("Dupont");
         user1.setFirstName("Jean");
         user1.setEmail("jean.dupont@example.com");
-        user1.setPassword(hashPassword("password123"));
+        user1.setPassword(hashPassword("a"));
         user1.setPseudo("jeandupont");
         user1.setBirthDate("1990-01-01");
         user1.setBioUser("Développeur Java passionné");

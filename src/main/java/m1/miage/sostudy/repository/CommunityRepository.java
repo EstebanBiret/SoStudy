@@ -45,10 +45,26 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
     Integer countPostsInCommunity(@Param("communityId") Integer communityId);
     
     /**
+     * Find all communities sorted by creation date
+     * @return list of communities sorted by creation date (newest first)
+     */
+    @Query("SELECT c FROM Community c ORDER BY c.communityCreationDate DESC")
+    List<Community> findAllOrderByCreationDate();
+
+    /**
      * Find all communities that a user belongs to
      * @param userId the id of the user
      * @return list of communities
      */
     List<Community> findByUsers_IdUser(Integer userId);
+
+    /**
+     * Check if a user is a member of a community
+     * @param userId the id of the user
+     * @param communityId the id of the community
+     * @return true if the user is a member of the community, false otherwise
+     */
+    boolean existsByUsers_IdUserAndCommunityId(Integer userId, Integer communityId);
+
     
 }

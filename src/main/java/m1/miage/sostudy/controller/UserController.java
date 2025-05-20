@@ -291,6 +291,9 @@ public class UserController {
      * @param birthdate the date of birth of the user
      * @param bioUser the bio of the user
      * @param image the image of the user
+     * @param niveauEtude the study level of the user
+     * @param studyDomain the study domain of the user
+     * @param university the university of the user
      * @return a redirect to the user profile page
      * @throws IOException if an I/O error occurs
      */
@@ -343,7 +346,22 @@ public class UserController {
 
         userRepository.save(user);
         session.setAttribute("user", user);
-        return "redirect:/user/" + user.getPseudo();
+
+        // Add a small delay using a temporary redirect
+        return "redirect:/user/temporary-redirect/" + user.getPseudo();
+    }
+
+    /**
+     * Temporary redirect to ensure the image is properly saved
+     * @param pseudo the pseudo of the user
+     * @return redirect to user profile
+     * @throws InterruptedException if the thread is interrupted
+     */
+    @GetMapping("/temporary-redirect/{pseudo}")
+    public String temporaryRedirect(@PathVariable String pseudo) throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
+        return "redirect:/user/" + pseudo;
     }
 
     /**
@@ -392,7 +410,7 @@ public class UserController {
 
     /**
      * Displays the unfollow user page for a specific user identified by their pseudo.
-     * * @param model the model to be used in the view
+     * @param model the model to be used in the view
      * @param session the HTTP session
      * @param pseudo the pseudo of the user to unfollow
      * @return the name of the unfollow user view

@@ -6,7 +6,11 @@ import m1.miage.sostudy.model.entity.User;
 import m1.miage.sostudy.repository.CommunityRepository;
 import m1.miage.sostudy.repository.PostRepository;
 import m1.miage.sostudy.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +18,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Controller for the Community entity
@@ -46,6 +61,11 @@ public class CommunityController {
     private PostRepository postRepository;
 
     /**
+     * Path for uploading files.
+     */
+    private final String UPLOAD_DIR = "./src/main/resources/static/images/community/";
+
+    /**
      * Get the name of the month in French
      * @param month the month
      * @return the name of the month in French
@@ -71,7 +91,7 @@ public class CommunityController {
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
         
         User user = (User) session.getAttribute("user");
-        List<Community> communities = communityRepository.findAll();
+        List<Community> communities = communityRepository.findAllOrderByCreationDate();
         
         //update number of members and posts
         for (Community community : communities) {
@@ -84,6 +104,11 @@ public class CommunityController {
                 getMonthName(Integer.parseInt(dateParts[1])) + " " +
                 dateParts[0];
             community.setCommunityCreationDate(formattedDate);
+            
+            // Check if user is member of this community
+            if(communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), community.getCommunityId())) {
+                community.addUser(user);
+            }
         }
 
         model.addAttribute("communities", communities);
@@ -111,7 +136,7 @@ public class CommunityController {
         
         if (optionalCommunity.isPresent()) {
             Community community = optionalCommunity.get();
-            if (!user.getSubscribedCommunities().contains(community)) {
+            if (!communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
                 user.getSubscribedCommunities().add(community);
                 community.getUsers().add(user);
                 userRepository.save(user);
@@ -140,7 +165,7 @@ public class CommunityController {
         
         if (optionalCommunity.isPresent()) {
             Community community = optionalCommunity.get();
-            if (user.getSubscribedCommunities().contains(community)) {
+            if (communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
                 user.getSubscribedCommunities().remove(community);
                 community.getUsers().remove(user);
                 userRepository.save(user);
@@ -152,41 +177,71 @@ public class CommunityController {
     }
 
     /**
-     * Formular to create a community
-     * @param model the model of the view
+     * Create a new community
+     * @param communityName the name of the community
+     * @param communityDescription the description of the community
+     * @param communityImage the image of the community
      * @param session the session of the user
      * @return the name of the view to be rendered
+     * @throws IOException if an I/O error occurs
      */
-    @GetMapping("/new")
-    public String newCommunity(Model model, HttpSession session) {
+    @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<Community> createCommunity(@RequestParam String communityName,
+                                                 @RequestParam String communityDescription,
+                                                 @RequestParam MultipartFile communityImage,
+                                                 HttpSession session) throws IOException {
+        if(session.getAttribute("user") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
 
-        User user = (User) session.getAttribute("user");
+        Community community = new Community();
+        community.setCommunityName(communityName);
+        community.setCommunityDescription(communityDescription);
 
-        model.addAttribute("user", user);
-        return "community/form_new";
+        String fileName;
+        if (!communityImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/community/" + rawFileName;
+        } else {
+            fileName = "/images/community/defaultCommunity.png";
+        }
+        community.setCommunityImagePath(fileName);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        community.setCommunityCreationDate(LocalDate.now().format(formatter));
+
+        community.setUserCreator(user);
+        community.setNumberOfMembers(1);
+        community.setNumberOfPosts(0);
+        community.getUsers().add(user);
+        communityRepository.save(community);
+
+        user.getSubscribedCommunities().add(community);
+        user.addCreatedCommunity(community);
+        userRepository.save(user);
+
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok(community);
     }
 
     /**
-     * Create a new community
-     * @param name the name of the community
-     * @param description the description of the community
-     * @param model the model of the view
-     * @param session the session of the user
-     * @return the name of the view to be rendered
+     * Temporary redirect to ensure the image is properly saved
+     * @return redirect to community list
+     * @throws InterruptedException if the thread is interrupted
      */
-    @PostMapping("/new")
-    public String createCommunity(@RequestParam String name, @RequestParam String description, Model model, HttpSession session) {
-
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        User user = (User) session.getAttribute("user");
-
-        model.addAttribute("user", user);
-        return "community/form_new";
+    @GetMapping("/temporary-redirect")
+    public String temporaryRedirect() throws InterruptedException {
+        // Wait for 1 second to ensure the image is properly saved
+        Thread.sleep(1000);
+        return "redirect:/community";
     }
 
     /**

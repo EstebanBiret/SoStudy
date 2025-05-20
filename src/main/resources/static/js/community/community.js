@@ -1,91 +1,248 @@
-// delete modal
 let currentCommunityId = null;
 
+// --- Modals management ---
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = "flex";
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+}
+
+// Delete modal
 function openDeleteModal(button) {
-    const communityId = button.getAttribute("data-community-id");
+    currentCommunityId = button.getAttribute("data-community-id");
     const communityName = button.getAttribute("data-community-name");
-    
-    currentCommunityId = communityId;
-    
-    const modal = document.getElementById("deleteModal");
-    const deleteCommunityName = document.getElementById("deleteCommunityName");
-    
-    deleteCommunityName.textContent = communityName;
-    modal.style.display = "flex";
+    document.getElementById("deleteCommunityName").textContent = communityName;
+    openModal("deleteModal");
 }
 
 function closeDeleteModal() {
-    document.getElementById("deleteModal").style.display = "none";
+    closeModal("deleteModal");
 }
 
-// close modal when clicking outside
-window.addEventListener('click', function(event) {
-    const modalOverlay = document.getElementById('deleteModal');
-    if (event.target === modalOverlay) {
-        closeDeleteModal();
-    }
+// Create modal
+function openCreateModal() {
+    openModal("createModal");
+}
+
+function closeCreateModal() {
+    closeModal("createModal");
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    ["deleteModal", "createModal"].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) closeModal(modalId);
+    });
 });
 
+// --- Delete community ---
+
 function confirmDelete() {
-    fetch(`/community/delete/${currentCommunityId}`, {
-        method: "POST"
-    })
+    if (!currentCommunityId) return;
+
+    fetch(`/community/delete/${currentCommunityId}`, { method: "POST" })
     .then(res => {
-        if (res.ok) {
-            // remove community card from DOM
-            const communityCard = document.querySelector(`.community-card[data-community-id-card="${currentCommunityId}"]`);
-            if (communityCard) {
-                communityCard.remove();
-            }
-            // close modal
-            closeDeleteModal();
-        } else {
-            alert("Erreur lors de la suppression de la communauté");
+        if (!res.ok) throw new Error("Erreur lors de la suppression de la communauté");
+        const communityCard = document.querySelector(`.community-card[data-community-id-card="${currentCommunityId}"]`);
+        if (!communityCard) return;
+
+        const communityList = communityCard.closest('.community-list');
+        communityCard.remove();
+
+        // Si dernière communauté supprimée
+        if (communityList && communityList.children.length === 1) {
+            communityList.remove();
+
+            const noCommunityContainer = document.createElement('div');
+            noCommunityContainer.className = 'no-following-container';
+            noCommunityContainer.innerHTML = `
+                <div class="no-following-content">
+                    <h2>Aucune communauté</h2>
+                    <p>Il n'y a pas encore de communauté. Soyez le premier à en créer une !</p>
+                    <a href="#" onclick="event.preventDefault(); openCreateModal()" class="createCommunityBtn">
+                        Créer une communauté
+                    </a>
+                </div>
+            `;
+
+            document.querySelector('.container').appendChild(noCommunityContainer);
         }
-    });
+        closeDeleteModal();
+    })
+    .catch(err => alert(err.message));
 }
 
-// toggle community membership
+// --- Create community ---
+
+document.getElementById("createCommunityForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch("/community/new", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erreur lors de la création de la communauté");
+        return res.json();
+    })
+    .then(community => {
+        addCommunityCard(community);
+        form.reset();
+        closeCreateModal();
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Une erreur est survenue lors de la création de la communauté");
+    });
+});
+
+// Fonction pour formater une date au format YYYY-MM-DD en format français
+function formatDate(dateString) {
+    const months = [
+        "janvier", "février", "mars", "avril", "mai", "juin",
+        "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+    ];
+    const dateParts = dateString.split("-");
+    const day = parseInt(dateParts[2]);
+    const month = parseInt(dateParts[1]) - 1; // Les mois en JavaScript commencent à 0
+    const year = dateParts[0];
+    return `${day} ${months[month]} ${year}`;
+}
+
+// Fonction auxiliaire pour insérer la nouvelle communauté dans le DOM
+function addCommunityCard(community) {
+    const newCard = document.createElement('div');
+    newCard.className = 'community-card';
+    newCard.setAttribute('data-community-id-card', community.communityId);
+    newCard.innerHTML = `
+        <div class="community-image">
+            <img src="${community.communityImagePath}" alt="Image de la communauté">
+        </div>
+        <div class="community-info">
+            <h2>${community.communityName}</h2>
+            <p>${community.communityDescription}</p>
+            <div class="community-meta">
+                <span class="creation-info">
+                    <span class="label">Créée par</span>
+                    <a href="/user/${community.userCreator.pseudo}" class="creator-link">${community.userCreator.pseudo}</a>
+                    <span class="label">le</span>
+                    <span class="date">${formatDate(community.communityCreationDate)}</span>
+                </span>
+            </div>
+            <div class="community-stats">
+                <div class="stat">
+                    <span data-community-id="${community.communityId}">1</span>
+                    <span>membre(s)</span>
+                </div>
+                <div class="stat">
+                    <span>0</span>
+                    <span>post(s)</span>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="community-actions" data-community-id="${community.communityId}">
+            <a href="#" class="btn" id="edit"
+                data-user-id="${community.userCreator.idUser}"
+                onclick="event.preventDefault(); openEditModal(this)">
+                Modifier
+            </a>
+            <a href="#" class="btn" id="delete"
+                data-user-id="${community.userCreator.idUser}"
+                data-community-id="${community.communityId}"
+                data-community-name="${community.communityName}"
+                onclick="event.preventDefault(); openDeleteModal(this)">
+                Supprimer
+            </a>
+            <a class="btn" id="voir"
+                href="/community/${community.communityId}"
+                data-user-id="${community.userCreator.idUser}">
+                Voir la communauté
+            </a>
+        </div>
+    `;
+
+    const communityList = document.querySelector('.community-list');
+
+    if (communityList) {
+        const createBtn = communityList.querySelector('.createCommunityBtn2');
+        if (createBtn) {
+            communityList.insertBefore(newCard, createBtn.nextSibling);
+        } else {
+            communityList.insertBefore(newCard, communityList.firstChild);
+        }
+    } else {
+        // Supprimer la div "Aucune communauté"
+        const noCommunityContainer = document.querySelector('.no-following-container');
+        if (noCommunityContainer) noCommunityContainer.remove();
+
+        const newCommunityList = document.createElement('div');
+        newCommunityList.className = 'community-list';
+
+        // Bouton créer communauté
+        const createButton = document.createElement('a');
+        createButton.className = 'createCommunityBtn2';
+        createButton.href = '#';
+        createButton.textContent = 'Créer une communauté';
+        createButton.onclick = function(e) {
+            e.preventDefault();
+            openCreateModal();
+        };
+
+        newCommunityList.appendChild(createButton);
+        newCommunityList.appendChild(newCard);
+
+        document.querySelector('.container').appendChild(newCommunityList);
+    }
+}
+
+// --- Toggle membership ---
+
 function toggleCommunityMembership(button) {
     const communityId = button.getAttribute("data-community-id");
     const isMember = button.getAttribute("data-is-member") === "true";
     const url = `/community/${isMember ? 'leave' : 'join'}/${communityId}`;
-    
-    fetch(url, {
-        method: "POST"
-    })
+
+    fetch(url, { method: "POST" })
     .then(res => {
-        if (res.ok) {
-            //update button
-            const newButtonHtml = `
-                <a href="" class="btn" id="${isMember ? 'join' : 'leave'}"
-                   data-community-id="${communityId}"
-                   data-is-member="${!isMember}"
-                   onclick="event.preventDefault(); toggleCommunityMembership(this)">
-                    ${isMember ? 'Rejoindre' : 'Quitter'}
+        if (!res.ok) throw new Error("Erreur lors de la mise à jour de l'appartenance à la communauté");
+
+        // Mise à jour bouton
+        const newButtonHtml = `
+            <a href="#" class="btn" id="${isMember ? 'join' : 'leave'}"
+               data-community-id="${communityId}"
+               data-is-member="${!isMember}"
+               onclick="event.preventDefault(); toggleCommunityMembership(this)">
+                ${isMember ? 'Rejoindre' : 'Quitter'}
+            </a>
+            ${!isMember ? `
+                <a href="/community/${communityId}" class="btn" id="voir">
+                    Voir la communauté
                 </a>
-                ${!isMember ? `
-                    <a href="/community/${communityId}" class="btn" id="voir">
-                        Voir la communauté
-                    </a>
-                ` : ''}
-            `;
-            button.outerHTML = newButtonHtml;
+            ` : ''}
+        `;
+        button.outerHTML = newButtonHtml;
 
-            //update member count
-            const memberCount = document.querySelector(`span[data-community-id="${communityId}"]`);
-            if (memberCount) {
-                memberCount.textContent = parseInt(memberCount.textContent) + (isMember ? -1 : 1);
-            }
-
-            //remove voir button if user is not a member
-            if (isMember) {
-                const voirButton = document.querySelector(`.community-actions[data-community-id="${communityId}"]`).querySelector('.btn#voir');
-                voirButton.remove();
-            }
-
-        } else {
-            alert("Erreur lors de la mise à jour de l'appartenance à la communauté");
+        // Mise à jour du compteur membres
+        const memberCount = document.querySelector(`span[data-community-id="${communityId}"]`);
+        if (memberCount) {
+            memberCount.textContent = parseInt(memberCount.textContent) + (isMember ? -1 : 1);
         }
-    });
+
+        // Suppression du bouton "voir" si l'utilisateur quitte la communauté
+        if (isMember) {
+            const actions = document.querySelector(`.community-actions[data-community-id="${communityId}"]`);
+            if (actions) {
+                const voirBtn = actions.querySelector('.btn#voir');
+                if (voirBtn) voirBtn.remove();
+            }
+        }
+    })
+    .catch(err => alert(err.message));
 }
