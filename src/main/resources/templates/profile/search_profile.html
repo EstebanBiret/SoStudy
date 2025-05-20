@@ -18,7 +18,7 @@
     </div>
 
 <div class="results-container">
-    <h2>Résultats de la recherche</h2>
+    <h2 th:text="'Résultats de la recherche pour « ' + ${pseudo} + ' »'">Résultats de la recherche</h2>
     <ul class="results-list">
         <div th:each="user, iterStat : ${users}">
             <a th:href="@{/user/{pseudo}(pseudo=${user.pseudo})}" class="result-item">
