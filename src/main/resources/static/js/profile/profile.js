@@ -43,7 +43,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 function toggleDropdown() {
     const menu = document.getElementById("dropdownMenu");
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
+
+document.getElementById('openFollowersModal').addEventListener('click', function() {
+    document.getElementById('followersModal').style.display = 'flex';
+});
+
+function closeFollowersModal() {
+    document.getElementById('followersModal').style.display = 'none';
+}
+
+document.getElementById('openFollowModal').addEventListener('click', function() {
+    document.getElementById('followModal').style.display = 'flex';
+});
+
+function closeFollowModal() {
+    document.getElementById('followModal').style.display = 'none';
 }
