@@ -10,12 +10,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * REST controller for managing messages.
+ */
 @RestController
 @RequestMapping("/api/messages")
 public class MessageRestController {
+    /**
+     * Message repository for database operations.
+     */
     @Autowired
     private MessageRepository messageRepository;
 
+    /**
+     * Retrieves all messages for a specific channel.
+     *
+     * @param channelId the ID of the channel
+     * @return a list of messages for the specified channel
+     */
     @GetMapping("/channel/{channelId}")
     public List<Message> getMessagesByChannel(@PathVariable int channelId) {
         return messageRepository.findByChannel_ChannelIdOrderByDateMessageAsc(channelId);
