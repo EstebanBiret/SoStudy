@@ -182,7 +182,7 @@ public class CommunityController {
      * @param communityDescription the description of the community
      * @param communityImage the image of the community
      * @param session the session of the user
-     * @return the name of the view to be rendered
+     * @return the community created
      * @throws IOException if an I/O error occurs
      */
     @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -233,57 +233,55 @@ public class CommunityController {
     }
 
     /**
-     * Temporary redirect to ensure the image is properly saved
-     * @return redirect to community list
-     * @throws InterruptedException if the thread is interrupted
-     */
-    @GetMapping("/temporary-redirect")
-    public String temporaryRedirect() throws InterruptedException {
-        // Wait for 1 second to ensure the image is properly saved
-        Thread.sleep(1000);
-        return "redirect:/community";
-    }
-
-    /**
-     * Formular to edit a community
-     * @param communityId the ID of the community
-     * @param model the model of the view
-     * @param session the session of the user
-     * @param request the request of the user
-     * @return the name of the view to be rendered
-     */
-    @GetMapping("/edit/{communityId}")
-    public String editCommunity(@PathVariable Integer communityId, Model model, HttpSession session, HttpServletRequest request) {
-        
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
-
-        User user = (User) session.getAttribute("user");
-        
-        model.addAttribute("user", user);
-        model.addAttribute("currentUri", request.getRequestURI());
-        return "community/form_edit";
-    }
-
-    /**
      * Edit a community
      * @param communityId the ID of the community
-     * @param model the model of the view
+     * @param communityName the name of the community
+     * @param communityDescription the description of the community
+     * @param communityImage the image of the community
      * @param session the session of the user
-     * @param request the request of the user
-     * @return the name of the view to be rendered
+     * @return the community edited
+     * @throws IOException if an I/O error occurs
      */
-    @PostMapping("/edit/{communityId}")
-    public String updateCommunity(@PathVariable Integer communityId, Model model, HttpSession session, HttpServletRequest request) {
-        
-        //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+    @PostMapping(value = "/edit/{communityId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity<Community> editCommunity(@PathVariable Integer communityId,
+                                                 @RequestParam String communityName,
+                                                 @RequestParam String communityDescription,
+                                                 @RequestParam MultipartFile communityImage,
+                                                 HttpSession session) throws IOException {
+        if(session.getAttribute("user") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        User user = (User) session.getAttribute("user");
-        
-        model.addAttribute("user", user);
-        model.addAttribute("currentUri", request.getRequestURI());
-        return "community/form_edit";
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
+
+        Community community = communityRepository.findById(communityId).orElseThrow();
+        community.setCommunityName(communityName);
+        community.setCommunityDescription(communityDescription);
+
+        String fileName;
+        if (!communityImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/community/" + rawFileName;
+        } else {
+            fileName = community.getCommunityImagePath();
+        }
+        community.setCommunityImagePath(fileName);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        community.setCommunityCreationDate(LocalDate.now().format(formatter));
+
+        community.setNumberOfMembers(community.getUsers().size());
+        community.setNumberOfPosts(communityRepository.countPostsInCommunity(community.getCommunityId()));
+        communityRepository.save(community);
+
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok(community);
     }
 
     /**
