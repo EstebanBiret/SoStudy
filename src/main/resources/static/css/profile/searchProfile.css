@@ -1,0 +1,133 @@
+body {
+    background-color: #efeff3;
+    margin: 0;
+    padding: 0;
+}
+
+.search-container {
+    max-width: 800px;
+    margin: 20px auto 20px auto;
+    background: white;
+    padding: 5px 20px 20px 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.search-container h1 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+#searchForm {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search-container #searchInputBody {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+.search-container #searchInputBody:focus {
+    outline: none;
+    border-color: #b226f8;
+    box-shadow: 0 0 0 3px rgba(178, 38, 248, 0.2);
+}
+
+.search-container button[type="submit"] {
+    background-color: #b226f8;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.search-container button[type="submit"]:hover {
+    background-color: #862fb3;
+}
+
+
+.results-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.results-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.result-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    background-color: #efeff3;
+    padding: 1rem;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.result-item:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.result-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.8rem;
+}
+
+.result-name {
+    font-size: 1.1rem;
+    color: #333;
+    text-align: center;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.no-results {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.result-stats .stat {
+    font-size: 0.9rem;
+    color: #666;
+    padding: 4px 4px;
+
+}
+

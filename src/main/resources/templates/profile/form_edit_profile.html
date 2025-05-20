@@ -57,13 +57,13 @@
       </div>
 
       <div class="input-container ic2">
-        <input id="studyDomain" class="input" type="text" placeholder=" " name="studyDomain" th:value="${session.user.studyDomain}"/>
+        <input id="studyDomain" class="input" type="text" placeholder=" " name="studyDomain" required th:value="${session.user.studyDomain}"/>
         <div class="cut"></div>
         <label for="studyDomain" class="placeholder">Domaine d'étude</label>
       </div>
 
       <div class="input-container ic2">
-        <input id="university" class="input" type="text" placeholder=" " name="university" th:value="${session.user.university}"/>
+        <input id="university" class="input" type="text" placeholder=" " name="university" required th:value="${session.user.university}"/>
         <div class="cut"></div>
         <label for="university" class="placeholder">Université</label>
       </div>

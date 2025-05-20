@@ -5,7 +5,10 @@
             <a th:href="@{/}">
                 <img th:src="@{/images/logos/logo_all.png}" alt="Logo" class="logo nav-item">
             </a>
-            <input type="text" placeholder="Rechercher..." class="search-bar nav-item">
+
+            <form onsubmit="return redirectSearch(event)">
+                <input type="text" id="searchInput" placeholder="Rechercher..." class="search-bar nav-item">
+            </form>
         </div>
 
 
@@ -43,4 +46,5 @@
         </div>
     </nav>
     <script th:src="@{/js/common/navbar.js}"></script>
+
 </html>

@@ -16,3 +16,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+
+function redirectSearch(event) {
+    event.preventDefault();
+    const input = document.getElementById("searchInput");
+    const query = input.value.trim();
+    if (query) {
+        // Redirige vers l'URL avec le pseudo
+        window.location.href = `/user/search/${encodeURIComponent(query)}`;
+    }
+    return false;
+}
+
+
