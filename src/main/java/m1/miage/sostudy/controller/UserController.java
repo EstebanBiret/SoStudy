@@ -474,7 +474,7 @@ public class UserController {
           model.addAttribute("nbPost", nbPost);
         }
 
-
+        model.addAttribute("recherche", pseudo);
         model.addAttribute("users", users);
         model.addAttribute("currentUri", request.getRequestURI());
         return "profile/search_profile";

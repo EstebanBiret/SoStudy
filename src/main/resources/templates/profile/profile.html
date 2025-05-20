@@ -19,11 +19,18 @@
 
                     <div class="profile-info">
                         <h2 th:text="${userProfile.pseudo}"></h2>
-                        <p class="bio" th:text="${userProfile.studyLevel}"></p>
-                        <p class="bio" th:text="${userProfile.studyDomain}"></p>
-                        <p class="bio" th:text="${userProfile.university}">
-                        <p class="bio" th:text="${userProfile.bioUser}">
 
+                        <div class="profile-detail-line">
+                            <img src="/images/logos/university.svg" alt="Niveau et domaine" class="icon">
+                            <span th:text="${userProfile.studyLevel + ', ' + userProfile.studyDomain}"></span>
+                        </div>
+
+                        <div class="profile-detail-line">
+                            <img src="/images/logos/building.svg" alt="Université" class="icon">
+                            <span th:text="${userProfile.university}"></span>
+                        </div>
+
+                        <p class="bio" th:text="${userProfile.bioUser}"></p>
 
                         <div class="profile-stats">
                             <p>
@@ -32,8 +39,8 @@
                                 <span th:text="${userProfile.following.size()}"></span>abonnement(s)
                             </p>
                         </div>
-
                     </div>
+
 
                     <div th:if="${userProfile.pseudo == session.user.pseudo}" class="profile-actions">
 
@@ -74,6 +81,23 @@
             <div class="posts-container">
 
                 <!-- Section des posts -->
+
+                <!-- Si 0 post sur le profil d'un autre utilisateur -->
+                <div th:if="${posts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
+                    <p>Cet utilisateur n'a pas encore posté, revenez plus tard !</p>
+                </div>
+
+                <!-- Si 0 post sur mon profil -->
+                <div th:if="${posts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
+                    <div class="no-following-content">
+                        <h2>Vous n'avez pas encore posté !</h2>
+                        <p>Vous pouvez créer un post pour partager vos idées ou tout ce qui vous passionne.</p>
+                        <a th:href="@{/post/publish}" id="createPostBtn">
+                            Créer un post
+                        </a>
+                    </div>
+                </div>
+
                 <div th:each="post : ${posts}" class="post-card">
                     <div class="post-header">
                         <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">

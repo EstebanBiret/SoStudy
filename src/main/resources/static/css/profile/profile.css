@@ -187,6 +187,8 @@ body {
     margin: 0 0 10px;
     font-size: 1.5rem;
     color: #333;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .bio {
@@ -194,6 +196,8 @@ body {
     color: #666;
     margin: 0;
     white-space: pre-line;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 .buttons {
@@ -469,3 +473,82 @@ body {
 .follow-btn.unfollow:hover {
     background-color: #c62828;
 }
+
+.no-posts {
+    background: white;
+    border-radius: 15px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 0 auto;
+    max-width: 1150px;
+    width: 100%;
+    color: #555;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.no-posts p {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #666;
+}
+
+.no-following-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.no-following-content h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 0;
+}
+
+.no-following-content p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+    max-width: 600px;
+}
+
+#createPostBtn {
+    background: #b226f8;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(178, 38, 248, 0.2);
+}
+
+#createPostBtn:hover {
+    background: #862fb3;
+    transform: scale(1.05);
+}
+
+.profile-detail-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #666;
+    margin: 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.profile-detail-line .icon {
+    width: 18px;
+    height: 18px;
+}
+
+
