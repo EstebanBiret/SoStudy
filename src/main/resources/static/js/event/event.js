@@ -42,8 +42,8 @@ function openEditModal(button) {
     document.getElementById("eventName").value = eventName;
     document.getElementById("eventDescription").value = eventDescription;
     document.getElementById("eventLocation").value = eventLocation;
-    document.getElementById("eventBeginningDate").value = eventBeginningDate;
-    document.getElementById("eventEndDate").value = eventEndDate;
+    document.getElementById("eventBeginningDate").value = parseFrenchDateToInputFormat(eventBeginningDate);
+    document.getElementById("eventEndDate").value = parseFrenchDateToInputFormat(eventEndDate);
     openModal("editModal");
 }
 
@@ -58,6 +58,34 @@ window.addEventListener('click', (event) => {
         if (event.target === modal) closeModal(modalId);
     });
 });
+
+function parseFrenchDateToInputFormat(frenchDate) {
+    const months = {
+        "janvier": "01",
+        "février": "02",
+        "mars": "03",
+        "avril": "04",
+        "mai": "05",
+        "juin": "06",
+        "juillet": "07",
+        "août": "08",
+        "septembre": "09",
+        "octobre": "10",
+        "novembre": "11",
+        "décembre": "12"
+    };
+
+    const parts = frenchDate.toLowerCase().split(" ");
+    if (parts.length !== 3) return ""; // format incorrect
+
+    const day = parts[0].padStart(2, '0');
+    const month = months[parts[1]];
+    const year = parts[2];
+
+    if (!month) return ""; // mois invalide
+
+    return `${year}-${month}-${day}`;
+}
 
 // --- Delete event ---
 function confirmDelete() {
@@ -157,21 +185,18 @@ document.getElementById("editEventForm").addEventListener("submit", function(eve
         eventCard.querySelector(".event-info h2").textContent = event.eventName;
         eventCard.querySelector(".event-info p").textContent = event.eventDescription;
         eventCard.querySelector(".event-image img").src = event.eventImagePath;
-        eventCard.querySelector(".event-location").textContent = event.eventLocation;
-        eventCard.querySelector(".event-time").textContent = event.eventBeginningDate + " ↣ " + event.eventEndDate;
+        eventCard.querySelector(".event-location span").textContent = event.eventLocation;
+        eventCard.querySelector("#spanEventBeginningDate").textContent = formatDate(event.eventBeginningDate);
+        eventCard.querySelector("#spanEventEndDate").textContent = formatDate(event.eventEndDate);
 
         //edit data-id
         eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-name", event.eventName);
         eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-description", event.eventDescription);
         eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-location", event.eventLocation);
-        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-beginning-date", event.eventBeginningDate);
-        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-end-date", event.eventEndDate);
+        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-beginning-date", formatDate(event.eventBeginningDate));
+        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-end-date", formatDate(event.eventEndDate));
         
         eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-name", event.eventName);
-        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-description", event.eventDescription);
-        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-location", event.eventLocation);
-        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-beginning-date", event.eventBeginningDate);
-        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-end-date", event.eventEndDate);
         
         closeEditModal();
     })
@@ -222,9 +247,9 @@ function addEventCard(event) {
                 </div>
                 <div class="event-time">
                     <img src="images/logos/calendar.svg">
-                    <span>${formatDate(event.eventBeginningDate)}</span>
+                    <span id="spanEventBeginningDate">${formatDate(event.eventBeginningDate)}</span>
                     <span class="label">↣</span>
-                    <span>${formatDate(event.eventEndDate)}</span>
+                    <span id="spanEventEndDate">${formatDate(event.eventEndDate)}</span>
                 </div>
             </div>
             <div class="event-stats">

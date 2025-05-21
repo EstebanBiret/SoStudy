@@ -69,6 +69,7 @@ public class ChannelController {
      * @param request the HTTP request
      * @param session the HTTP session
      * @return the name of the view to be rendered
+     * @throws JsonProcessingException if an error occurs while processing the JSON
      */
     @GetMapping("/")
     public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) throws JsonProcessingException {
@@ -272,13 +273,21 @@ public class ChannelController {
         return "channel"; // Return the name of the view (e.g., Thymeleaf template)
     }
 
-
+    /**
+     * Updates a channel.
+     * @param channelId the ID of the channel to update
+     * @param channelName the new name of the channel
+     * @param deletedUserIdsJson the JSON string containing the IDs of users to delete from the channel
+     * @param channelImage the new image of the channel
+     * @return a ResponseEntity containing the updated channel
+     * @throws IOException if an I/O error occurs
+     */
     @PostMapping("/update")
     public ResponseEntity<?> updateChannel(
-            @RequestParam("channelId") int channelId,
-            @RequestParam("channelName") String channelName,
+            @RequestParam int channelId,
+            @RequestParam String channelName,
             @RequestParam(value = "deletedUserIds", required = false) String deletedUserIdsJson,
-            @RequestParam(value = "channelImage", required = false) MultipartFile channelImage
+            @RequestParam(required = false) MultipartFile channelImage
     ) throws IOException {
         List<Integer> deletedIds = new ArrayList<>();
         if (deletedUserIdsJson != null && !deletedUserIdsJson.isEmpty()) {

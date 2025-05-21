@@ -42,13 +42,19 @@ public class ChannelDTO {
      * @param channelId the id of the channel
      * @param channelName the name of the channel
      * @param users the list of users in the channel
+     * @param creator the creator of the channel
      */
     public ChannelDTO(int channelId, String channelName, List<UserDTO> users, UserDTO creator) {
         this.channelId = channelId;
         this.channelName = channelName;
         this.users = users;
+        this.creator = creator;
     }
 
+    /**
+     * Constructor with a Channel object.
+     * @param chan the Channel object
+     */
     public ChannelDTO(Channel chan){
         this.channelId = chan.getChannelId();
         this.channelName = chan.getChannelName();

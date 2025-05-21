@@ -178,12 +178,73 @@ public class EventController {
 
     /**
      * Edit an event
-     * @param eventid the id of the event
+     * @param eventId the id of the event
+     * @param eventName the name of the event
+     * @param eventDescription the description of the event
+     * @param eventBeginningDate the beginning date of the event
+     * @param eventEndDate the end date of the event
+     * @param eventLocation the location of the event
+     * @param eventImage the image of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
+     * @throws IOException if an I/O error occurs
      */
-    @PostMapping("/edit/{eventid}")
-    public String updateEvent(@PathVariable int eventid) {
-        return "redirect:/event";
+    @PostMapping(value = "/edit/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Event> updateEvent(@PathVariable int eventId,
+                              @RequestParam String eventName,
+                              @RequestParam String eventDescription,
+                              @RequestParam String eventBeginningDate,
+                              @RequestParam String eventEndDate,
+                              @RequestParam String eventLocation,
+                              @RequestParam MultipartFile eventImage,
+                              HttpSession session) throws IOException {
+
+        if(session.getAttribute("user") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
+
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        event.setEventName(eventName);
+        event.setEventDescription(eventDescription);
+
+        String fileName;
+        if (!eventImage.isEmpty()) {
+            // Delete the old image if it exists and is not the default image
+            String oldImagePath = event.getEventImagePath();
+            if (oldImagePath != null && !oldImagePath.contains("defaultEventImage.jpg")) {
+                Path oldImageFilePath = Paths.get("src/main/resources/static" + oldImagePath);
+                try {
+                    Files.deleteIfExists(oldImageFilePath);
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                }
+            }
+            String rawFileName = UUID.randomUUID().toString() + "_" + eventImage.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(eventImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/events/" + rawFileName;
+        } else {
+            fileName = event.getEventImagePath();
+        }
+        event.setEventImagePath(fileName);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        event.setEventPublicationDate(LocalDate.now().format(formatter));
+
+        event.setEventLocation(eventLocation);
+        event.setEventBeginningDate(eventBeginningDate);
+        event.setEventEndDate(eventEndDate);
+
+        event.setNumberOfMembers(event.getUsers().size());
+        eventRepository.save(event);
+
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok(event);
     }
 
     /**
@@ -208,11 +269,23 @@ public class EventController {
             
             // check if user is the creator
             if (user.getIdUser() == event.getUserCreator().getIdUser()) {
+                
                 // remove user from event
                 List<User> users = event.getUsers();
                 for (User u : users) {
                     u.getSubscribedEvents().remove(event);
                     userRepository.save(u);
+                }
+
+                //remove event picture
+                String imagePath = event.getEventImagePath();
+                if (imagePath != null && !imagePath.contains("defaultEventImage.jpg")) {
+                    Path imageFilePath = Paths.get("src/main/resources/static" + imagePath);
+                    try {
+                        Files.deleteIfExists(imageFilePath);
+                    } catch (IOException e) {
+                        System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                    }
                 }
 
                 // delete event
@@ -258,6 +331,7 @@ public class EventController {
     /**
      * Leave an event
      * @param eventid the id of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/leave/{eventid}")
