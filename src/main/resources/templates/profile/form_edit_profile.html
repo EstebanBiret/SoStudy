@@ -15,32 +15,32 @@
       <div class="input-container ic1">
         <input id="nom" class="input" type="text" name="nom" placeholder=" " th:value="${session.user.name}" required/>
         <div class="cut"></div>
-        <label for="nom" class="placeholder">Nom</label>
+        <label for="nom" class="placeholder">Nom*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="prenom" class="input" type="text" placeholder=" " name="prenom" th:value="${session.user.firstName}" required/>
         <div class="cut"></div>
-        <label for="prenom" class="placeholder">Prenom</label>
+        <label for="prenom" class="placeholder">Prenom*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="pseudo" class="input" type="text" placeholder=" " name="pseudo" th:value="${session.user.pseudo}" pattern="^[a-zA-Z0-9_]+$" title="Seuls les lettres non accentuées, chiffres et underscores (_) sont autorisés." required/>
         <span id="pseudoCheck" class="error"></span>
         <div class="cut"></div>
-        <label for="pseudo" class="placeholder">Pseudo</label>
+        <label for="pseudo" class="placeholder">Pseudo*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="password" class="input" type="password" placeholder=" " name="password" required pattern="^\S+$"/>
         <div class="cut"></div>
-        <label for="password" class="placeholder">Mot de passe</label>
+        <label for="password" class="placeholder">Mot de passe*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="birthdate" class="input" type="date" placeholder=" " name="birthdate" th:value="${session.user.birthDate}" required/>
         <div class="cut"></div>
-        <label for="birthdate" class="placeholder">Date de naissance</label>
+        <label for="birthdate" class="placeholder">Date de naissance*</label>
       </div>
 
       <div class="input-container ic2">
@@ -53,19 +53,19 @@
           </option>
         </select>
         <div class="cut"></div>
-        <label for="niveauEtude" class="placeholder">Niveau d'étude</label>
+        <label for="niveauEtude" class="placeholder">Niveau d'étude*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="studyDomain" class="input" type="text" placeholder=" " name="studyDomain" required th:value="${session.user.studyDomain}"/>
         <div class="cut"></div>
-        <label for="studyDomain" class="placeholder">Domaine d'étude</label>
+        <label for="studyDomain" class="placeholder">Domaine d'étude*</label>
       </div>
 
       <div class="input-container ic2">
         <input id="university" class="input" type="text" placeholder=" " name="university" required th:value="${session.user.university}"/>
         <div class="cut"></div>
-        <label for="university" class="placeholder">Université</label>
+        <label for="university" class="placeholder">Université*</label>
       </div>
 
       <div class="input-container ic2">

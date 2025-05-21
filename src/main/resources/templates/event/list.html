@@ -158,13 +158,13 @@
             <div class="modal">
                 <h2 id="createEventFormTitle">Publier un événement</h2>
                 <form id="createEventForm" method="post" enctype="multipart/form-data">
-                    <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement" required>
-                    <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement" required>
-                    <input type="text" id="eventLocation" name="eventLocation" placeholder="Lieu de l'événement" required>
+                    <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement*" required>
+                    <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement*" required>
+                    <input type="text" id="eventLocation" name="eventLocation" placeholder="Lieu de l'événement*" required>
 
-                    <label for="eventBeginningDate">Date de début</label>
+                    <label for="eventBeginningDate">Date de début*</label>
                     <input type="date" id="eventBeginningDate" name="eventBeginningDate" required>
-                    <label for="eventEndDate">Date de fin</label>
+                    <label for="eventEndDate">Date de fin*</label>
                     <input type="date" id="eventEndDate" name="eventEndDate" required>
                     <label for="eventImage">Image de l'événement (moins de 2 Mo, format JPG/PNG...)</label>
                     <input type="file" id="eventImage" name="eventImage" accept="image/*">
