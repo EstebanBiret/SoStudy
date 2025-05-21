@@ -94,7 +94,7 @@
                 </div>
 
                 <!-- Si 0 post sur mon profil -->
-                <div th:if="${posts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
+                <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
                     <div class="no-following-content">
                         <h2>Vous n'avez pas encore posté !</h2>
                         <p>Vous pouvez créer un post pour partager vos idées ou tout ce qui vous passionne.</p>
