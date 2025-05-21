@@ -262,6 +262,16 @@ public class CommunityController {
 
         String fileName;
         if (!communityImage.isEmpty()) {
+            // Delete the old image if it exists and is not the default image
+            String oldImagePath = community.getCommunityImagePath();
+            if (oldImagePath != null && !oldImagePath.contains("defaultCommunity.png")) {
+                Path oldImageFilePath = Paths.get("src/main/resources/static" + oldImagePath);
+                try {
+                    Files.deleteIfExists(oldImageFilePath);
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                }
+            }
             String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
             Files.createDirectories(filePath.getParent());
@@ -320,6 +330,17 @@ public class CommunityController {
                 for (User u : users) {
                     u.getSubscribedCommunities().remove(community);
                     userRepository.save(u);
+                }
+
+                //remove community picture
+                String imagePath = community.getCommunityImagePath();
+                if (imagePath != null && !imagePath.contains("defaultCommunity.png")) {
+                    Path imageFilePath = Paths.get("src/main/resources/static" + imagePath);
+                    try {
+                        Files.deleteIfExists(imageFilePath);
+                    } catch (IOException e) {
+                        System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                    }
                 }
                 
                 // delete community
