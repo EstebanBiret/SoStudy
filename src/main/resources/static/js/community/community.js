@@ -3,7 +3,6 @@ let currentCommunityId = null;
 // --- Modals management ---
 function openModal(modalId) {
     document.getElementById(modalId).style.display = "flex";
-    console.log(currentCommunityId);
 }
 
 function closeModal(modalId) {
@@ -12,7 +11,6 @@ function closeModal(modalId) {
 
 // Delete modal
 function openDeleteModal(button) {
-    console.log(button);
     currentCommunityId = button.getAttribute("data-community-id");
     const communityName = button.getAttribute("data-community-name");
     document.getElementById("deleteCommunityName").textContent = communityName;
@@ -35,7 +33,6 @@ function closeCreateModal() {
 
 // Edit modal
 function openEditModal(button) {
-    console.log(button);
     currentCommunityId = button.getAttribute("data-community-id");
     const communityName = button.getAttribute("data-community-name");
     const communityDescription = button.getAttribute("data-community-description");

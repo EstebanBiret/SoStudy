@@ -1,6 +1,7 @@
 package utc.miage.sostudy.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import utc.miage.sostudy.model.entity.Event;
 import utc.miage.sostudy.model.entity.User;
 import utc.miage.sostudy.repository.EventRepository;
+import utc.miage.sostudy.repository.UserRepository;
 
 /**
  * Controller for the Event entity
@@ -30,9 +32,15 @@ public class EventController {
     private EventRepository eventRepository;
 
     /**
+     * User repository
+     */
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
      * Path for uploading files.
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/events/";
+    private String uploadDir = "./src/main/resources/static/images/events/";
 
     /**
      * Get all events
@@ -122,10 +130,27 @@ public class EventController {
     /**
      * Join an event
      * @param eventid the id of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/join/{eventid}")
-    public String joinEvent(@PathVariable int eventid) {
+    public String joinEvent(@PathVariable int eventid, HttpSession session) {
+        
+        // Check if user is logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
+        Optional<Event> optionalEvent = eventRepository.findById(eventid);
+        
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            if (!eventRepository.existsByUsers_IdUserAndEventId(user.getIdUser(), eventid)) {
+                user.getSubscribedEvents().add(event);
+                event.getUsers().add(user);
+                userRepository.save(user);
+                eventRepository.save(event);
+            }
+        }
         return "redirect:/event";
     }
 
@@ -135,7 +160,23 @@ public class EventController {
      * @return the name of the view to be rendered
      */
     @PostMapping("/leave/{eventid}")
-    public String leaveEvent(@PathVariable int eventid) {
+    public String leaveEvent(@PathVariable int eventid, HttpSession session) {
+        
+        // Check if user is logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
+        Optional<Event> optionalEvent = eventRepository.findById(eventid);
+        
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            if (eventRepository.existsByUsers_IdUserAndEventId(user.getIdUser(), eventid)) {
+                user.getSubscribedEvents().remove(event);
+                event.getUsers().remove(user);
+                userRepository.save(user);
+                eventRepository.save(event);
+            }
+        }
         return "redirect:/event";
     }
 

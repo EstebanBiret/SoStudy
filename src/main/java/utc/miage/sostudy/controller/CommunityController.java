@@ -85,7 +85,7 @@ public class CommunityController {
     /**
      * Path for uploading files.
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/community/";
+    private String uploadDir = "./src/main/resources/static/images/community/";
 
     /**
      * Get the name of the month in French
@@ -144,11 +144,10 @@ public class CommunityController {
      * Join a community
      * @param communityId the ID of the community
      * @param session the session of the user
-     * @param request the request of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/join/{communityId}")
-    public String joinCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
+    public String joinCommunity(@PathVariable Integer communityId, HttpSession session) {
 
         // Check if user is logged in
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
@@ -165,7 +164,6 @@ public class CommunityController {
                 communityRepository.save(community);
             }
         }
-
         return "redirect:/community";
     }
 
@@ -173,11 +171,10 @@ public class CommunityController {
      * Leave a community
      * @param communityId the ID of the community
      * @param session the session of the user
-     * @param request the request of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/leave/{communityId}")
-    public String leaveCommunity(@PathVariable Integer communityId, HttpSession session, HttpServletRequest request) {
+    public String leaveCommunity(@PathVariable Integer communityId, HttpSession session) {
         
         // Check if user is logged in
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
@@ -194,7 +191,6 @@ public class CommunityController {
                 communityRepository.save(community);
             }
         }
-
         return "redirect:/community";
     }
 
@@ -227,7 +223,7 @@ public class CommunityController {
         String fileName;
         if (!communityImage.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
@@ -285,7 +281,7 @@ public class CommunityController {
         String fileName;
         if (!communityImage.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
