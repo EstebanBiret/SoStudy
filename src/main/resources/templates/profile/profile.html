@@ -86,14 +86,12 @@
         <div class="container">
             <div class="posts-container">
 
-                <!-- Section des posts -->
-
-                <!-- Si 0 post sur le profil d'un autre utilisateur -->
+                <!-- If 0 post on the profile of another user -->
                 <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
                     <p>Cet utilisateur n'a pas encore posté, revenez plus tard !</p>
                 </div>
 
-                <!-- Si 0 post sur mon profil -->
+                <!-- If 0 post on my profile -->
                 <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
                     <div class="no-following-content">
                         <h2>Vous n'avez pas encore posté !</h2>
@@ -104,7 +102,7 @@
                     </div>
                 </div>
 
-                <div th:each="post : ${posts}" class="post-card">
+                <div th:each="post : ${posts}" class="post-card" th:id="post-card- + ${post.postId}">
                     <div class="post-header">
                         <img th:src="@{${post.user.personImagePath}}" alt="Avatar" class="post-avatar">
                         <div class="post-user-info">
@@ -133,6 +131,16 @@
                                 onclick="submitUnrepost(this)">
                             <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
                             Ne plus reposter
+                        </button>
+
+                        <!-- Delete post button -->
+                        <button type="button"
+                                class="delete-post-btn"
+                                th:id="'delete-post-btn-' + ${post.postId}"
+                                th:if="${post.user.pseudo == session.user.pseudo}"
+                                th:attr="data-post-id=${post.postId}"
+                                onclick="openDeletePostModal(this)">
+                            <img th:src="@{/images/logos/delete-white.svg}" alt="Delete" class="delete-post-icon">
                         </button>
                     </div>
                     
@@ -202,7 +210,6 @@
                             </h3>
                             <p th:text="${repostDisplay.repost.formattedDate}"></p>
                         </div>
-
                     </div>
 
                     <div class="repost-content">
@@ -323,7 +330,7 @@
                 </form>
             </div>
         </div>
-      
+
         <!-- Modale d'image -->
         <div id="imageModal" class="image-modal" onclick="closeImageModal()">
             <span class="close">&times;</span>
@@ -364,9 +371,9 @@
                     <button type="button" class="cancel" onclick="closeFollowModal()">Fermer</button>
                 </div>
             </div>
-      </div>
+        </div>
 
-        <!-- Modal de suppression -->
+        <!-- Modal de suppression de profil -->
         <div id="deleteModal" class="modal-overlay" style="display:none;">
             <div class="modal">
                 <h2 id="deleteCommunityName"></h2>
@@ -378,15 +385,21 @@
             </div>
         </div>
 
-
-
-
+        <!-- Modal de suppression de post -->
+        <div id="deletePostModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <p class="warning">Êtes-vous sûr de vouloir supprimer votre post ? Cette action est irréversible.</p>
+                <div class="modal-actions">
+                    <button id="deletePostBouton" onclick="confirmDeletePost()" class="btn btn-danger">Supprimer</button>
+                    <button onclick="closeDeletePostModal()" class="btn">Annuler</button>
+                </div>
+            </div>
+        </div>
 
         <script th:src="@{/js/repost/repost.js}"></script>
+        <script th:src="@{/js/post/delete.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
         <script th:src="@{/js/profile/profile.js}"></script>
         <script th:src="@{/js/common/common.js}"></script>
-
     </body>
-
 </html>
