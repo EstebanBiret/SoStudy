@@ -168,11 +168,11 @@ body {
 }
 
 .profile-info h2 {
-    margin: 0 0 10px;
     font-size: 1.5rem;
     color: #333;
     white-space: pre-wrap;
     word-break: break-word;
+    margin-bottom: 6px;
 }
 
 .bio {
@@ -644,4 +644,20 @@ body {
 
 #deleteBouton:hover {
     background-color: #c82333;
+}
+
+.profile-name {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #666;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.hr {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 10px 0;
 }

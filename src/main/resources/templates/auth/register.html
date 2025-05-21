@@ -31,7 +31,7 @@
             </div>
 
             <div class="input-container ic2">
-                <input id="pseudo" class="input" type="text" name="pseudo" placeholder=" " required/>
+                <input id="pseudo" class="input" type="text" name="pseudo" placeholder=" " pattern="^[a-zA-Z0-9_]+$" title="Seuls les lettres non accentuées, chiffres et underscores (_) sont autorisés." required/>
                 <span id="pseudoCheck" class="error"></span>
                 <div class="cut"></div>
                 <label for="pseudo" class="placeholder">Pseudo</label>
