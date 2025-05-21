@@ -82,32 +82,32 @@ public class UserController {
     /**
      * Redirect to login page
      */
-    private static final String redirectLogin = "redirect:/auth/login";
+    private String redirectLogin = "redirect:/auth/login";
 
     /**
      * Redirect to home page
      */
-    private static final String redirectHome = "redirect:/";
+    private String redirectHome = "redirect:/";
 
     /**
      * Current URI
      */
-    private static final String currentUri = "currentUri";
+    private String currentUri = "currentUri";
 
     /**
      * Deleted user
      */
-    private static final String utilisateurSupprime = "utilisateurSupprime";
+    private String utilisateurSupprime = "utilisateurSupprime";
 
     /**
      * Path to static resources
      */
-    private static final String imgPath = "src/main/resources/static";
+    private static final String IMG_PATH = "src/main/resources/static";
 
     /**
      * Logger
      */
-    private static final Logger logger = Logger.getLogger(UserController.class.getName());
+    private Logger logger = Logger.getLogger(UserController.class.getName());
 
 
     /**
@@ -118,7 +118,7 @@ public class UserController {
     public static boolean postMediaExists(String mediaPath) {
         if (mediaPath == null) return false;
         try {
-            return Files.exists(Paths.get(imgPath + "/" + mediaPath));
+            return Files.exists(Paths.get(IMG_PATH + "/" + mediaPath));
         } catch (Exception e) {
             return false;
         }
@@ -397,7 +397,7 @@ public class UserController {
             // Supprimer l'ancienne image si elle n'est pas la photo par défaut
             String oldImagePath = user.getPersonImagePath();
             if (oldImagePath != null && !oldImagePath.contains("defaultProfilePic.jpg")) {
-                Path oldImageFilePath = Paths.get(imgPath + oldImagePath);
+                Path oldImageFilePath = Paths.get(IMG_PATH + oldImagePath);
                 try {
                     Files.deleteIfExists(oldImageFilePath);
                 } catch (IOException e) {
@@ -407,7 +407,7 @@ public class UserController {
 
             // Ajouter la nouvelle image
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(imgPath + "/images/profiles_pictures", rawFileName);
+            Path filePath = Paths.get(IMG_PATH + "/images/profiles_pictures", rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             String fileName = "/images/profiles_pictures/" + rawFileName;
@@ -531,7 +531,7 @@ public class UserController {
             // suppression du media du post
             String mediaPath = post.getPostMediaPath();
             if (mediaPath != null) {
-                Path mediaFilePath = Paths.get(imgPath + mediaPath);
+                Path mediaFilePath = Paths.get(IMG_PATH + mediaPath);
                 try {
                     Files.deleteIfExists(mediaFilePath);
                 } catch (IOException e) {
@@ -563,7 +563,7 @@ public class UserController {
         //suppression de la photo de profil si pas celle par defaut
         String imagePath = user.getPersonImagePath();
         if (imagePath != null && !imagePath.contains("defaultProfilePic.jpg")) {
-            Path imageFilePath = Paths.get(imgPath + imagePath);
+            Path imageFilePath = Paths.get(IMG_PATH + imagePath);
             try {
                 Files.deleteIfExists(imageFilePath);
             } catch (IOException e) {

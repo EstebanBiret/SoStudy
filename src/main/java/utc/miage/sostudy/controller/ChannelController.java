@@ -64,6 +64,21 @@ public class ChannelController {
     private String uploadDir = "./src/main/resources/static/images/channel/";
 
     /**
+     * Default channel image path.
+     */
+    private String defaultChannelImage = "/images/channel/defaultChannelImage.jpg";
+
+    /**
+     * Error message when user is not found.
+     */
+    private String userNotFound = "Utilisateur introuvable";
+
+    /**
+     * Redirect to login.
+     */
+    private String redirectLogin = "redirect:/auth/login";
+
+    /**
      * Displays the list of all channels.
      * @param model the model to be used in the view
      * @param request the HTTP request
@@ -75,10 +90,10 @@ public class ChannelController {
     public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) throws JsonProcessingException {
         model.addAttribute("currentUri", request.getRequestURI());
         User sessionUserTemp = (User) session.getAttribute("user");
-        if (sessionUserTemp == null) return "redirect:/auth/login";
+        if (sessionUserTemp == null) return redirectLogin;
 
         User sessionUser = userRepository.findById(sessionUserTemp.getIdUser())
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new RuntimeException(userNotFound));
 
         List<Channel> chans = channelRepository.findByUsers(sessionUser.getIdUser());
 
@@ -148,10 +163,10 @@ public class ChannelController {
         model.addAttribute("currentUri", request.getRequestURI());
 
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/auth/login";
+        if (sessionUser == null) return redirectLogin;
 
         User userConnected = userRepository.findById(sessionUser.getIdUser())
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new RuntimeException(userNotFound));
 
         List<User> following = userConnected.getFollowing();
 
@@ -174,7 +189,7 @@ public class ChannelController {
     @PostMapping("/new")
     public String saveChannel(@RequestParam String selectedUsers, @RequestParam MultipartFile channelImage, @RequestParam String firstMessage, @RequestParam(required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/auth/login";
+        if (sessionUser == null) return redirectLogin;
 
         String fileName = null;
         if (!channelImage.isEmpty()) {
@@ -184,7 +199,7 @@ public class ChannelController {
             Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;
         } else {
-            fileName = "/images/channel/defaultChannelImage.jpg";
+            fileName = defaultChannelImage;
         }
 
         List<Integer> selectedUserIds = Arrays.stream(selectedUsers.split(","))
@@ -194,7 +209,7 @@ public class ChannelController {
         List<User> selectedUsersList = new ArrayList<>();
         for (Integer id : selectedUserIds) {
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                    .orElseThrow(() -> new RuntimeException(userNotFound));
             selectedUsersList.add(user);
         }
 

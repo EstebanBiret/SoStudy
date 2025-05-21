@@ -39,7 +39,7 @@ public class ReactionController {
     /**
      * Redirect to the home page
      */
-    private final String HOME = "redirect:/";
+    private static final String HOME = "redirect:/";
 
     /**
      * Adds, modifies or deletes a reaction for a user on a post

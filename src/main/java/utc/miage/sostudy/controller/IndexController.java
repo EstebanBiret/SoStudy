@@ -355,7 +355,7 @@ public class IndexController {
         model.addAttribute(POSTS, posts);
         model.addAttribute("user", user);
         model.addAttribute("repostedPostIds", repostedPostIds);
-        model.addAttribute(FOLLOWING, "posts");
+        model.addAttribute(FOLLOWING, POSTS);
         model.addAttribute(CURRENT_URI, request.getRequestURI());
         model.addAttribute("repostDisplays", repostDisplays);
         model.addAttribute("userReactedPosts", userReactedPosts);

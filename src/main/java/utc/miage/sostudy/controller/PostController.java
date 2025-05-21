@@ -152,15 +152,8 @@ public class PostController {
      * Redirect to home page if the post id is empty
      * @return redirect to home page
      */
-    @GetMapping("")
+    @GetMapping({ "", "/" })
     public String getPostEmpty() {return HOME;}
-
-    /**
-     * Redirect to home page if the post id is empty
-     * @return redirect to home page
-     */
-    @GetMapping("/")
-    public String getPostEmpty2() {return HOME;}
 
     /**
      * Get a post by id

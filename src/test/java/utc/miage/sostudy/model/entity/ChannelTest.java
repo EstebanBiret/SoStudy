@@ -14,14 +14,14 @@ class ChannelTest {
     /**
      * The Channel instance to be tested.
      */
-    private Channel channel;
+    private Channel c;
 
     /**
      * Sets up the Channel instance before each test.
      */
     @BeforeEach
     void setUp() {
-        channel = new Channel();
+        c = new Channel();
     }
 
     /**
@@ -29,10 +29,10 @@ class ChannelTest {
      */
     @Test
     void testEmptyConstructor() {
-        assertNotNull(channel);
-        assertNull(channel.getChannelName());
-        assertNull(channel.getChannelImagePath());
-        assertEquals(0, channel.getChannelId());
+        assertNotNull(c);
+        assertNull(c.getChannelName());
+        assertNull(c.getChannelImagePath());
+        assertEquals(0, c.getChannelId());
     }
 
     /**
@@ -40,10 +40,10 @@ class ChannelTest {
      */
     @Test
     void testParameterizedConstructor() {
-        Channel channel = new Channel("Gaming", "http://example.com/pic.png");
+        c = new Channel("Gaming", "http://example.com/pic.png");
 
-        assertEquals("Gaming", channel.getChannelName());
-        assertEquals("http://example.com/pic.png", channel.getChannelImagePath());
+        assertEquals("Gaming", c.getChannelName());
+        assertEquals("http://example.com/pic.png", c.getChannelImagePath());
     }
 
     /**
@@ -51,8 +51,8 @@ class ChannelTest {
      */
     @Test
     void testGetAndSetChannelName() {
-        channel.setChannelName("Science");
-        assertEquals("Science", channel.getChannelName());
+        c.setChannelName("Science");
+        assertEquals("Science", c.getChannelName());
     }
 
     /**
@@ -60,8 +60,8 @@ class ChannelTest {
      */
     @Test
     void testGetAndSetChannelImagePath() {
-        channel.setChannelImagePath("http://example.com/science.png");
-        assertEquals("http://example.com/science.png", channel.getChannelImagePath());
+        c.setChannelImagePath("http://example.com/science.png");
+        assertEquals("http://example.com/science.png", c.getChannelImagePath());
     }
 
     /**
@@ -108,17 +108,17 @@ class ChannelTest {
         user1.setIdUser(1);
         user2.setIdUser(2);
 
-        channel.addUser(user1);
-        channel.addUser(user2);
+        c.addUser(user1);
+        c.addUser(user2);
 
 
-        assertEquals(2, channel.getUsers().size());
-        assertTrue(channel.getUsers().contains(user1));
-        assertTrue(channel.getUsers().contains(user2));
+        assertEquals(2, c.getUsers().size());
+        assertTrue(c.getUsers().contains(user1));
+        assertTrue(c.getUsers().contains(user2));
 
-        channel.removeUser(user1);
-        assertEquals(1, channel.getUsers().size());
-        assertFalse(channel.getUsers().contains(user1));
+        c.removeUser(user1);
+        assertEquals(1, c.getUsers().size());
+        assertFalse(c.getUsers().contains(user1));
     }
 
     /**
@@ -127,9 +127,9 @@ class ChannelTest {
     @Test
     void testSetAndGetCreator() {
         User creator = new User();
-        channel.setCreator(creator);
+        c.setCreator(creator);
 
-        assertEquals(creator, channel.getCreator());
+        assertEquals(creator, c.getCreator());
     }
 
     /**
@@ -143,17 +143,17 @@ class ChannelTest {
         message1.setMessageId(1);
         message2.setMessageId(2);
 
-        channel.addMessage(message1);
-        channel.addMessage(message2);
+        c.addMessage(message1);
+        c.addMessage(message2);
 
-        List<Message> messages = channel.getMessages();
+        List<Message> messages = c.getMessages();
         assertEquals(2, messages.size());
         assertTrue(messages.contains(message1));
         assertTrue(messages.contains(message2));
 
-        channel.removeMessage(message1);
-        assertEquals(1, channel.getMessages().size());
-        assertFalse(channel.getMessages().contains(message1));
+        c.removeMessage(message1);
+        assertEquals(1, c.getMessages().size());
+        assertFalse(c.getMessages().contains(message1));
     }
 
     /**
@@ -161,9 +161,9 @@ class ChannelTest {
      */
     @Test
     void testHashCode() {
-        Channel channel1 = new Channel("Tech", "http://example.com/tech.png");
-        Channel channel2 = new Channel("Tech", "http://example.com/tech.png");
+        Channel c1 = new Channel("Tech", "http://example.com/tech.png");
+        Channel c2 = new Channel("Tech", "http://example.com/tech.png");
 
-        assertEquals(channel1.hashCode(), channel2.hashCode());
+        assertEquals(c1.hashCode(), c2.hashCode());
     }
 }

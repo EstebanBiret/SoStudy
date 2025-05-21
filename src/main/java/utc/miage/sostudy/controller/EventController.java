@@ -59,22 +59,22 @@ public class EventController {
     /**
      * Logger
      */
-    private static final Logger logger = Logger.getLogger(EventController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(EventController.class.getName());
 
     /**
      * Redirect to login
      */
-    private static final String redirectLogin = "redirect:/auth/login";
+    private static final String LOGIN = "redirect:/auth/login";
 
     /**
      * Redirect to event
      */
-    private static final String redirectEvent = "redirect:/event";
+    private static final String EVENT = "redirect:/event";
 
     /**
      * Default event image path
      */
-    private static final String defaultEventImage = "/images/events/defaultEventImage.jpg";
+    private static final String DEFAULT_EVENT_IMAGE = "/images/events/defaultEventImage.jpg";
 
     /**
      * Get all events
@@ -86,7 +86,7 @@ public class EventController {
     @GetMapping("")
     public String getAllEvents(Model model, HttpSession session, HttpServletRequest request) {
         //user not logged in
-        if(session.getAttribute("user") == null) {return redirectLogin;}
+        if(session.getAttribute("user") == null) {return LOGIN;}
         
         User user = (User) session.getAttribute("user");
         List<Event> events = eventRepository.findAllOrderByPublicationDate();
@@ -171,7 +171,7 @@ public class EventController {
             Files.copy(eventImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/events/" + rawFileName;
         } else {
-            fileName = defaultEventImage;
+            fileName = DEFAULT_EVENT_IMAGE;
         }
         event.setEventImagePath(fileName);
 
@@ -235,7 +235,7 @@ public class EventController {
                 try {
                     Files.deleteIfExists(oldImageFilePath);
                 } catch (IOException e) {
-                    logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
+                    LOGGER.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                 }
             }
             String rawFileName = UUID.randomUUID().toString() + "_" + eventImage.getOriginalFilename();
@@ -274,7 +274,7 @@ public class EventController {
     public String deleteEvent(@PathVariable int eventid, Model model, HttpSession session) {
         
         //user not logged in
-        if(session.getAttribute("user") == null) {return redirectLogin;}
+        if(session.getAttribute("user") == null) {return LOGIN;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -300,7 +300,7 @@ public class EventController {
                     try {
                         Files.deleteIfExists(imageFilePath);
                     } catch (IOException e) {
-                        logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
+                        LOGGER.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                     }
                 }
 
@@ -314,7 +314,7 @@ public class EventController {
             }
         }
 
-        return redirectEvent;
+        return EVENT;
     }
 
     /**
@@ -327,7 +327,7 @@ public class EventController {
     public String joinEvent(@PathVariable int eventid, HttpSession session) {
         
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return redirectLogin;}
+        if (session.getAttribute("user") == null) {return LOGIN;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -341,7 +341,7 @@ public class EventController {
                 eventRepository.save(event);
             }
         }
-        return redirectEvent;
+        return EVENT;
     }
 
     /**
@@ -354,7 +354,7 @@ public class EventController {
     public String leaveEvent(@PathVariable int eventid, HttpSession session) {
         
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return redirectLogin;}
+        if (session.getAttribute("user") == null) {return LOGIN;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -368,7 +368,7 @@ public class EventController {
                 eventRepository.save(event);
             }
         }
-        return redirectEvent;
+        return EVENT;
     }
 
 }

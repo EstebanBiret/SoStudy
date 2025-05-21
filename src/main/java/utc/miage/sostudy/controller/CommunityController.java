@@ -96,22 +96,22 @@ public class CommunityController {
     /**
      * Redirect to login
      */
-    private static final String redirectLogin = "redirect:/auth/login";
+    private String redirectLogin = "redirect:/auth/login";
 
     /**
      * Redirect to community
      */
-    private static final String redirectCommunity = "redirect:/community";
+    private String redirectCommunity = "redirect:/community";
 
     /**
      * Current URI
      */
-    private static final String currentUri = "currentUri";
+    private String currentUri = "currentUri";
 
     /**
      * Default community image path
      */
-    private static final String defaultCommunityImage = "/images/community/defaultCommunityImage.jpg";
+    private String defaultCommunityImage = "/images/community/defaultCommunityImage.jpg";
 
     /**
      * Get the name of the month in French

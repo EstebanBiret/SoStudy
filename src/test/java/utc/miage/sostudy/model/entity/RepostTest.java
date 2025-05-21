@@ -17,7 +17,7 @@ class RepostTest {
         Repost repost2 = new Repost();
         repost1.setId(1);
         repost2.setId(1);
-        assertEquals(repost1.equals(repost2), true);
+        assertEquals(true, repost1.equals(repost2));
     }
 
     /**

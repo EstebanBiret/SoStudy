@@ -39,7 +39,7 @@ public class RepostController {
     /**
      * Redirect to the home page
      */
-    private final String HOME = "redirect:/";
+    private static final String HOME = "redirect:/";
     
     /**
      * Displays the repost page for a specific post identified by its id.

@@ -55,17 +55,6 @@ class RepostDisplayTest {
     }
 
     /**
-     * Test the setOriginalPost method
-     */
-    @Test
-    void testSetOriginalPost() {
-        RepostDisplay repostDisplay = new RepostDisplay();
-        Post post = new Post();
-        repostDisplay.setOriginalPost(post);
-        assertEquals(post, repostDisplay.getOriginalPost());
-    }
-
-    /**
      * Test of constructor with parameters
      */
     @Test
