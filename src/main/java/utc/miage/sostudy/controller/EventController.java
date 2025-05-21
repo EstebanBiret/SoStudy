@@ -120,10 +120,42 @@ public class EventController {
     /**
      * Delete an event
      * @param eventid the id of the event
+     * @param model the model of the view
+     * @param session the session of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/delete/{eventid}")
-    public String deleteEvent(@PathVariable int eventid) {
+    public String deleteEvent(@PathVariable int eventid, Model model, HttpSession session) {
+        
+        //user not logged in
+        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        User user = (User) session.getAttribute("user");
+        Optional<Event> optionalEvent = eventRepository.findById(eventid);
+
+        // check if event exists
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+            
+            // check if user is the creator
+            if (user.getIdUser() == event.getUserCreator().getIdUser()) {
+                // remove user from event
+                List<User> users = event.getUsers();
+                for (User u : users) {
+                    u.getSubscribedEvents().remove(event);
+                    userRepository.save(u);
+                }
+
+                // delete event
+                eventRepository.deleteById(eventid);
+                eventRepository.flush();
+
+                // Reload user to avoid null pointer exception
+                user = userRepository.findById(user.getIdUser()).orElse(null);
+                session.setAttribute("user", user);
+            }
+        }
+
         return "redirect:/event";
     }
 

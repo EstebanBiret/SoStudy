@@ -307,11 +307,10 @@ public class CommunityController {
      * @param communityId the ID of the community
      * @param model the model of the view
      * @param session the session of the user
-     * @param request the request of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/delete/{communityId}")
-    public String deleteCommunity(@PathVariable Integer communityId, Model model, HttpSession session, HttpServletRequest request) {
+    public String deleteCommunity(@PathVariable Integer communityId, Model model, HttpSession session) {
         
         //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
