@@ -572,6 +572,7 @@ body {
 .follower-link {
     display: flex;
     align-items: center;
+    width: 100%;
     gap: 12px;
     text-decoration: none;
     color: #333;
