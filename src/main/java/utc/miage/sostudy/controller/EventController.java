@@ -178,7 +178,7 @@ public class EventController {
 
     /**
      * Edit an event
-     * @param eventid the id of the event
+     * @param eventId the id of the event
      * @param eventName the name of the event
      * @param eventDescription the description of the event
      * @param eventBeginningDate the beginning date of the event
@@ -187,6 +187,7 @@ public class EventController {
      * @param eventImage the image of the event
      * @param session the session of the user
      * @return the name of the view to be rendered
+     * @throws IOException if an I/O error occurs
      */
     @PostMapping(value = "/edit/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Event> updateEvent(@PathVariable int eventId,
