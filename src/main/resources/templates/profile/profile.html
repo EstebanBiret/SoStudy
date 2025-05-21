@@ -21,6 +21,10 @@
                     <div class="profile-info">
                         <h2 th:text="${userProfile.pseudo}"></h2>
 
+                        <div class="profile-name">
+                            <span th:text="${userProfile.firstName + ' ' + userProfile.name}"></span>
+                        </div>
+
                         <div class="profile-detail-line">
                             <img src="/images/logos/university.svg" alt="Niveau et domaine" class="icon">
                             <span th:text="${userProfile.studyLevel + ', ' + userProfile.studyDomain}"></span>
