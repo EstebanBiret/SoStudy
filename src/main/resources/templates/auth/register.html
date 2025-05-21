@@ -14,39 +14,39 @@
             <div class="input-container ic1">
                 <input id="nom" class="input" type="text" name="nom" placeholder=" " required/>
                 <div class="cut"></div>
-                <label for="nom" class="placeholder">Nom</label>
+                <label for="nom" class="placeholder">Nom *</label>
             </div>
 
             <div class="input-container ic1">
                 <input id="prenom" class="input" type="text" name="prenom" placeholder=" " required/>
                 <div class="cut"></div>
-                <label for="prenom" class="placeholder">Prenom</label>
+                <label for="prenom" class="placeholder">Prenom *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="email" class="input" type="email" name="email" placeholder=" " required/>
                 <span id="emailCheck" class="error"></span>
                 <div class="cut"></div>
-                <label for="email" class="placeholder">Email</label>
+                <label for="email" class="placeholder">Email *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="pseudo" class="input" type="text" name="pseudo" placeholder=" " pattern="^[a-zA-Z0-9_]+$" title="Seuls les lettres non accentuées, chiffres et underscores (_) sont autorisés." required/>
                 <span id="pseudoCheck" class="error"></span>
                 <div class="cut"></div>
-                <label for="pseudo" class="placeholder">Pseudo</label>
+                <label for="pseudo" class="placeholder">Pseudo *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="password" class="input" type="password" name="password" placeholder=" " required pattern="^\S+$"/>
                 <div class="cut"></div>
-                <label for="password" class="placeholder">Mot de passe</label>
+                <label for="password" class="placeholder">Mot de passe *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="birthdate" class="input" type="date" name="birthdate" placeholder=" " required/>
                 <div class="cut"></div>
-                <label for="birthdate" class="placeholder">Date de naissance</label>
+                <label for="birthdate" class="placeholder">Date de naissance *</label>
             </div>
 
             <div class="input-container ic2 full-width">
@@ -55,19 +55,19 @@
                     <option th:each="niveau : ${niveauxEtude}" th:value="${niveau}" th:text="${niveau}"></option>
                 </select>
                 <div class="cut"></div>
-                <label for="niveauEtude" class="placeholder">Niveau d'étude</label>
+                <label for="niveauEtude" class="placeholder">Niveau d'étude *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="studyDomain" class="input" type="text" name="studyDomain" required placeholder=" "/>
                 <div class="cut"></div>
-                <label for="studyDomain" class="placeholder">Domaine d'étude</label>
+                <label for="studyDomain" class="placeholder">Domaine d'étude *</label>
             </div>
 
             <div class="input-container ic2">
                 <input id="university" class="input" type="text" name="university" required placeholder=" "/>
                 <div class="cut"></div>
-                <label for="university" class="placeholder">Université</label>
+                <label for="university" class="placeholder">Université *</label>
             </div>
 
             <div class="input-container ic2 full-width">
