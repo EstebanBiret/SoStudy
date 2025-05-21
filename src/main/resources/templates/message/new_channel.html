@@ -48,7 +48,7 @@
                    th:value="${user.idUser}">
         </li>
     </ul>
-    <button class="btn confirm bottom" id="submitBtn" onclick="openModal()" disabled>Créer un canal de discussion</button>
+    <button class="btn confirm bottom" id="submitBtn" onclick="openModal()" disabled>Créer une nouvelle conversation</button>
 
 </div>
 
@@ -63,27 +63,27 @@
             <img src="https://randomuser.me/api/portraits/women/46.jpg" alt="user3" class="avatar">
         </div>
 
-        <h2>Créer un nouveau canal de discussion</h2>
-        <p>Envoie un message pour démarrer la conversation !</p>
+        <h2 class="h2-modal">Créer une nouvelle conversation</h2>
+        <p class="p-modal">Envoie un message pour démarrer la conversation !</p>
 
         <form th:action="@{/channels/new}" method="post" enctype="multipart/form-data">
 
             <div id="channelNameWrapper" style="display: none;">
-                <h4>Nom du channel</h4>
+                <h4 class="h4-modal">Nom de la conversation</h4>
                 <div class="share-link">
                     <input type="text" name="channelName" id="channelName" placeholder="Nom du groupe">
                     <div class="copy-icon">💬</div>
                 </div>
             </div>
 
-            <h4>Premier message</h4>
+            <h4 class="h4-modal">Premier message</h4>
             <div class="share-link">
-                <input type="text" id="firstMessage" name="firstMessage" placeholder="Premier Message" value="">
+                <input type="text" id="firstMessage" name="firstMessage" placeholder="Premier Message" value="" required>
                 <div class="copy-icon">💬</div>
             </div>
 
             <div id="channelImageWrapper" style="display: none;">
-                <h4>Nom du channel</h4>
+                <h4 class="h4-modal">Image de la conversation</h4>
                 <div class="share-link">
                     <input type="file" name="channelImage" id="channelImage" accept="image/*">
                     <small>Moins de 2 Mo</small>

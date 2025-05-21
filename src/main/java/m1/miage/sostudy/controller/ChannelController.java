@@ -1,14 +1,19 @@
 package m1.miage.sostudy.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import m1.miage.sostudy.model.entity.Channel;
 import m1.miage.sostudy.model.entity.Message;
 import m1.miage.sostudy.model.entity.User;
+import m1.miage.sostudy.model.entity.dto.ChannelDTO;
 import m1.miage.sostudy.repository.ChannelRepository;
 import m1.miage.sostudy.repository.MessageRepository;
 import m1.miage.sostudy.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,12 +73,15 @@ public class ChannelController {
      * @return the name of the view to be rendered
      */
     @GetMapping("/")
-    public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) {
+    public String getAllChannels(Model model, HttpServletRequest request, HttpSession session) throws JsonProcessingException {
         model.addAttribute("currentUri", request.getRequestURI());
-        User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return "redirect:/auth/login";
+        User sessionUserTemp = (User) session.getAttribute("user");
+        if (sessionUserTemp == null) return "redirect:/auth/login";
 
-        List<Channel> chans = sessionUser.getSubscribedChannels();
+        User sessionUser = userRepository.findById(sessionUserTemp.getIdUser())
+                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+
+        List<Channel> chans = channelRepository.findByUsers(sessionUser.getIdUser());
 
         if (chans.isEmpty()) {
             model.addAttribute("NoChannel", "Vous n'avez pas encore de canal");
@@ -84,7 +92,6 @@ public class ChannelController {
         HashMap<Channel, String> profPicMap = new HashMap<>();
         HashMap<Channel, String> profPseudoMap = new HashMap<>();
 
-        System.out.println("chans: " + chans);
 
         for (Channel channel : chans) {
             //have the path of the profile picture of the other user
@@ -106,12 +113,26 @@ public class ChannelController {
             lastMessageMap.put(channel, lastMessage);
         }
 
-        System.out.println("lastMessageMap: " + lastMessageMap);
+
+
+
         model.addAttribute("currentUser", sessionUser);
 
         model.addAttribute("profPicMap", profPicMap);
         model.addAttribute("lastMessageMap", lastMessageMap);
         model.addAttribute("profPseudoMap", profPseudoMap);
+
+        Map<String, String> jsonChannelMap = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        for (Channel channel : chans) {
+            ChannelDTO dto = new ChannelDTO(channel);
+            String json = objectMapper.writeValueAsString(dto);
+            jsonChannelMap.put(String.valueOf(channel.getChannelId()), json);
+        }
+
+        model.addAttribute("jsonChannelMap", jsonChannelMap);
+
 
         return "message/list_channel";
     }
@@ -228,6 +249,8 @@ public class ChannelController {
         channel.addMessage(message);
         channelRepository.save(channel);
 
+        session.setAttribute("user", sessionUser);
+
         // Add a small delay using a temporary redirect
         return "redirect:/channels/temporary-redirect";
     }
@@ -253,6 +276,51 @@ public class ChannelController {
     public String getChannelById() {
         // Logic to retrieve a channel by its ID
         return "channel"; // Return the name of the view (e.g., Thymeleaf template)
+    }
+
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateChannel(
+            @RequestParam("channelId") int channelId,
+            @RequestParam("channelName") String channelName,
+            @RequestParam(value = "deletedUserIds", required = false) String deletedUserIdsJson,
+            @RequestParam(value = "channelImage", required = false) MultipartFile channelImage
+    ) throws IOException {
+        List<Integer> deletedIds = new ArrayList<>();
+        if (deletedUserIdsJson != null && !deletedUserIdsJson.isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            deletedIds = mapper.readValue(deletedUserIdsJson, new TypeReference<List<Integer>>() {});
+        }
+
+        Channel channel = channelRepository.findById(channelId);
+        channel.setChannelName(channelName);
+
+        String fileName = null;
+        if (channelImage !=null && !channelImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + channelImage.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/channel/" + rawFileName;
+
+            channel.setChannelImagePath(fileName);
+        }
+
+
+        for (Integer userId : deletedIds) {
+            User user = userRepository.findById(userId).orElse(null);
+            if (user != null && channel.getCreator().getIdUser() != user.getIdUser()) {
+                channel.getUsers().remove(user);
+            }
+            if (user != null) {
+                user.getSubscribedChannels().remove(channel);
+                userRepository.save(user);
+            }
+        }
+
+        channelRepository.save(channel);
+
+        return ResponseEntity.ok(Map.of("message", "Canal mis à jour")); // ou retourne une 200 JSON si tu veux
     }
 
     /**

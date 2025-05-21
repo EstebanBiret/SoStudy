@@ -1,4 +1,6 @@
 
+let isFirstMessage = true;
+
 let currentSubscription = null;
 
 let hasConnected = false;
@@ -79,12 +81,24 @@ function showMessage(sender, message, date) {
     const messageElement = document.createElement("div");
 
     let profileImageSrc = ""
+    let firstMessageText = ""
 
-    console.log(checkToShowDate(date));
+    if (isFirstMessage) {
+        const dateMessage = date.slice(0, 10);
+        firstMessageText = `<div class="debut-conv">
+                                <p class="debut-conv-text">
+                                    <span class="trait"></span>
+                                    Début de la conversation : 20 Mai 2025
+                                    <span class="trait"></span>
+                                </p>
+                            </div>`
+        chatMessages.innerHTML = firstMessageText;
+        isFirstMessage = false;
+    }
 
     if (parseInt(userId) !== sender.idUser) {
         messageElement.className = "message-row friend";
-            profileImageSrc = `
+        profileImageSrc = `
                     <a href="/user/${sender.pseudo}" class="prof-pic-container">
                         <img src="${sender.personImagePath}" alt="Photo de profil" class="profile-pic">
                     </a>
@@ -163,6 +177,8 @@ function showMessage(sender, message, date) {
 function changeChannel(channelId) {
     currentChannelId = channelId;
 
+    isFirstMessage = true;
+
     $("#chat-messages").html("");
     $.ajax({
         url: "/api/messages/channel/" + channelId,
@@ -205,12 +221,16 @@ $(function () {
         }
         const channelId = $(this).data("channel-id");
         const isGroup = $(this).data("is-group");
+        const channel = $(this).data("channel");
+
+        const settingsIcon = document.querySelector('.conv-settings');
 
         if (isGroup) {
-            $(".conv-settings").show()
+            settingsIcon.style.display = 'flex';
+            console.log(channel)
         }
         else {
-            $(".conv-settings").hide()
+            settingsIcon.style.display = 'none';
         }
 
         if (channelId) {
@@ -229,20 +249,15 @@ sendIconHover.addEventListener('mouseout', function() {
     sendIconHover.style.display = 'none';
 });
 
+function formatDateToFrench(dateStr) {
+    const [day, month, year] = dateStr.split("-");
+    const date = new Date(`${year}-${month}-${day}`);
 
-function checkToShowDate(date){
-    const now = new Date();
-    const messageDate = new Date(date);
-    const diff = now - messageDate;
-    const diffHours = Math.floor(diff / (1000 * 60 * 60));
-    console.log(diffHours);
-
-    if (diffHours > 5) {
-        return messageDate.toLocaleString();
-    } else {
-        return "";
-    }
+    return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+    });
 }
-
 
 
