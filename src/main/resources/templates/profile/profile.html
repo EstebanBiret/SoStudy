@@ -21,6 +21,11 @@
                     <div class="profile-info">
                         <h2 th:text="${userProfile.pseudo}"></h2>
 
+                        <div class="profile-name">
+                            <span th:text="${userProfile.firstName + ' ' + userProfile.name}"></span>
+                        </div>
+                        <hr class="hr">
+
                         <div class="profile-detail-line">
                             <img src="/images/logos/university.svg" alt="Niveau et domaine" class="icon">
                             <span th:text="${userProfile.studyLevel + ', ' + userProfile.studyDomain}"></span>
@@ -30,6 +35,7 @@
                             <img src="/images/logos/building.svg" alt="Université" class="icon">
                             <span th:text="${userProfile.university}"></span>
                         </div>
+                        <hr class="hr">
 
                         <p class="bio" th:text="${userProfile.bioUser}"></p>
 
