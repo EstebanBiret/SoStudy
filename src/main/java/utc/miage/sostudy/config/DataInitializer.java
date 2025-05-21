@@ -123,7 +123,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setBirthDate("1992-05-15");
         user2.setBioUser("Architecte logiciel");
         user2.setPersonImagePath("/images/profiles_pictures/2.jpeg");
-        user2.setStudyLevel("utc");
+        user2.setStudyLevel("M2");
         user2.setStudyDomain("Informatique");
         user2.setUniversity("Université Toulouse 3");
 
@@ -167,7 +167,7 @@ public class DataInitializer implements CommandLineRunner {
         // Création des communautés
         Community community1 = new Community("Scouts", "2024-01-01", " /images/community/scout.webp", "Les scouts de Montreuil");
         Community community2 = new Community("Cuisine", "2025-02-01", "/images/community/cook.webp", "Cuisine désastreuse");
-        Community community3 = new Community("utc MIAGE", "2025-05-01", "/images/community/m1miage.webp", "Promo utc MIAGE");
+        Community community3 = new Community("M1 MIAGE", "2025-05-01", "/images/community/m1miage.webp", "Promo M1 MIAGE");
 
         Community community4 = new Community("Bricolage", "2025-05-01", "/images/community/bricolage.webp", "Bricolage et réparations");
         Community community5 = new Community("Jardinage", "2025-07-01", "/images/community/jardinage.webp", "Jardinage et plantes");
@@ -297,7 +297,7 @@ public class DataInitializer implements CommandLineRunner {
         user4.setBirthDate("1998-03-15");
         user4.setBioUser("Débutante en programmation");
         user4.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
-        user4.setStudyLevel("utc");
+        user4.setStudyLevel("BTS");
         user4.setStudyDomain("Informatique");
         user4.setUniversity("Université Toulouse 1");
         user4 = userRepository.save(user4);
