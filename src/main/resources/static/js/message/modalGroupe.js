@@ -37,7 +37,7 @@ function openModal() {
         modal.classList.add("full-height");
 
         const channelName = document.getElementById("channelName");
-        channelName.setAttribute("readonly", "false");
+        channelName.removeAttribute("readonly");
     }
 
     const users = parsedData.users || [];
@@ -59,6 +59,10 @@ function openModal() {
 
         const profilePseudo = user.pseudo || `Utilisateur ${user.idUser}`;
 
+        if (user.idUser == 1) {
+            return;
+        }
+
         const line = document.createElement("div");
         line.innerHTML = `
                     <div class="prof-pic-pseudo-modal">
@@ -76,12 +80,12 @@ function openModal() {
             deleteButton.innerHTML ="<img src='/images/logos/delete-white.svg' alt='Supprimer' class='delete-img'>";
             deleteButton.className = "delete-button";
 
-
-            deleteButton.onclick = function() {
+            deleteButton.addEventListener("click", function() {
                 deletedId.push(user.idUser);
                 line.remove();
-            };
+            })
             line.appendChild(deleteButton);
+
         }
 
 
@@ -107,6 +111,10 @@ function openModal() {
                     <button type="button" class="btn cancel" onclick="closeModal()">Annuler</button>
                     <button type="submit" class="btn confirm" id="confirmUpdate">Valider</button>
                 </div>`
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = CreatorForm;
+        modalBody.appendChild(wrapper);
+
         let label = document.querySelector('.channel-image-label');
         let uploadIcon = document.querySelector('.upload-icon');
         let uploadIconHover = document.querySelector('.upload-icon-hover');
@@ -118,16 +126,86 @@ function openModal() {
             uploadIcon.style.display = 'block';
             uploadIconHover.style.display = 'none';
         });
+
+        document.getElementById("confirmUpdate").addEventListener("click", async function () {
+            const channelName = document.getElementById("channelName").value;
+            const imageInput = document.getElementById("channel-image-input");
+            const imageFile = imageInput.files[0];
+
+            // Exclure l'utilisateur supprimé (id = 1)
+            const validUsers = users.filter(user => user.idUser != 1);
+
+            const allUsersSelected = validUsers.every(user => deletedId.includes(user.idUser));
+
+            console.log("deletedId", deletedId);
+            console.log("validUsers", validUsers);
+            console.log("allUsersSelected", allUsersSelected);
+
+            if (allUsersSelected) {
+                let confirmDelete = confirm("Êtes-vous sûr de vouloir supprimer tous les utilisateurs ? Cela supprimera également le groupe.");
+                if (confirmDelete){
+                    fetch("/channels/delete", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            channelId: currentChannelId
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Erreur lors de la suppression du groupe");
+                        return response.json();
+                    })
+                    .then(data => {
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error("Erreur :", error);
+                        alert("Échec de la suppression du groupe.");
+                    });
+                    return;
+                }
+            }
+
+            const formData = new FormData();
+            formData.append("channelId", currentChannelId);
+            formData.append("channelName", channelName);
+            formData.append("deletedUserIds", JSON.stringify(deletedId));
+
+            if (imageFile) {
+                formData.append("channelImage", imageFile);
+            }
+
+            fetch("/channels/update", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error("Erreur lors de la mise à jour");
+                    return response.json();
+                })
+                .then(data => {
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error("Erreur :", error);
+                    alert("Échec de la mise à jour du canal.");
+                });
+        });
     }
     else {
         CreatorForm = `
-        <div class="buttons">
-            <button type="button" class="btn cancel" onclick="closeModal()">Quitte le groupe</button>
+        <div class="buttons ">
+            <button type="button" class="btn cancel leave-group" onclick="leaveGroup()">Quitter le groupe</button>
         </div>
         `
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = CreatorForm;
+        modalBody.appendChild(wrapper);
     }
 
-    modalBody.innerHTML += CreatorForm;
+
 
     document.getElementById("myModal").style.display = "flex";
 }
@@ -147,34 +225,34 @@ window.onclick = function(event) {
 }
 
 
+function leaveGroup(){
+    let confirmLeave = confirm("Êtes-vous sûr de vouloir quitter le groupe ?");
 
-document.getElementById("confirmUpdate").addEventListener("click", async function () {
-    const channelName = document.getElementById("channelName").value;
-    const imageInput = document.getElementById("channel-image-input");
-    const imageFile = imageInput.files[0];
-
-    const formData = new FormData();
-    formData.append("channelId", currentChannelId);
-    formData.append("channelName", channelName);
-    formData.append("deletedUserIds", JSON.stringify(deletedId));
-
-    if (imageFile) {
-        formData.append("channelImage", imageFile);
-    }
-
-    fetch("/channels/update", {
-        method: "POST",
-        body: formData
-    })
+    if (confirmLeave) {
+        fetch("/channels/leave", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                channelId: currentChannelId
+            })
+        })
         .then(response => {
-            if (!response.ok) throw new Error("Erreur lors de la mise à jour");
+            if (!response.ok) throw new Error("Erreur lors de la sortie du groupe");
             return response.json();
         })
         .then(data => {
-            location.reload(); // Recharge la page
+            location.reload();
         })
         .catch(error => {
             console.error("Erreur :", error);
-            alert("Échec de la mise à jour du canal.");
+            alert("Échec de la sortie du groupe.");
         });
-});
+    }
+    else {
+        closeModal();
+    }
+}
+
+

@@ -126,3 +126,23 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.leave-group{
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.leave-group:active:hover{
+    background: #ad2828;
+    color: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.leave-group:hover{
+    background: #ff4d4d;
+    color: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.user-group-list{
+    overflow: auto;
+}
