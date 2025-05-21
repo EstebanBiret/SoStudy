@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SoStudy</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
+    <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    <link rel="stylesheet" th:href="@{/css/community/list.css}">
+</head>
+<body>
+<div th:replace="common/navbar :: navbar(${currentUri})">
+</div>
+
+<div class="no-following-container">
+    <div class="no-following-content">
+        <h2>Cet utilisateur a été supprimé !</h2>
+        <a th:href="@{/}" id="createPostBtn">
+            Retour à l'accueil
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

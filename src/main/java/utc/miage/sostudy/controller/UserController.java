@@ -108,6 +108,23 @@ public class UserController {
         return "profile/profile";
     }
 
+
+    /**
+     * Displays the deleted user redirect page.
+     *
+     * @param model the model to be used in the view
+     * @param session the HTTP session
+     * @param request the HTTP request
+     * @return the name of the deleted user redirect view
+     */
+    @GetMapping("/deleted-user-redirect")
+    public String deletedUserRedirectPage(Model model, HttpSession session, HttpServletRequest request) {
+        model.addAttribute("currentUri", request.getRequestURI());
+        // user not logged in
+        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        return "deleted_user_redirect"; // Correspond à deleted-user-redirect.html
+    }
+
     /**
      * Displays the user profile page for a specific user identified by their pseudo.
      * @param pseudo the pseudo of the user
@@ -121,6 +138,11 @@ public class UserController {
 
         // user not logged in
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+
+        // user is deleted
+        if (pseudo.equals("utilisateurSupprime")) {
+            return "redirect:/user/deleted-user-redirect";
+        }
 
         User user = (User) session.getAttribute("user");
         User userProfile = userRepository.findByPseudo(pseudo);
@@ -410,10 +432,13 @@ public class UserController {
         //suppression de tous les canaux
         List<Channel> channels = channelRepository.findByCreator(user);
         for (Channel channel : channels) {
-            if(channel.getUsers().contains(user)) {
-                channel.removeUser(user);
+            if (channel.getUsers().contains(user)) {
+                user.removeSubscribedChannel(channel);
+                deletedUser.addSubscribedChannel(channel);
             }
             channel.setCreator(deletedUser);
+            userRepository.save(deletedUser);
+            userRepository.save(user);
             channelRepository.save(channel);
         }
 
