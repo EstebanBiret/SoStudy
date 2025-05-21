@@ -28,9 +28,9 @@
                 <img th:unless="${currentUri.contains('/community')}" th:src="@{/images/logos/community-grey.svg}" alt="Communities">
             </a>
 
-            <a th:href="@{/events}" class="nav-item">
-                <img th:if="${currentUri.contains('/events')}" th:src="@{/images/logos/event-active.svg}" alt="Events">
-                <img th:unless="${currentUri == '/events'}" th:src="@{/images/logos/event-grey.svg}" alt="Events" id="events-img">
+            <a th:href="@{/event}" class="nav-item">
+                <img th:if="${currentUri.contains('/event')}" th:src="@{/images/logos/event-active.svg}" alt="Events" id="events-img">
+                <img th:unless="${currentUri == '/event'}" th:src="@{/images/logos/event-grey.svg}" alt="Events" id="events-img">
             </a>
 
             <a th:href="@{/post/publish}" class="nav-item">

@@ -103,12 +103,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                         <p>${content}</p>
-                        <div class="comment-replies">
-                            <div class="toggle-replies-btn">
-                                <button class="toggle-replies-btn"></button>
-                            </div>
-                            <div class="replies-container" style="display: none;"></div>
-                        </div>
                     </div>
                 `;
 
@@ -163,12 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                         </div>
                                     </div>
                                     <p>${content}</p>
-                                    <div class="comment-replies">
-                                        <div class="toggle-replies-btn">
-                                            <button class="toggle-replies-btn"></button>
-                                        </div>
-                                        <div class="replies-container" style="display: none;"></div>
-                                    </div>
                                 </div>
                             `;
                             // Ajouter le nouveau commentaire avec son conteneur intégré dans le parent
