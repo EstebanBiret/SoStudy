@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_channels.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/list_new_conv.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/message/chat.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/modal.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/message/modal_group.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
@@ -18,10 +20,15 @@
         <div class="list-chan-box">
 
             <input type="text" placeholder="Rechercher..." class="search-bar full">
-    
+
             <ul class="full-card">
-                <li class="user-card" th:each="entry : ${lastMessageMap}" th:id="'channel-' + ${entry.key.channelId}"
-                    th:data-channel-id="${entry.key.channelId}" th:data-is-group="${entry.key.getUsers().size() > 2 ? true : false}">
+                <li class="user-card"
+                    th:each="entry : ${lastMessageMap}"
+                    th:with="channelId=${entry.key.channelId}"
+                    th:id="'channel-' + ${channelId}"
+                    th:data-channel-id="${channelId}"
+                    th:data-is-group="${entry.key.getUsers().size() > 2}">
+
                     <a class="user-info">
                         <img th:if="${entry.key.getUsers().size() > 2}" th:src="${entry.key.channelImagePath}" alt="User" class="user-photo">
                         <img th:unless="${entry.key.getUsers().size() > 2}" th:src="${profPicMap[entry.key]}" alt="User" class="user-photo" />
@@ -33,21 +40,26 @@
                     </a>
                 </li>
             </ul>
+            <div class="no-conv" th:if="${lastMessageMap == null}">
+                <p class="no-user">Aucune conversation.</p>
+            </div>
         <form th:action="@{/channels/new}" method="get">
             <button type="submit" class="new-conv">
                 +
             </button>
         </form>
-    </div>
+            <input type="hidden" id="current-user-id" th:if="${currentUser != null}" th:value="${currentUser.getIdUser()}"/>
 
+        </div>
         <div class="conv-box" id="conversation">
             <div class="conv-header">
-                <h2 class="conv-name">Nom de la conversation</h2>
+                <h2 class="h2-modal conv-name">Nom de la conversation</h2>
                 <button class="conv-settings">
-                    <img src="/images/logos/repost.png" alt="Settings" class="settings-icon" id="connect">
+                    <img src="/images/logos/setting.svg" alt="Settings" class="settings-icon" id="connect" onclick="openModal()" >
                 </button>
             </div>
-            <input type="hidden" id="current-user-id" th:value="${currentUser.getIdUser()}"/>
+
+
 
 
             <div class="chat-messages" id="chat-messages">
@@ -63,6 +75,47 @@
             </form>
         </div>
     </div>
+
+
+    <div class="modal-overlay" id="myModal">
+        <div class="modal full-height" >
+            <button class="modal-close" id="closeModal" onclick="closeModal()">
+                <img src="/images/logos/close-black.svg" alt="close" class="close-btn-modal">
+            </button>
+            <div class="settings-container">
+                <img src="/images/logos/settings_grey.svg" alt="Settings" class="settings-icon bigger" >
+            </div>
+            <h2 class="h2-modal">Informations du groupe</h2>
+            <p class="p-modal p-group" style="height: 30vh">Membres du groupe : </p>
+            <div class="channel-name">
+                <p class="p-modal p-group">Nom de la conversation :</p>
+                <div class="share-link">
+                    <input type="text" name="channelName" id="channelName" placeholder="Nom du groupe">
+                    <div class="copy-icon">💬</div>
+                </div>            </div>
+            <div class="channel-image">
+                <p class="p-modal p-group">Image de la conversation :</p>
+                <input type="file" id="channel-image-input" accept="image/*" style="display: none">
+                <label for="channel-image-input" class="channel-image-label">
+                    <img src="/images/logos/upload-black.svg" alt="Upload" class="upload-icon">
+                    <img src="/images/logos/upload-purple.svg" alt="Upload" class="upload-icon-hover">
+                    <span class="upload-text">Télécharger une image</span>
+                </label>
+
+            </div>
+            <div class="buttons">
+                <button type="button" class="btn cancel" onclick="closeModal()">Annuler</button>
+                <button type="submit" class="btn confirm" id="confirmUpdate">Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var CHANNEL_DATA_MAP = /*[[${jsonChannelMap}]]*/ {};
+        /*]]>*/
+    </script>
     <script th:src="@{/js/message/chat.js}"></script>
+    <script th:src="@{/js/message/modalGroupe.js}"></script>
 </body>
 </html>

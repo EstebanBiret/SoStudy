@@ -82,6 +82,9 @@
 .prof-pic-container{
     display: flex;
     align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
 }
 
 .message-pseudo{
@@ -111,3 +114,24 @@
     opacity: 1;
 }
 
+.debut-conv {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.debut-conv-text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #555;
+    text-align: center;
+    width: 100%;
+}
+
+.trait {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #ccc;
+}
