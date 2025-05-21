@@ -47,4 +47,11 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
      * @return the number of direct comments.
      */
     Integer countByCommentFather_PostIdAndCommentFatherIsNull(Integer postId);
+
+    /**
+     * Find all posts (including comments) by a specific user.
+     * @param idUser the ID of the user.
+     * @return a list of posts and comments created by the user.
+     */
+    List<Post> findByUser_IdUser(Integer idUser);
 }

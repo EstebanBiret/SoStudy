@@ -1,6 +1,7 @@
 package m1.miage.sostudy.repository;
 
 import m1.miage.sostudy.model.entity.Community;
+import m1.miage.sostudy.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,6 +58,16 @@ public interface CommunityRepository extends JpaRepository<Community, Integer> {
      * @return list of communities
      */
     List<Community> findByUsers_IdUser(Integer userId);
+
+    /**
+     * Find all communities created by a user
+     *
+     * @param user the creator user
+     * @return list of communities
+     */
+    @Query("SELECT c FROM Community c WHERE c.userCreator = :user")
+    List<Community> findByCreator(@Param("user") User user);
+
 
     /**
      * Check if a user is a member of a community

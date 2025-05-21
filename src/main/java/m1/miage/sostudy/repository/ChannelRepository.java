@@ -2,6 +2,7 @@ package m1.miage.sostudy.repository;
 
 import m1.miage.sostudy.model.entity.Channel;
 import m1.miage.sostudy.model.entity.Message;
+import m1.miage.sostudy.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,6 +31,20 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
      * @return the Channel entity if found, otherwise null
      */
     Channel findById(int id);
+
+    /**
+     * Find all channels created by a user.
+     *
+     * @param user the creator
+     * @return the list of channels created by the user
+     */
+    @Query("""
+    SELECT c
+    FROM Channel c
+    WHERE c.creator = :user
+""")
+    List<Channel> findByCreator(@Param("user") User user);
+
 
     /**
      * Find all private channels between two users.
