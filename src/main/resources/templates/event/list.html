@@ -58,9 +58,9 @@
                             </div>
                             <div class="event-time">
                                 <img th:src="@{/images/logos/calendar.svg}" alt="Calendrier de l'événement">
-                                <span th:text="${event.eventBeginningDate}"></span>
+                                <span th:text="${event.eventBeginningDate}" id="spanEventBeginningDate"></span>
                                 <span class="label">↣</span>
-                                <span th:text="${event.eventEndDate}"></span>
+                                <span th:text="${event.eventEndDate}" id="spanEventEndDate"></span>
                             </div>
                         </div>
 
