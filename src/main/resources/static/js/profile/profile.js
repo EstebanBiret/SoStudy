@@ -64,3 +64,14 @@ document.getElementById('openFollowModal').addEventListener('click', function() 
 function closeFollowModal() {
     document.getElementById('followModal').style.display = 'none';
 }
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    ["followersModal", "followModal"].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+            closeFollowModal(modalId);
+            closeFollowersModal(modalId);
+        }
+    });
+});

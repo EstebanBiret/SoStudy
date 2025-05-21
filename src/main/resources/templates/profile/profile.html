@@ -5,6 +5,7 @@
         <title>SoStudy | Profil</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
         <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
@@ -134,12 +135,20 @@
                             <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
                             Ne plus reposter
                         </button>
-
                     </div>
+                    
                     <div class="post-content">
                         <p th:text="${post.postContent}">Contenu du post</p>
                         <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">
-                            <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                            <div class="media-wrapper">
+                                <img th:src="@{${post.postMediaPath}}"
+                                     alt="Media du post"
+                                     class="post-media-image"
+                                     onclick="openImageModal(this.src)">
+                            </div>
+                            <button class="expand-button" th:attr="data-src=${post.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                            </button>
                         </div>
                     </div>
                     <div class="post-actions">
@@ -238,7 +247,15 @@
                             <div class="post-content">
                                 <p th:text="${repostDisplay.originalPost.postContent}"></p>
                                 <div th:if="${postMediaExistsMap[repostDisplay.originalPost.postId]}" class="post-media">
-                                    <img th:src="@{${repostDisplay.originalPost.postMediaPath}}" alt="Media du post" class="post-media-image">
+                                    <div class="media-wrapper">
+                                        <img th:src="@{${repostDisplay.originalPost.postMediaPath}}"
+                                             alt="Media du post"
+                                             class="post-media-image"
+                                             onclick="openImageModal(this.src)">
+                                    </div>
+                                    <button class="expand-button" th:attr="data-src=${repostDisplay.originalPost.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                        <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                                    </button>
                                 </div>
                             </div>
                             <div class="post-actions">
@@ -307,6 +324,12 @@
                 </form>
             </div>
         </div>
+      
+        <!-- Modale d'image -->
+        <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
 
         <!-- Followers modal -->
         <div id="followersModal" class="modal-overlay" style="display: none;">
@@ -326,7 +349,7 @@
             </div>
         </div>
 
-        <!-- Follow modal -->
+        <!-- Following modal -->
         <div id="followModal" class="modal-overlay" style="display: none;">
             <div class="modal followers-modal">
                 <h2 class="modal-title">Liste des abonnements</h2>
@@ -342,11 +365,13 @@
                     <button type="button" class="cancel" onclick="closeFollowModal()">Fermer</button>
                 </div>
             </div>
-        </div>
+      </div>
 
         <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
         <script th:src="@{/js/profile/profile.js}"></script>
+        <script th:src="@{/js/common/common.js}"></script>
+
     </body>
 
 </html>

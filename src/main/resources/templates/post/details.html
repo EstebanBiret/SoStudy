@@ -4,6 +4,7 @@
         <title>SoStudy - Détails du post</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/post/details.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
@@ -51,7 +52,15 @@
                 <div class="post-content">
                     <p th:text="${post.postContent}">Contenu du post</p>
                     <div th:if="${post.postMediaPath != null}" class="post-media">
-                        <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                        <div class="media-wrapper">
+                            <img th:src="@{${post.postMediaPath}}"
+                                 alt="Media du post"
+                                 class="post-media-image"
+                                 onclick="openImageModal(this.src)">
+                        </div>
+                        <button class="expand-button" th:attr="data-src=${post.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                            <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                        </button>
                     </div>
                 </div>
 
@@ -284,9 +293,16 @@
             </div>
         </div>
 
+        <!-- Modale d'image -->
+        <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+
         <script th:src="@{/js/post/details.js}"></script>
         <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
+        <script th:src="@{/js/common/common.js}"></script>
 
     </body>
 </html>
