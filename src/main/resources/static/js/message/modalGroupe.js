@@ -128,7 +128,6 @@ document.getElementById("confirmUpdate").addEventListener("click", async functio
             return response.json();
         })
         .then(data => {
-            console.log("Mise à jour réussie :", data.message);
             location.reload(); // Recharge la page
         })
         .catch(error => {

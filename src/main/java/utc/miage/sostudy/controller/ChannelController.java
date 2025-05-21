@@ -292,7 +292,7 @@ public class ChannelController {
         String fileName = null;
         if (channelImage !=null && !channelImage.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + channelImage.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;

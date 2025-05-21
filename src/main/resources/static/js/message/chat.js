@@ -141,9 +141,6 @@ function showMessage(sender, message, date) {
 
     const dateSpan = bubble.querySelector('.message-date');
 
-    console.log(dateSpan);
-    console.log(bubble);
-
     let pressTimer = null;
 
     bubble.addEventListener('mousedown', () => {
@@ -227,7 +224,6 @@ $(function () {
 
         if (isGroup) {
             settingsIcon.style.display = 'flex';
-            console.log(channel)
         }
         else {
             settingsIcon.style.display = 'none';

@@ -1,6 +1,6 @@
 package utc.miage.sostudy.model.entity.dto;
 
-import m1.miage.sostudy.model.entity.Channel;
+import utc.miage.sostudy.model.entity.Channel;
 
 import java.util.List;
 
