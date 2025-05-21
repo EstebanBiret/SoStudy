@@ -65,13 +65,39 @@ function closeFollowModal() {
     document.getElementById('followModal').style.display = 'none';
 }
 
+// GESTION DE LA MODAL DE SUPPRESSION
+const deleteBtn = document.getElementById("deleteProfileBtn");
+const deleteModal = document.getElementById("deleteModal");
+
+if (deleteBtn && deleteModal) {
+    deleteBtn.addEventListener("click", function () {
+        deleteModal.style.display = "flex";
+    });
+}
+
+// Fonction appelée par le bouton "Supprimer" dans la modal
+function confirmDelete() {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/user/delete"; // Peut être remplacé par `th:action` côté Thymeleaf
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Fonction appelée par le bouton "Annuler"
+function closeDeleteModal() {
+    deleteModal.style.display = "none";
+}
+
 // Close modal when clicking outside
 window.addEventListener('click', (event) => {
-    ["followersModal", "followModal"].forEach(modalId => {
+    ["followersModal", "followModal", "deleteModal"].forEach(modalId => {
         const modal = document.getElementById(modalId);
         if (event.target === modal) {
-            closeFollowModal(modalId);
-            closeFollowersModal(modalId);
+            if (modalId === "followersModal") closeFollowersModal();
+            else if (modalId === "followModal") closeFollowModal();
+            else if (modalId === "deleteModal") closeDeleteModal();
         }
     });
 });

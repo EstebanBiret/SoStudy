@@ -19,4 +19,11 @@ public interface UserPostReactionRepository extends JpaRepository<UserPostReacti
      * @return the list of user post reactions
      */
     List<UserPostReaction> findByPost_PostId(Integer postId);
+
+    /**
+     * Find all user post reactions by user id.
+     * @param userId the id of the user
+     * @return the list of user post reactions
+     */
+    List<UserPostReaction> findByUser_IdUser(Integer userId);
 }

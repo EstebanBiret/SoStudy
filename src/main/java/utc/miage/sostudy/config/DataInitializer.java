@@ -91,6 +91,16 @@ public class DataInitializer implements CommandLineRunner {
         + voir si on pourrait implémenter l'envoi de post dans un canal
         */
 
+        //Création de l'utilisateur supprimé
+        User deletedUser = new User();
+        deletedUser.setName("Utilisateur supprimé");
+        deletedUser.setFirstName("Utilisateur supprimé");
+        deletedUser.setPseudo("Utilisateur supprimé");
+        deletedUser.setBioUser("Utilisateur supprimé");
+        deletedUser.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
+        userRepository.save(deletedUser);
+
+
         // Création des utilisateurs
         User user1 = new User();
         user1.setName("Dupont");

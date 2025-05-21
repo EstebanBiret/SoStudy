@@ -2,16 +2,10 @@ package utc.miage.sostudy.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import utc.miage.sostudy.model.entity.Post;
-import utc.miage.sostudy.model.entity.Repost;
-import utc.miage.sostudy.model.entity.User;
-import utc.miage.sostudy.model.entity.UserPostReaction;
+import utc.miage.sostudy.model.entity.*;
 import utc.miage.sostudy.model.entity.dto.RepostDisplay;
 import utc.miage.sostudy.model.enums.ReactionType;
-import utc.miage.sostudy.repository.PostRepository;
-import utc.miage.sostudy.repository.RepostRepository;
-import utc.miage.sostudy.repository.UserPostReactionRepository;
-import utc.miage.sostudy.repository.UserRepository;
+import utc.miage.sostudy.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +52,30 @@ public class UserController {
      */
     @Autowired
     private PostRepository postRepository;
+
+    /**
+     * Autowired MessageRepository
+     */
+    @Autowired
+    private MessageRepository messageRepository;
+
+    /**
+     * Autowired ChannelRepository
+     */
+    @Autowired
+    private ChannelRepository channelRepository;
+
+    /**
+     * Autowired CommunityRepository
+     */
+    @Autowired
+    private CommunityRepository communityRepository;
+
+    /**
+     * Autowired EventRepository
+     */
+    @Autowired
+    private EventRepository eventRepository;
 
 
     /**
@@ -366,11 +384,147 @@ public class UserController {
 
     /**
      * Displays the delete user page.
+     * @param model the model to be used in the view
+     * @param session the HTTP session
      * @return the name of the delete user view
      */
     @PostMapping("/delete")
-    public String deleteUser() {
-        return "redirect:/";
+    public String deleteUser(Model model, HttpSession session) {
+        if (session.getAttribute("user") == null) {
+            return"redirect:/auth/login";
+        }
+        // Get the user from the session
+        User user = (User) session.getAttribute("user");
+
+        //Get the deleted user
+        User deletedUser = userRepository.findByPseudo("Utilisateur supprimé");
+
+        //suppression de tous les messages
+        List<Message> messages = messageRepository.findBySender(user);
+        for (Message message : messages) {
+            message.setUserId(deletedUser.getIdUser());
+            message.setSender(deletedUser);
+            messageRepository.save(message);
+        }
+
+        //suppression de tous les canaux
+        List<Channel> channels = channelRepository.findByCreator(user);
+        for (Channel channel : channels) {
+            if(channel.getUsers().contains(user)) {
+                channel.removeUser(user);
+            }
+            channel.setCreator(deletedUser);
+            channelRepository.save(channel);
+        }
+
+        //suppression de tous les follow et followers
+        List<User> followers = user.getFollowers();
+        for (User follower : followers) {
+            follower.removeFollowing(user);
+            userRepository.save(follower);
+        }
+
+        List<User> following = user.getFollowing();
+        for (User followed : following) {
+            followed.removeFollowers(user);
+            userRepository.save(followed);
+        }
+
+        //suppression de toutes les communautés
+        List<Community> communities = communityRepository.findByCreator(user);
+        for (Community community : communities) {
+            community.setUserCreator(deletedUser);
+            communityRepository.save(community);
+        }
+
+        communities.clear();
+        communities = communityRepository.findByUsers_IdUser(user.getIdUser());
+        for (Community community : communities) {
+            community.removeUser(user);
+            communityRepository.save(community);
+        }
+
+        //suppression des reactions
+        List<UserPostReaction> reactions = userPostReactionRepository.findByUser_IdUser(user.getIdUser());
+        for (UserPostReaction reaction : reactions) {
+            userPostReactionRepository.delete(reaction);
+        }
+
+        //suppression de tous les reposts
+        List<Repost> repostsFromUser = repostRepository.findByUser(user);
+        for (Repost repost : repostsFromUser) {
+            repostRepository.delete(repost);
+        }
+
+        //suppression de tous les posts
+        List<Post> posts = postRepository.findByUser_IdUser(user.getIdUser());
+        for (Post post : posts) {
+            // suppression de tous les commentaires
+            List<Post> comments = postRepository.findByCommentFather_PostId(post.getPostId());
+            for (Post comment : comments) {
+                postRepository.delete(comment);
+            }
+            // suppression de tous les reposts du post
+            List<Repost> reposts = repostRepository.findByOriginalPost(post);
+            for (Repost repost : reposts) {
+                repostRepository.delete(repost);
+            }
+            // suppression de toutes les reactions du post
+            List<UserPostReaction> postReactions = userPostReactionRepository.findByPost_PostId(post.getPostId());
+            for (UserPostReaction postReaction : postReactions) {
+                userPostReactionRepository.delete(postReaction);
+            }
+            // suppression du media du post
+            String mediaPath = post.getPostMediaPath();
+            if (mediaPath != null) {
+                Path mediaFilePath = Paths.get("src/main/resources/static" + mediaPath);
+                try {
+                    Files.deleteIfExists(mediaFilePath);
+                } catch (IOException e) {
+                    System.err.println("Erreur lors de la suppression du fichier média : " + e.getMessage());
+                }
+            }
+            // suppression du post
+            postRepository.delete(post);
+        }
+
+        //suppression de tous les reposts de l'utilisateur
+        List<Repost> reposts = repostRepository.findByUser(user);
+        repostRepository.deleteAll(reposts);
+
+        //suppression de tous les evenements
+        List<Event> events = eventRepository.findByUserCreator(user);
+        for (Event event : events) {
+            event.setUserCreator(deletedUser);
+            eventRepository.save(event);
+        }
+
+        //suppression de toute les participations aux evenements
+        List<Event> eventsParticipated = eventRepository.findByUserParticipant(user);
+        for (Event event : eventsParticipated) {
+            event.removeUser(user);
+            eventRepository.save(event);
+        }
+
+        //suppression de la photo de profil si pas celle par defaut
+        String imagePath = user.getPersonImagePath();
+        if (imagePath != null && !imagePath.contains("defaultProfilePic.jpg")) {
+            Path imageFilePath = Paths.get("src/main/resources/static" + imagePath);
+            try {
+                Files.deleteIfExists(imageFilePath);
+            } catch (IOException e) {
+                System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+            }
+        }
+
+        userRepository.findByPseudo(user.getPseudo());
+
+        // Delete the user from the database
+        userRepository.delete(user);
+        // Invalidate the session
+        session.invalidate();
+        // Redirect to the login page
+        return"redirect:/auth/login";
     }
 
     /**
@@ -462,6 +616,11 @@ public class UserController {
         if(users.contains(user)){
             users.remove(user);
         }
+
+        if(users.contains(userRepository.findByPseudo("Utilisateur supprimé"))){
+            users.remove(userRepository.findByPseudo("Utilisateur supprimé"));
+        }
+
         List<Integer> nbPost = new ArrayList<>();
         List<Repost> repostsFromUser = new ArrayList<>();
         for(User u : users){
