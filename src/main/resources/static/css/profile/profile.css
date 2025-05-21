@@ -597,3 +597,51 @@ body {
     color: #333;
 }
 
+#deleteModal .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+#deleteModal .btn {
+    flex: 1;
+    padding: .8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#deleteModal .btn:not(.btn-danger) {
+    background: #EFEFF3;
+    color: black;
+}
+
+#deleteModal .btn:not(.btn-danger):hover {
+    background: #b3b3b6;
+}
+
+.warning {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#deleteBouton {
+    background-color: #dc3545;
+    color: white;
+}
+
+#deleteBouton:hover {
+    background-color: #c82333;
+}
