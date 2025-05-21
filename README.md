@@ -23,8 +23,9 @@
 |-------------------------------|---------|--------------------|---------------------------------------------------------|-------------------------|
 | /                             | GET     | IndexController     | Index de l'application, affiche le fil principal        |                         |
 | /auth/login                   | GET     | AuthController     | Page de connexion                                       |                         |
-| /auth/login                   | POST    | AuthController     | Traite la connexion                                     | Formulaire              |
-| /auth/register                | POST    | AuthController     | Création de compte                                      | Formulaire              |
+| /auth/login                   | POST    | AuthController     | Traite la connexion à un compte                                    | Formulaire              |
+| /auth/register                | GET    | AuthController     | Page de création de compte                                      |               |
+| /auth/register                | POST    | AuthController     | Traite la création d'un compte                                      | Formulaire              |
 | /auth/logout                  | POST    | AuthController     | Déconnexion + suppression session                       |                         |
 | /user/{pseudo}               | GET     | UserController     | Profil d’un utilisateur                           | pseudo                  |
 | /user/edit                    | GET     | UserController     | Formulaire d’édition de profil                          |                         |
