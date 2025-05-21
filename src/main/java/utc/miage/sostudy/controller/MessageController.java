@@ -75,9 +75,7 @@ public class MessageController {
 
         message.setDateMessage(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
 
-        Message saved = messageRepository.save(message);
-        //TODO enlever le focus du champ après envoi
-        return saved;
+        return messageRepository.save(message);
     }
 
 }

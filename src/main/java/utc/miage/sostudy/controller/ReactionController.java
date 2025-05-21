@@ -24,11 +24,22 @@ import java.util.List;
 @RequestMapping("/reaction")
 public class ReactionController {
 
+    /**
+     * Repository for user post reactions
+     */
     @Autowired
     private UserPostReactionRepository userPostReactionRepository;
     
+    /**
+     * Repository for reactions
+     */
     @Autowired
     private ReactionRepository reactionRepository;
+
+    /**
+     * Redirect to the home page
+     */
+    private final String HOME = "redirect:/";
 
     /**
      * Adds, modifies or deletes a reaction for a user on a post
@@ -50,7 +61,7 @@ public class ReactionController {
         // Check if the reaction type is valid
         Reaction reaction = reactionRepository.findByReactionType(ReactionType.valueOf(reactionType));
         if (reaction == null) {
-            return "redirect:/";
+            return HOME;
         }
 
         // Find all reactions for this user and post
@@ -70,7 +81,7 @@ public class ReactionController {
             if (existingReaction.getReaction().getReactionType() == reaction.getReactionType()) {
                 // Delete the existing reaction
                 userPostReactionRepository.delete(existingReaction);
-                return "redirect:/";
+                return HOME;
             }
             // Otherwise, delete the existing reaction and create a new one
             userPostReactionRepository.delete(existingReaction);
@@ -95,6 +106,6 @@ public class ReactionController {
         newReaction.setId(reactionId);
         
         userPostReactionRepository.save(newReaction);
-        return "redirect:/";
+        return HOME;
     }
 }

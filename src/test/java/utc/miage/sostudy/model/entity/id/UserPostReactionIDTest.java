@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test class for the UserPostReactionID class
  */
-public class UserPostReactionIDTest {
+class UserPostReactionIDTest {
 
     /**
      * Test the equals method

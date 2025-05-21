@@ -35,6 +35,11 @@ public class RepostController {
      */
     @Autowired
     private RepostRepository repostRepository;
+
+    /**
+     * Redirect to the home page
+     */
+    private final String HOME = "redirect:/";
     
     /**
      * Displays the repost page for a specific post identified by its id.
@@ -50,11 +55,11 @@ public class RepostController {
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         //if post does not exist
-        if (postRepository.findById(postId).isEmpty()) {return "redirect:/";}
+        if (postRepository.findById(postId).isEmpty()) {return HOME;}
 
         //if user has already reposted the post
         User user = (User) session.getAttribute("user");
-        if (repostRepository.findByUser(user).stream().anyMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))) {return "redirect:/";}
+        if (repostRepository.findByUser(user).stream().anyMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))) {return HOME;}
 
         Post post = postRepository.findById(postId).get();
 
@@ -62,7 +67,7 @@ public class RepostController {
         Repost repost = new Repost(user, post, LocalDate.now().format(formatter), content);
         repostRepository.save(repost);
 
-        return "redirect:/";
+        return HOME;
     }
 
     /**
@@ -78,18 +83,18 @@ public class RepostController {
         if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
 
         //if post does not exist
-        if (postRepository.findById(postId).isEmpty()) {return "redirect:/";}
+        if (postRepository.findById(postId).isEmpty()) {return HOME;}
 
         //if user has not reposted the post
         User user = (User) session.getAttribute("user");
-        if (repostRepository.findByUser(user).stream().noneMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))) {return "redirect:/";}
+        if (repostRepository.findByUser(user).stream().noneMatch(repost -> repost.getOriginalPost().getPostId().equals(postId))) {return HOME;}
 
         repostRepository.findByUser(user).stream()
             .filter(r -> r.getOriginalPost().getPostId().equals(postId))
             .findFirst()
             .ifPresent(repostRepository::delete);
 
-        return "redirect:/";
+        return HOME;
     }
 
 }

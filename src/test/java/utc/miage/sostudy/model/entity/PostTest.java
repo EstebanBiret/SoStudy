@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the Post entity
  */
-public class PostTest {
+class PostTest {
 
     /**
      * Test the constructor with parameters
@@ -99,7 +99,7 @@ public class PostTest {
     void testHashCode() {
         Post post = new Post();
         post.setPostId(1);
-        assertEquals(post.hashCode(), 1);
+        assertEquals(1, post.hashCode());
     }
 
     /**
@@ -110,7 +110,7 @@ public class PostTest {
         Post post = new Post();
         Post commentFather = new Post();
         post.setCommentFather(commentFather);
-        assertEquals(post.getCommentFather(), commentFather);
+        assertEquals(commentFather, post.getCommentFather());
     }
 
     /**
@@ -121,7 +121,7 @@ public class PostTest {
         Post post = new Post();
         List<Post> comments = new ArrayList<>();
         post.setComments(comments);
-        assertEquals(post.getComments(), comments);
+        assertEquals(comments, post.getComments());
     }
 
     /**
@@ -131,7 +131,7 @@ public class PostTest {
     void testGetContent() {
         Post post = new Post();
         post.setPostContent("content");
-        assertEquals(post.getPostContent(), "content");
+        assertEquals("content", post.getPostContent());
     }
 
     /**
@@ -141,7 +141,7 @@ public class PostTest {
     void testGetMediaPath() {
         Post post = new Post();
         post.setPostMediaPath("mediaPath");
-        assertEquals(post.getPostMediaPath(), "mediaPath");
+        assertEquals("mediaPath", post.getPostMediaPath());
     }
 
     /**
@@ -151,7 +151,7 @@ public class PostTest {
     void testGetPostId() {
         Post post = new Post();
         post.setPostId(1);
-        assertEquals(post.getPostId(), 1);
+        assertEquals(1, post.getPostId());
     }
 
     /**
@@ -161,59 +161,7 @@ public class PostTest {
     void testGetPublicationDate() {
         Post post = new Post();
         post.setPostPublicationDate("publicationDate");
-        assertEquals(post.getPostPublicationDate(), "publicationDate");
-    }
-
-    /**
-     * Test the setCommentFather method
-     */
-    @Test
-    void testSetCommentFather() {
-        Post post = new Post();
-        Post commentFather = new Post();
-        post.setCommentFather(commentFather);
-        assertEquals(post.getCommentFather(), commentFather);
-    }
-
-    /**
-     * Test the setComments method
-     */
-    @Test
-    void testSetComments() {
-        Post post = new Post();
-        List<Post> comments = new ArrayList<>();
-        post.setComments(comments);
-        assertEquals(post.getComments(), comments);
-    }
-
-    /**
-     * Test the setContent method
-     */
-    @Test
-    void testSetContent() {
-        Post post = new Post();
-        post.setPostContent("content");
-        assertEquals(post.getPostContent(), "content");
-    }
-
-    /**
-     * Test the setMediaPath method
-     */
-    @Test
-    void testSetMediaPath() {
-        Post post = new Post();
-        post.setPostMediaPath("mediaPath");
-        assertEquals(post.getPostMediaPath(), "mediaPath");
-    }
-
-    /**
-     * Test the setPublicationDate method
-     */
-    @Test
-    void testSetPublicationDate() {
-        Post post = new Post();
-        post.setPostPublicationDate("publicationDate");
-        assertEquals(post.getPostPublicationDate(), "publicationDate");
+        assertEquals("publicationDate", post.getPostPublicationDate());
     }
 
     /**
@@ -224,7 +172,7 @@ public class PostTest {
         Post post = new Post();
         Community community = new Community();
         post.setCommunity(community);
-        assertEquals(post.getCommunity(), community);
+        assertEquals(community, post.getCommunity());
     }
 
     /**
@@ -235,7 +183,7 @@ public class PostTest {
         Post post = new Post();
         User user = new User();
         post.setUser(user);
-        assertEquals(post.getUser(), user);
+        assertEquals(user, post.getUser());
     }
 
     /**
@@ -246,18 +194,7 @@ public class PostTest {
         Post post = new Post();
         List<UserPostReaction> reactions = new ArrayList<>();
         post.setReactions(reactions);
-        assertEquals(post.getReactions(), reactions);
-    }
-
-    /**
-     * Test of setReactions method
-     */
-    @Test
-    void testSetReactions() {
-        Post post = new Post();
-        List<UserPostReaction> reactions = new ArrayList<>();
-        post.setReactions(reactions);
-        assertEquals(post.getReactions(), reactions);
+        assertEquals(reactions, post.getReactions());
     }
 
     /**
@@ -267,17 +204,7 @@ public class PostTest {
     void testGetLikeCount() {
         Post post = new Post();
         post.setLikeCount(1);
-        assertEquals(post.getLikeCount(), 1);
-    }
-
-    /**
-     * Test of setLikeCount method
-     */
-    @Test
-    void testSetLikeCount() {
-        Post post = new Post();
-        post.setLikeCount(1);
-        assertEquals(post.getLikeCount(), 1);
+        assertEquals(1, post.getLikeCount());
     }
 
     /**
@@ -287,17 +214,7 @@ public class PostTest {
     void testGetLoveCount() {
         Post post = new Post();
         post.setLoveCount(1);
-        assertEquals(post.getLoveCount(), 1);
-    }
-
-    /**
-     * Test of setLoveCount method
-     */
-    @Test
-    void testSetLoveCount() {
-        Post post = new Post();
-        post.setLoveCount(1);
-        assertEquals(post.getLoveCount(), 1);
+        assertEquals(1, post.getLoveCount());
     }
 
     /**
@@ -307,17 +224,7 @@ public class PostTest {
     void testGetLaughCount() {
         Post post = new Post();
         post.setLaughCount(1);
-        assertEquals(post.getLaughCount(), 1);
-    }
-
-    /**
-     * Test of setLaughCount method
-     */
-    @Test
-    void testSetLaughCount() {
-        Post post = new Post();
-        post.setLaughCount(1);
-        assertEquals(post.getLaughCount(), 1);
+        assertEquals(1, post.getLaughCount());
     }
 
     /**
@@ -327,17 +234,7 @@ public class PostTest {
     void testGetCryCount() {
         Post post = new Post();
         post.setCryCount(1);
-        assertEquals(post.getCryCount(), 1);
-    }
-
-    /**
-     * Test of setCryCount method
-     */
-    @Test
-    void testSetCryCount() {
-        Post post = new Post();
-        post.setCryCount(1);
-        assertEquals(post.getCryCount(), 1);
+        assertEquals(1, post.getCryCount());
     }
 
     /**
@@ -347,17 +244,7 @@ public class PostTest {
     void testGetAngryCount() {
         Post post = new Post();
         post.setAngryCount(1);
-        assertEquals(post.getAngryCount(), 1);
-    }
-
-    /**
-     * Test of setAngryCount method
-     */
-    @Test
-    void testSetAngryCount() {
-        Post post = new Post();
-        post.setAngryCount(1);
-        assertEquals(post.getAngryCount(), 1);
+        assertEquals(1, post.getAngryCount());
     }
 
     /**
@@ -367,17 +254,7 @@ public class PostTest {
     void testGetFormattedDate() {
         Post post = new Post();
         post.setFormattedDate("formattedDate");
-        assertEquals(post.getFormattedDate(), "formattedDate");
-    }
-
-    /**
-     * Test of setFormattedDate method
-     */
-    @Test
-    void testSetFormattedDate() {
-        Post post = new Post();
-        post.setFormattedDate("formattedDate");
-        assertEquals(post.getFormattedDate(), "formattedDate");
+        assertEquals("formattedDate", post.getFormattedDate());
     }
 
 }

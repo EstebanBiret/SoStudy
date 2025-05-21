@@ -59,6 +59,26 @@ public class IndexController {
     private RepostRepository repostRepository;
     
     /**
+     * Constant for posts attribute
+     */
+    private static final String POSTS = "posts";
+
+    /**
+     * Constant for currentUri attribute
+     */
+    private static final String CURRENT_URI = "currentUri";
+
+    /**
+     * Constant for following attribute
+     */
+    private static final String FOLLOWING = "following";
+    
+    /**
+     * Constant for index view name
+     */
+    private static final String INDEX = "index";
+
+    /**
      * Formats the date of a post
      * @param postDate the date of the post
      * @return the formatted date of the post
@@ -144,11 +164,11 @@ public class IndexController {
 
         //user has no following
         if(abonnements.isEmpty()) {
-            model.addAttribute("posts", new ArrayList<>());
+            model.addAttribute(POSTS, new ArrayList<>());
             model.addAttribute("user", user);
-            model.addAttribute("currentUri", request.getRequestURI());
-            model.addAttribute("following", "empty");
-            return "index";
+            model.addAttribute(CURRENT_URI, request.getRequestURI());
+            model.addAttribute(FOLLOWING, "empty");
+            return INDEX;
         }
         
         List<Post> posts = new ArrayList<>();
@@ -182,11 +202,11 @@ public class IndexController {
 
         //if user has following but they have no posts or reposts
         if (posts.isEmpty() && reposts.isEmpty()) {
-            model.addAttribute("posts", posts);
+            model.addAttribute(POSTS, posts);
             model.addAttribute("user", user);
-            model.addAttribute("currentUri", request.getRequestURI());
-            model.addAttribute("following", "no_posts");
-            return "index";
+            model.addAttribute(CURRENT_URI, request.getRequestURI());
+            model.addAttribute(FOLLOWING, "no_posts");
+            return INDEX;
         }
         
         //format date
@@ -332,17 +352,17 @@ public class IndexController {
         }
         
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
-        model.addAttribute("posts", posts);
+        model.addAttribute(POSTS, posts);
         model.addAttribute("user", user);
         model.addAttribute("repostedPostIds", repostedPostIds);
-        model.addAttribute("following", "posts");
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(FOLLOWING, "posts");
+        model.addAttribute(CURRENT_URI, request.getRequestURI());
         model.addAttribute("repostDisplays", repostDisplays);
         model.addAttribute("userReactedPosts", userReactedPosts);
         model.addAttribute("repostCounts", repostCounts);
         model.addAttribute("postCommentCounts", postCommentCounts);
 
-        return "index";
+        return INDEX;
     }
 
 }

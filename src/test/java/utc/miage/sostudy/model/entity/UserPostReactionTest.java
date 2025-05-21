@@ -9,7 +9,7 @@ import utc.miage.sostudy.model.entity.id.UserPostReactionID;
 /**
  * Test class for the UserPostReaction class
  */
-public class UserPostReactionTest {
+class UserPostReactionTest {
 
     /**
      * Test the constructor with parameters
