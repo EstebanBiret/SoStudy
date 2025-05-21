@@ -133,8 +133,9 @@
                 <form id="editCommunityForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
                     <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
+
+                    <label for="communityImage">Image de la communauté (moins de 2 Mo, format JPG/PNG...)</label>
                     <input type="file" id="communityImage" name="communityImage" accept="image/*">
-                    <small>Moins de 2 Mo</small>
                     <div class="modal-actions">
                         <button type="submit" class="btn editCommunityBtn">Modifier</button>
                         <button onclick="closeEditModal()" class="btn btn-danger">Annuler</button>
@@ -150,8 +151,9 @@
                 <form id="createCommunityForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="communityName" name="communityName" placeholder="Nom de la communauté" required>
                     <input type="text" id="communityDescription" name="communityDescription" placeholder="Description de la communauté" required>
+
+                    <label for="communityImage">Image de la communauté (moins de 2 Mo, format JPG/PNG...)</label>
                     <input type="file" id="communityImage" name="communityImage" accept="image/*">
-                    <small>Moins de 2 Mo</small>
                     <div class="modal-actions">
                         <button type="submit" class="btn createCommunityBtn">Créer</button>
                         <button onclick="closeCreateModal()" class="btn btn-danger">Annuler</button>

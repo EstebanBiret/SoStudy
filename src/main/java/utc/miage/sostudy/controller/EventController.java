@@ -1,15 +1,28 @@
 package utc.miage.sostudy.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -100,11 +113,67 @@ public class EventController {
 
     /**
      * Create a new event
+     * @param eventName the name of the event
+     * @param eventDescription the description of the event
+     * @param eventBeginningDate the beginning date of the event
+     * @param eventEndDate the end date of the event
+     * @param eventLocation the location of the event
+     * @param eventImage the image of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
+     * @throws IOException if an I/O error occurs
      */
-    @PostMapping("/new")
-    public String createEvent() {
-        return "redirect:/event";
+    @PostMapping(value = "/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Event> createEvent(@RequestParam String eventName,
+                              @RequestParam String eventDescription,
+                              @RequestParam String eventBeginningDate,
+                              @RequestParam String eventEndDate,
+                              @RequestParam String eventLocation,
+                              @RequestParam MultipartFile eventImage,
+                              HttpSession session) throws IOException {
+        
+        //user not logged in
+        if(session.getAttribute("user") == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        User sessionUser = (User) session.getAttribute("user");
+        User user = userRepository.findById(sessionUser.getIdUser()).orElseThrow();
+
+        Event event = new Event();
+        event.setEventName(eventName);
+        event.setEventDescription(eventDescription);
+        event.setEventBeginningDate(eventBeginningDate);
+        event.setEventEndDate(eventEndDate);
+        event.setEventLocation(eventLocation);
+
+        String fileName;
+        if (!eventImage.isEmpty()) {
+            String rawFileName = UUID.randomUUID().toString() + "_" + eventImage.getOriginalFilename();
+            Path filePath = Paths.get(uploadDir, rawFileName);
+            Files.createDirectories(filePath.getParent());
+            Files.copy(eventImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            fileName = "/images/events/" + rawFileName;
+        } else {
+            fileName = "/images/events/defaultEventImage.jpg";
+        }
+        event.setEventImagePath(fileName);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        event.setEventPublicationDate(LocalDate.now().format(formatter));
+
+        event.setUserCreator(user);
+        event.setNumberOfMembers(1);
+        event.getUsers().add(user);
+        eventRepository.save(event);
+
+        user.getSubscribedEvents().add(event);
+        user.addCreatedEvent(event);
+        userRepository.save(user);
+
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok(event);
     }
 
     /**

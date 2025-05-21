@@ -79,6 +79,9 @@
                            th:data-event-id="${event.eventId}"
                            th:data-event-name="${event.eventName}"
                            th:data-event-description="${event.eventDescription}"
+                           th:data-event-location="${event.eventLocation}"
+                           th:data-event-beginning-date="${event.eventBeginningDate}"
+                           th:data-event-end-date="${event.eventEndDate}"
                            onclick="event.preventDefault(); openEditModal(this)">
                             Modifier
                         </a>
@@ -135,8 +138,13 @@
                 <form id="editEventForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement" required>
                     <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement" required>
+                    <input type="text" id="eventLocation" name="eventLocation" placeholder="Lieu de l'événement" required>
+                    <label for="eventBeginningDate">Date de début</label>
+                    <input type="date" id="eventBeginningDate" name="eventBeginningDate" required>
+                    <label for="eventEndDate">Date de fin</label>
+                    <input type="date" id="eventEndDate" name="eventEndDate" required>
+                    <label for="eventImage">Image de l'événement (moins de 2 Mo, format JPG/PNG...)</label>
                     <input type="file" id="eventImage" name="eventImage" accept="image/*">
-                    <small>Moins de 2 Mo</small>
                     <div class="modal-actions">
                         <button type="submit" class="btn editEventBtn">Modifier</button>
                         <button onclick="closeEditModal()" class="btn btn-danger">Annuler</button>
@@ -152,8 +160,14 @@
                 <form id="createEventForm" method="post" enctype="multipart/form-data">
                     <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement" required>
                     <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement" required>
+                    <input type="text" id="eventLocation" name="eventLocation" placeholder="Lieu de l'événement" required>
+
+                    <label for="eventBeginningDate">Date de début</label>
+                    <input type="date" id="eventBeginningDate" name="eventBeginningDate" required>
+                    <label for="eventEndDate">Date de fin</label>
+                    <input type="date" id="eventEndDate" name="eventEndDate" required>
+                    <label for="eventImage">Image de l'événement (moins de 2 Mo, format JPG/PNG...)</label>
                     <input type="file" id="eventImage" name="eventImage" accept="image/*">
-                    <small>Moins de 2 Mo</small>
                     <div class="modal-actions">
                         <button type="submit" class="btn createEventBtn">Publier</button>
                         <button onclick="closeCreateModal()" class="btn btn-danger">Annuler</button>

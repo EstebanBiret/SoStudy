@@ -110,8 +110,10 @@ body {
 
 #createEventForm input[type="text"],
 #createEventForm input[type="file"],
+#createEventForm input[type="date"],
 #editEventForm input[type="text"],
-#editEventForm input[type="file"] {
+#editEventForm input[type="file"],
+#editEventForm input[type="date"] {
     padding: 0.75rem;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -122,8 +124,10 @@ body {
 
 #createEventForm input[type="text"]:focus,
 #createEventForm input[type="file"]:focus,
+#createEventForm input[type="date"]:focus,
 #editEventForm input[type="text"]:focus,
-#editEventForm input[type="file"]:focus {
+#editEventForm input[type="file"]:focus,
+#editEventForm input[type="date"]:focus {
     outline: none;
     border-color: #b529e4;
     box-shadow: 0 0 0 2px rgba(181, 41, 228, 0.1);
@@ -270,7 +274,7 @@ body {
     }
 }
 
-/* Style spécifique pour le bouton dans la liste des communautés */
+/* Style spécifique pour le bouton dans la liste des événements */
 .createEventBtn2 {
     background: #b226f8;
     color: white;
@@ -322,4 +326,11 @@ body {
     span {
         margin-top: 2px;
     }
+}
+
+label {
+    margin-bottom: -18px;
+    font-size: .9rem;
+    color: #a0a0a0;
+    font-weight: 500;
 }
