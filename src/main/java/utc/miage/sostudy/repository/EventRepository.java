@@ -14,12 +14,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface EventRepository extends JpaRepository<Event, Integer> {
-    /**
-     * Find an event by its id
-     * @param id the id of the event
-     * @return the event
-     */
-    Event findById(int id);
 
     /**
      * Find all events sorted by creation date

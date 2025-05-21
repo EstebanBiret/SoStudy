@@ -79,7 +79,7 @@ public class PostController {
     /**
      * Path for uploading files.
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/posts_images/";
+    private String uploadDir = "./src/main/resources/static/images/posts_images/";
 
     /**
      * Formats the date of a post without the "a posté" prefix
@@ -312,7 +312,7 @@ public class PostController {
         String fileName = null;
         if (!image.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/posts_images/" + rawFileName;

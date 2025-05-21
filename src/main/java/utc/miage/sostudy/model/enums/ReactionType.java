@@ -33,12 +33,12 @@ public enum ReactionType {
     /**
      * The name of the reaction
      */
-    private final String name;
+    private String name;
 
     /**
      * The image path of the reaction
      */
-    private final String imagePath;
+    private String imagePath;
 
     /**
      * Constructor with parameters

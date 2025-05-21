@@ -59,7 +59,7 @@ public class AuthController {
     /**
      * Path for uploading files.
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/profiles_pictures/";
+    private String uploadDir = "./src/main/resources/static/images/profiles_pictures/";
 
     /**
      * Displays the login page.
@@ -148,7 +148,7 @@ public class AuthController {
         String fileName = null;
         if (!image.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/profiles_pictures/" + rawFileName;

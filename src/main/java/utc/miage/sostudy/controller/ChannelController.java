@@ -56,9 +56,7 @@ public class ChannelController {
     /**
      * Default path for uploading files.
      */
-    private final String UPLOAD_DIR = "./src/main/resources/static/images/channel/";
-
-
+    private String uploadDir = "./src/main/resources/static/images/channel/";
 
     /**
      * Displays the list of all channels.
@@ -159,7 +157,7 @@ public class ChannelController {
         String fileName = null;
         if (!channelImage.isEmpty()) {
             String rawFileName = UUID.randomUUID().toString() + "_" + channelImage.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR, rawFileName);
+            Path filePath = Paths.get(uploadDir, rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;
