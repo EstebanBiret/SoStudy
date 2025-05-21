@@ -172,7 +172,7 @@ body {
     color: #333;
     white-space: pre-wrap;
     word-break: break-word;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
 }
 
 .bio {
@@ -651,7 +651,13 @@ body {
     align-items: center;
     font-size: 1rem;
     color: #666;
-    margin-bottom: 5px;
     white-space: pre-wrap;
     word-break: break-word;
+}
+
+.hr {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 10px 0;
 }
