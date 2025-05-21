@@ -91,7 +91,7 @@ public class ChannelController {
                         .filter(user -> user.getIdUser() != sessionUser.getIdUser())
                         .findFirst()
                         .map(User::getPersonImagePath)
-                        .orElse("/images/profiles_pictures/defaultProfilePic.png"));
+                        .orElse("/images/profiles_pictures/defaultProfilePic.jpg"));
                 //have the pseudo of the other user
                 profPseudoMap.put(channel, channel.getUsers().stream()
                         .filter(user -> user.getIdUser() != sessionUser.getIdUser())
@@ -162,7 +162,7 @@ public class ChannelController {
             Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;
         } else {
-            fileName = "/images/channel/defaultChannelImage.png";
+            fileName = "/images/channel/defaultChannelImage.jpg";
         }
 
         List<Integer> selectedUserIds = Arrays.stream(selectedUsers.split(","))

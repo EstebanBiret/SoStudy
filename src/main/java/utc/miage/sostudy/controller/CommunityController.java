@@ -284,7 +284,7 @@ public class CommunityController {
         if (!communityImage.isEmpty()) {
             // Delete the old image if it exists and is not the default image
             String oldImagePath = community.getCommunityImagePath();
-            if (oldImagePath != null && !oldImagePath.contains("defaultCommunity.png")) {
+            if (oldImagePath != null && !oldImagePath.contains("defaultCommunityImage.jpg")) {
                 Path oldImageFilePath = Paths.get("src/main/resources/static" + oldImagePath);
                 try {
                     Files.deleteIfExists(oldImageFilePath);
@@ -353,7 +353,7 @@ public class CommunityController {
 
                 //remove community picture
                 String imagePath = community.getCommunityImagePath();
-                if (imagePath != null && !imagePath.contains("defaultCommunity.png")) {
+                if (imagePath != null && !imagePath.contains("defaultCommunityImage.jpg")) {
                     Path imageFilePath = Paths.get("src/main/resources/static" + imagePath);
                     try {
                         Files.deleteIfExists(imageFilePath);

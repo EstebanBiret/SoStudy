@@ -397,7 +397,7 @@ public class UserController {
         User user = (User) session.getAttribute("user");
 
         //Get the deleted user
-        User deletedUser = userRepository.findByPseudo("Utilisateur supprimé");
+        User deletedUser = userRepository.findByPseudo("utilisateurSupprime");
 
         //suppression de tous les messages
         List<Message> messages = messageRepository.findBySender(user);
@@ -617,8 +617,8 @@ public class UserController {
             users.remove(user);
         }
 
-        if(users.contains(userRepository.findByPseudo("Utilisateur supprimé"))){
-            users.remove(userRepository.findByPseudo("Utilisateur supprimé"));
+        if(users.contains(userRepository.findByPseudo("utilisateurSupprime"))){
+            users.remove(userRepository.findByPseudo("utilisateurSupprime"));
         }
 
         List<Integer> nbPost = new ArrayList<>();

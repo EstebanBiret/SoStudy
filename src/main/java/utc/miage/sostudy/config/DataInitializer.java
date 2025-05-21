@@ -93,13 +93,12 @@ public class DataInitializer implements CommandLineRunner {
 
         //Création de l'utilisateur supprimé
         User deletedUser = new User();
-        deletedUser.setName("Utilisateur supprimé");
-        deletedUser.setFirstName("Utilisateur supprimé");
-        deletedUser.setPseudo("Utilisateur supprimé");
-        deletedUser.setBioUser("Utilisateur supprimé");
+        deletedUser.setName("Supprime");
+        deletedUser.setFirstName("Utilisateur");
+        deletedUser.setPseudo("utilisateurSupprime");
+        deletedUser.setBioUser("Ce compte a été supprimé");
         deletedUser.setPersonImagePath("/images/profiles_pictures/defaultProfilePic.jpg");
         userRepository.save(deletedUser);
-
 
         // Création des utilisateurs
         User user1 = new User();
