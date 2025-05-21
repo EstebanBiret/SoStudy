@@ -179,6 +179,13 @@ public class EventController {
     /**
      * Edit an event
      * @param eventid the id of the event
+     * @param eventName the name of the event
+     * @param eventDescription the description of the event
+     * @param eventBeginningDate the beginning date of the event
+     * @param eventEndDate the end date of the event
+     * @param eventLocation the location of the event
+     * @param eventImage the image of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
      */
     @PostMapping(value = "/edit/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -323,6 +330,7 @@ public class EventController {
     /**
      * Leave an event
      * @param eventid the id of the event
+     * @param session the session of the user
      * @return the name of the view to be rendered
      */
     @PostMapping("/leave/{eventid}")
