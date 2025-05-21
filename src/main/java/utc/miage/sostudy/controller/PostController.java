@@ -379,11 +379,25 @@ public class PostController {
         //user not logged in
         if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
         
+        User currentUser = (User) session.getAttribute("user");
+        
         //post not found
         if(postRepository.findById(id).isEmpty()) {return "redirect:/";}
-        
+
+        //user is not the owner of the post
+        if (!postRepository.findByUser_IdUser(currentUser.getIdUser()).stream().anyMatch(p -> p.getPostId().equals(id))) {
+            return "redirect:/";
+        }
+
+        //delete all reposts of the post
+        repostRepository.findByOriginalPost(postRepository.findById(id).get()).forEach(repostRepository::delete);
+
+        //delete all reactions of the post
+        userPostReactionRepository.findByPost_PostId(id).forEach(userPostReactionRepository::delete);
+
         //delete post
         postRepository.deleteById(id);
+
         return "redirect:/";
     }
 

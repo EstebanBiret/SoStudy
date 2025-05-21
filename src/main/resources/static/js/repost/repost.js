@@ -115,6 +115,20 @@ function submitUnrepost(button) {
                 userPostsCount.textContent = parseInt(userPostsCount.textContent) - 1;
             }
 
+            //si c'était son dernier post, on ajoute la div du no post
+            if (parseInt(userPostsCount.textContent) === 0) {
+                const noPostsContainer = document.createElement('div');
+                noPostsContainer.innerHTML = `<div class="no-posts">
+                    <div class="no-following-content">
+                        <h2>Vous n'avez pas encore posté !</h2>
+                        <p>Vous pouvez créer un post pour partager vos idées ou tout ce qui vous passionne.</p>
+                        <a th:href="@{/post/publish}" id="createPostBtn">
+                            Créer un post
+                        </a>
+                    </div>`;
+                document.querySelector('.posts-container').appendChild(noPostsContainer);
+            }
+
         } else {
             alert("Erreur lors du unrepost");
         }
