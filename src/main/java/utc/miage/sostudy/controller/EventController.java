@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,26 @@ public class EventController {
     private String uploadDir = "./src/main/resources/static/images/events/";
 
     /**
+     * Logger
+     */
+    private static final Logger logger = Logger.getLogger(EventController.class.getName());
+
+    /**
+     * Redirect to login
+     */
+    private static final String redirectLogin = "redirect:/auth/login";
+
+    /**
+     * Redirect to event
+     */
+    private static final String redirectEvent = "redirect:/event";
+
+    /**
+     * Default event image path
+     */
+    private static final String defaultEventImage = "/images/events/defaultEventImage.jpg";
+
+    /**
      * Get all events
      * @param model the model of the view
      * @param session the session of the user
@@ -65,7 +86,7 @@ public class EventController {
     @GetMapping("")
     public String getAllEvents(Model model, HttpSession session, HttpServletRequest request) {
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return redirectLogin;}
         
         User user = (User) session.getAttribute("user");
         List<Event> events = eventRepository.findAllOrderByPublicationDate();
@@ -93,14 +114,9 @@ public class EventController {
                 eventEndDateParts[0];
             event.setEventEndDate(formattedEventEndDate);
             
-            System.out.println(event.getEventName() + "-----------");
-
             // Check if user is member of this community
             if(eventRepository.existsByUsers_IdUserAndEventId(user.getIdUser(), event.getEventId())) {
-                System.out.println("User is member of this event");
                 event.getUsers().add(user);
-                System.out.println(user.getPseudo());
-                System.out.println(event.getEventName());
             }
         }
 
@@ -155,7 +171,7 @@ public class EventController {
             Files.copy(eventImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/events/" + rawFileName;
         } else {
-            fileName = "/images/events/defaultEventImage.jpg";
+            fileName = defaultEventImage;
         }
         event.setEventImagePath(fileName);
 
@@ -219,7 +235,7 @@ public class EventController {
                 try {
                     Files.deleteIfExists(oldImageFilePath);
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                    logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                 }
             }
             String rawFileName = UUID.randomUUID().toString() + "_" + eventImage.getOriginalFilename();
@@ -258,7 +274,7 @@ public class EventController {
     public String deleteEvent(@PathVariable int eventid, Model model, HttpSession session) {
         
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -284,7 +300,7 @@ public class EventController {
                     try {
                         Files.deleteIfExists(imageFilePath);
                     } catch (IOException e) {
-                        System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                        logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                     }
                 }
 
@@ -298,7 +314,7 @@ public class EventController {
             }
         }
 
-        return "redirect:/event";
+        return redirectEvent;
     }
 
     /**
@@ -311,7 +327,7 @@ public class EventController {
     public String joinEvent(@PathVariable int eventid, HttpSession session) {
         
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -325,7 +341,7 @@ public class EventController {
                 eventRepository.save(event);
             }
         }
-        return "redirect:/event";
+        return redirectEvent;
     }
 
     /**
@@ -338,7 +354,7 @@ public class EventController {
     public String leaveEvent(@PathVariable int eventid, HttpSession session) {
         
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Event> optionalEvent = eventRepository.findById(eventid);
@@ -352,7 +368,7 @@ public class EventController {
                 eventRepository.save(event);
             }
         }
-        return "redirect:/event";
+        return redirectEvent;
     }
 
 }

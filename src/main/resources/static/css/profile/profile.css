@@ -413,12 +413,12 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-.modal button.submit {
+.modal button.submit, .modal button.cancel-btn {
     background-color: #b226f8;
     color: white;
 }
 
-.modal button.submit:hover {
+.modal button.submit:hover, .modal button.cancel-btn:hover {
     background-color: #862fb3;
 }
 
@@ -612,6 +612,7 @@ body {
 .modal-actions {
     display: flex;
     gap: 1rem;
+    justify-content: center;
 }
 
 #deleteModal .btn {

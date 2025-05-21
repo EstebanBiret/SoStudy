@@ -9,7 +9,7 @@ import utc.miage.sostudy.model.enums.ReactionType;
 /**
  * Test class for the Reaction entity
  */
-public class ReactionTest {
+class ReactionTest {
 
     /**
      * Test the constructor with parameters
@@ -35,27 +35,6 @@ public class ReactionTest {
      */
     @Test
     void testGetReactionType() {
-        Reaction reaction = new Reaction();
-        reaction.setReactionType(ReactionType.LIKE);
-        assertEquals(ReactionType.LIKE, reaction.getReactionType());
-
-    }
-
-    /**
-     * Test the setReactionId method
-     */
-    @Test
-    void testSetReactionId() {
-        Reaction reaction = new Reaction();
-        reaction.setReactionId(1);
-        assertEquals(1, reaction.getReactionId());
-    }
-
-    /**
-     * Test the setReactionType method
-     */
-    @Test
-    void testSetReactionType() {
         Reaction reaction = new Reaction();
         reaction.setReactionType(ReactionType.LIKE);
         assertEquals(ReactionType.LIKE, reaction.getReactionType());

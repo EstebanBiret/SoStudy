@@ -2,10 +2,17 @@ package utc.miage.sostudy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test class for the SoStudyApplication class
+ */
 @SpringBootTest
 class SoStudyApplicationTests {
 
+	/**
+	 * Test the context loading
+	 */
 	@Test
 	void contextLoads() {
 		// This test will check if the Spring application context loads successfully
@@ -18,9 +25,12 @@ class SoStudyApplicationTests {
 		// or if a repository method returns the expected results
 	}
 
+	/**
+	 * Test the main method
+	 */
     @Test
     void testMain() {
-		SoStudyApplication.main(new String[] {});
+		assertDoesNotThrow(() -> SoStudyApplication.main(new String[] {}));
     }
 
 }

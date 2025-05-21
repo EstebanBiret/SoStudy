@@ -23,7 +23,7 @@ public enum ReactionType {
     /**
      * Cry reaction
      */
-    CRY(" Cry", "/images/reactions/cry.png"),
+    CRY("Cry", "/images/reactions/cry.png"),
     
     /**
      * Angry reaction

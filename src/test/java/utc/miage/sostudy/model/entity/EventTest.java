@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the Event class
  */
-public class EventTest {
+class EventTest {
 
     /**
      * Test the addUser method
@@ -122,16 +122,6 @@ public class EventTest {
     }
 
     /**
-     * Test the getUsers method
-     */
-    void testGetUsers() {
-        Event event = new Event();
-        User user = new User();
-        event.addUser(user);
-        assertEquals(1, event.getUsers().size());
-    }
-
-    /**
      * Test the hashCode method
      */
     void testHashCode() {
@@ -150,95 +140,4 @@ public class EventTest {
         assertEquals(0, event.getUsers().size());
     }
 
-    /**
-     * Test the setEventBeginningDate method
-     */
-    void testSetEventBeginningDate() {
-        Event event = new Event();
-        event.setEventBeginningDate("2022-01-01");
-        assertEquals("2022-01-01", event.getEventBeginningDate());
-    }
-
-    /**
-     * Test the setEventDescription method
-     */
-    void testSetEventDescription() {
-        Event event = new Event();
-        event.setEventDescription("Description");
-        assertEquals("Description", event.getEventDescription());
-    }
-
-    /**
-     * Test the setEventEndDate method
-     */
-    void testSetEventEndDate() {
-        Event event = new Event();
-        event.setEventEndDate("2022-01-01");
-        assertEquals("2022-01-01", event.getEventEndDate());
-    }
-
-    /**
-     * Test the setEventImagePath method
-     */
-    void testSetEventImagePath() {
-        Event event = new Event();
-        event.setEventImagePath("image.jpg");
-        assertEquals("image.jpg", event.getEventImagePath());
-    }
-
-    /**
-     * Test the setEventLocation method
-     */
-    void testSetEventLocation() {
-        Event event = new Event();
-        event.setEventLocation("Location");
-        assertEquals("Location", event.getEventLocation());
-    }
-
-    /**
-     * Test the setEventName method
-     */
-    void testSetEventName() {
-        Event event = new Event();
-        event.setEventName("Event");
-        assertEquals("Event", event.getEventName());
-    }
-
-    /**
-     * Test the setEventPublicationDate method
-     */
-    void testSetEventPublicationDate() {
-        Event event = new Event();
-        event.setEventPublicationDate("2022-01-01");
-        assertEquals("2022-01-01", event.getEventPublicationDate());
-    }
-
-    /**
-     * Test the setNumberOfMembers method
-     */
-    void testSetNumberOfMembers() {
-        Event event = new Event();
-        event.setNumberOfMembers(1);
-        assertEquals(1, event.getNumberOfMembers());
-    }
-
-    /**
-     * Test the setUserCreator method
-     */
-    void testSetUserCreator() {
-        Event event = new Event();
-        User user = new User();
-        event.setUserCreator(user);
-        assertEquals(user, event.getUserCreator());
-    }
-
-    /**
-     * Test the setUsers method
-     */
-    void testSetUsers() {
-        Event event = new Event();
-        User user = new User();
-        event.addUser(user);
-        assertEquals(1, event.getUsers().size());
-    }
 }

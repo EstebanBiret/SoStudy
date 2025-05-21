@@ -1,12 +1,12 @@
 package utc.miage.sostudy.model.entity;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for the Repost entity.
  */
-public class RepostTest {
+class RepostTest {
     
     /**
      * Test the equals method.
@@ -17,7 +17,7 @@ public class RepostTest {
         Repost repost2 = new Repost();
         repost1.setId(1);
         repost2.setId(1);
-        Assertions.assertTrue(repost1.equals(repost2));
+        assertEquals(repost1.equals(repost2), true);
     }
 
     /**
@@ -27,7 +27,7 @@ public class RepostTest {
     void testGetContent() {
         Repost repost = new Repost();
         repost.setRepostContent("test");
-        Assertions.assertEquals("test", repost.getRepostContent());
+        assertEquals("test", repost.getRepostContent());
     }
 
     /**
@@ -37,7 +37,7 @@ public class RepostTest {
     void testGetId() {
         Repost repost = new Repost();
         repost.setId(1);
-        Assertions.assertEquals(1, repost.getId());
+        assertEquals(1, repost.getId());
     }
 
     /**
@@ -48,7 +48,7 @@ public class RepostTest {
         Repost repost = new Repost();
         Post originalPost = new Post();
         repost.setOriginalPost(originalPost);
-        Assertions.assertEquals(originalPost, repost.getOriginalPost());
+        assertEquals(originalPost, repost.getOriginalPost());
     }
 
     /**
@@ -58,7 +58,7 @@ public class RepostTest {
     void testGetRepostDate() {
         Repost repost = new Repost();
         repost.setRepostDate("test");
-        Assertions.assertEquals("test", repost.getRepostDate());
+        assertEquals("test", repost.getRepostDate());
     }
 
     /**
@@ -69,7 +69,7 @@ public class RepostTest {
         Repost repost = new Repost();
         User user = new User();
         repost.setUser(user);
-        Assertions.assertEquals(user, repost.getUser());
+        assertEquals(user, repost.getUser());
     }
 
     /**
@@ -79,60 +79,7 @@ public class RepostTest {
     void testHashCode() {
         Repost repost = new Repost();
         repost.setId(1);
-        Assertions.assertEquals(1, repost.hashCode());
-    }
-
-    /**
-     * Test the setContent method.
-     */
-    @Test
-    void testSetContent() {
-        Repost repost = new Repost();
-        repost.setRepostContent("test");
-        Assertions.assertEquals("test", repost.getRepostContent());
-    }
-
-    /**
-     * Test the setId method.
-     */
-    @Test
-    void testSetId() {
-        Repost repost = new Repost();
-        repost.setId(1);
-        Assertions.assertEquals(1, repost.getId());
-
-    }
-
-    /**
-     * Test the setOriginalPost method.
-     */
-    @Test
-    void testSetOriginalPost() {
-        Repost repost = new Repost();
-        Post originalPost = new Post();
-        repost.setOriginalPost(originalPost);
-        Assertions.assertEquals(originalPost, repost.getOriginalPost());
-    }
-
-    /**
-     * Test the setRepostDate method.
-     */
-    @Test
-    void testSetRepostDate() {
-        Repost repost = new Repost();
-        repost.setRepostDate("test");
-        Assertions.assertEquals("test", repost.getRepostDate());
-    }
-
-    /**
-     * Test the setUser method.
-     */
-    @Test
-    void testSetUser() {
-        Repost repost = new Repost();
-        User user = new User();
-        repost.setUser(user);
-        Assertions.assertEquals(user, repost.getUser());
+        assertEquals(1, repost.hashCode());
     }
 
     /**
@@ -141,7 +88,7 @@ public class RepostTest {
     @Test
     void testConstructor() {
         Repost repost = new Repost();
-        Assertions.assertNotNull(repost);
+        assertNotNull(repost);
     }
 
     /**
@@ -150,7 +97,7 @@ public class RepostTest {
     @Test
     void testConstructorWithParameters() {
         Repost repost = new Repost(new User(), new Post(), "2025-01-05", "test");
-        Assertions.assertNotNull(repost);
+        assertNotNull(repost);
     }
 
     /**
@@ -160,37 +107,7 @@ public class RepostTest {
     void testGetFormattedDate() {
         Repost repost = new Repost();
         repost.setFormattedDate("2025-01-05");
-        Assertions.assertEquals("2025-01-05", repost.getFormattedDate());
-    }
-
-    /**
-     * Test of setFormattedDate method.
-     */
-    @Test
-    void testSetFormattedDate() {
-        Repost repost = new Repost();
-        repost.setFormattedDate("test");
-        Assertions.assertEquals("test", repost.getFormattedDate());
-    }
-
-    /**
-     * Test of getRepostContent method.
-     */
-    @Test
-    void testGetRepostContent() {
-        Repost repost = new Repost();
-        repost.setRepostContent("test");
-        Assertions.assertEquals("test", repost.getRepostContent());
-    }
-
-    /**
-     * Test of setRepostContent method.
-     */
-    @Test
-    void testSetRepostContent() {
-        Repost repost = new Repost();
-        repost.setRepostContent("test");
-        Assertions.assertEquals("test", repost.getRepostContent());
+        assertEquals("2025-01-05", repost.getFormattedDate());
     }
 
 }

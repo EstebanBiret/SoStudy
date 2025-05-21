@@ -83,14 +83,6 @@ public class DataInitializer implements CommandLineRunner {
             return;
         }
 
-        /*TODO pour faire + réseau social d'étudiants, créer des comptes types étudiant, 
-        avoir des canaux du style "Soirée de x", "Groupe 3", "Promo utc MIAGE"..., des évènements du style "Soirée au Délirium le 20 mai 2025", "Atelier SpringBoot le 21 mai 2025", "Consultation de copies le 22 mai 2025"...
-        des posts qui fassent + étudiant,
-        des communautés centrés sur des sujets d'études ou promo par ex.
-
-        + voir si on pourrait implémenter l'envoi de post dans un canal
-        */
-
         //Création de l'utilisateur supprimé
         User deletedUser = new User();
         deletedUser.setName("Supprime");

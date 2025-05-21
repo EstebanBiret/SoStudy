@@ -6,6 +6,8 @@ import utc.miage.sostudy.model.entity.*;
 import utc.miage.sostudy.model.entity.dto.RepostDisplay;
 import utc.miage.sostudy.model.enums.ReactionType;
 import utc.miage.sostudy.repository.*;
+
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,6 +79,36 @@ public class UserController {
     @Autowired
     private EventRepository eventRepository;
 
+    /**
+     * Redirect to login page
+     */
+    private static final String redirectLogin = "redirect:/auth/login";
+
+    /**
+     * Redirect to home page
+     */
+    private static final String redirectHome = "redirect:/";
+
+    /**
+     * Current URI
+     */
+    private static final String currentUri = "currentUri";
+
+    /**
+     * Deleted user
+     */
+    private static final String utilisateurSupprime = "utilisateurSupprime";
+
+    /**
+     * Path to static resources
+     */
+    private static final String imgPath = "src/main/resources/static";
+
+    /**
+     * Logger
+     */
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
+
 
     /**
      * Checks if a post media file exists
@@ -86,7 +118,7 @@ public class UserController {
     public static boolean postMediaExists(String mediaPath) {
         if (mediaPath == null) return false;
         try {
-            return Files.exists(Paths.get("src/main/resources/static/" + mediaPath));
+            return Files.exists(Paths.get(imgPath + "/" + mediaPath));
         } catch (Exception e) {
             return false;
         }
@@ -102,9 +134,9 @@ public class UserController {
     @GetMapping("")
     public String user(Model model, HttpSession session, HttpServletRequest request) {
         if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
+            return redirectLogin;
         }
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
         return "profile/profile";
     }
 
@@ -119,9 +151,9 @@ public class UserController {
      */
     @GetMapping("/deleted-user-redirect")
     public String deletedUserRedirectPage(Model model, HttpSession session, HttpServletRequest request) {
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
         // user not logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
         return "deleted_user_redirect"; // Correspond à deleted-user-redirect.html
     }
 
@@ -137,10 +169,10 @@ public class UserController {
     public String userByPseudo(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
 
         // user not logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         // user is deleted
-        if (pseudo.equals("utilisateurSupprime")) {
+        if (pseudo.equals(utilisateurSupprime)) {
             return "redirect:/user/deleted-user-redirect";
         }
 
@@ -148,10 +180,10 @@ public class UserController {
         User userProfile = userRepository.findByPseudo(pseudo);
 
         // user not found
-        if (userProfile == null) {return "redirect:/";}
+        if (userProfile == null) {return redirectHome;}
 
         model.addAttribute("userProfile", userProfile);
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
 
         // --- GET POSTS ---
         List<Post> posts = postRepository.findByUser_IdUserAndCommentFatherIsNull(userProfile.getIdUser());
@@ -314,7 +346,7 @@ public class UserController {
     @GetMapping("/edit")
     public String editUser(Model model, HttpSession session, HttpServletRequest request) {
         if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
+            return redirectLogin;
         }
         model.addAttribute("niveauxEtude", STUDY_LEVELS);
         return "profile/form_edit_profile";
@@ -348,9 +380,7 @@ public class UserController {
                                @RequestParam String studyDomain,
                                @RequestParam String university) throws IOException {
 
-        if (session.getAttribute("user") == null) {
-            return "redirect:/auth/login";
-        }
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         user.setName(nom);
@@ -367,17 +397,17 @@ public class UserController {
             // Supprimer l'ancienne image si elle n'est pas la photo par défaut
             String oldImagePath = user.getPersonImagePath();
             if (oldImagePath != null && !oldImagePath.contains("defaultProfilePic.jpg")) {
-                Path oldImageFilePath = Paths.get("src/main/resources/static" + oldImagePath);
+                Path oldImageFilePath = Paths.get(imgPath + oldImagePath);
                 try {
                     Files.deleteIfExists(oldImageFilePath);
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de la suppression de l'ancienne image : " + e.getMessage());
+                    logger.info("Erreur lors de la suppression de l'ancienne image : " + e.getMessage());
                 }
             }
 
             // Ajouter la nouvelle image
             String rawFileName = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
-            Path filePath = Paths.get("src/main/resources/static/images/profiles_pictures", rawFileName);
+            Path filePath = Paths.get(imgPath + "/images/profiles_pictures", rawFileName);
             Files.createDirectories(filePath.getParent());
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             String fileName = "/images/profiles_pictures/" + rawFileName;
@@ -412,14 +442,13 @@ public class UserController {
      */
     @PostMapping("/delete")
     public String deleteUser(Model model, HttpSession session) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
+        if (session.getAttribute("user") == null) {return redirectLogin;}
+
         // Get the user from the session
         User user = (User) session.getAttribute("user");
 
         //Get the deleted user
-        User deletedUser = userRepository.findByPseudo("utilisateurSupprime");
+        User deletedUser = userRepository.findByPseudo(utilisateurSupprime);
 
         //suppression de tous les messages
         List<Message> messages = messageRepository.findBySender(user);
@@ -502,11 +531,11 @@ public class UserController {
             // suppression du media du post
             String mediaPath = post.getPostMediaPath();
             if (mediaPath != null) {
-                Path mediaFilePath = Paths.get("src/main/resources/static" + mediaPath);
+                Path mediaFilePath = Paths.get(imgPath + mediaPath);
                 try {
                     Files.deleteIfExists(mediaFilePath);
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de la suppression du fichier média : " + e.getMessage());
+                    logger.info("Erreur lors de la suppression du fichier média : " + e.getMessage());
                 }
             }
             // suppression du post
@@ -534,11 +563,11 @@ public class UserController {
         //suppression de la photo de profil si pas celle par defaut
         String imagePath = user.getPersonImagePath();
         if (imagePath != null && !imagePath.contains("defaultProfilePic.jpg")) {
-            Path imageFilePath = Paths.get("src/main/resources/static" + imagePath);
+            Path imageFilePath = Paths.get(imgPath + imagePath);
             try {
                 Files.deleteIfExists(imageFilePath);
             } catch (IOException e) {
-                System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
             }
         }
 
@@ -548,8 +577,7 @@ public class UserController {
         userRepository.delete(user);
         // Invalidate the session
         session.invalidate();
-        // Redirect to the login page
-        return"redirect:/auth/login";
+        return redirectLogin;
     }
 
     /**
@@ -562,18 +590,18 @@ public class UserController {
      */
     @PostMapping("/follow/{pseudo}")
     public String followUser(Model model, HttpSession session, @PathVariable String pseudo) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
+
+        if (session.getAttribute("user") == null) {return redirectLogin;}
+
         User user = (User) session.getAttribute("user");
         User userToFollow = userRepository.findByPseudo(pseudo);
         if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
-            return "redirect:/";
+            return redirectHome;
         }
         // Check if the user is already following the user to follow
         if (user.getFollowing().contains(userToFollow)) {
             // User is already following, do nothing or show a message
-            return "redirect:/";
+            return redirectHome;
         }
         // Add the user to the following list
         user.addFollowing(userToFollow);
@@ -584,7 +612,7 @@ public class UserController {
         userRepository.save(userToFollow);
         // Update the session attribute
         session.setAttribute("user", user);
-        return "redirect:/";
+        return redirectHome;
     }
 
     /**
@@ -596,18 +624,17 @@ public class UserController {
      */
     @PostMapping("/unfollow/{pseudo}")
     public String unfollowUser(Model model, HttpSession session, @PathVariable String pseudo) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
+
+        if (session.getAttribute("user") == null) {return redirectLogin;}
+
         User user = (User) session.getAttribute("user");
         User userToFollow = userRepository.findByPseudo(pseudo);
         if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
-            return "redirect:/";
+            return redirectHome;
         }
         // Check if the user is not following the user to unfollow
         if (!user.getFollowing().contains(userToFollow)) {
-            // User is not following, do nothing or show a message
-            return "redirect:/";
+            return redirectHome;
         }
         // Remove the user from the following list
         user.removeFollowing(userToFollow);
@@ -618,7 +645,7 @@ public class UserController {
         userRepository.save(userToFollow);
         // Update the session attribute
         session.setAttribute("user", user);
-        return "redirect:/";
+        return redirectHome;
     }
 
     /**
@@ -632,9 +659,8 @@ public class UserController {
      */
     @GetMapping("/search/{pseudo}")
     public String searchUser(@PathVariable String pseudo, Model model, HttpSession session, HttpServletRequest request) {
-        if (session.getAttribute("user") == null) {
-            return"redirect:/auth/login";
-        }
+
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         List<User> users = userRepository.findByPseudoLike(pseudo);
@@ -642,12 +668,12 @@ public class UserController {
             users.remove(user);
         }
 
-        if(users.contains(userRepository.findByPseudo("utilisateurSupprime"))){
-            users.remove(userRepository.findByPseudo("utilisateurSupprime"));
+        if(users.contains(userRepository.findByPseudo(utilisateurSupprime))){
+            users.remove(userRepository.findByPseudo(utilisateurSupprime));
         }
 
         List<Integer> nbPost = new ArrayList<>();
-        List<Repost> repostsFromUser = new ArrayList<>();
+        List<Repost> repostsFromUser;
         for(User u : users){
             repostsFromUser = repostRepository.findByUser(u);
             nbPost.add(postRepository.findByUser_IdUserAndCommentFatherIsNull(u.getIdUser()).size() + repostsFromUser.size());
@@ -657,7 +683,7 @@ public class UserController {
 
         model.addAttribute("recherche", pseudo);
         model.addAttribute("users", users);
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
         return "profile/search_profile";
     }
 

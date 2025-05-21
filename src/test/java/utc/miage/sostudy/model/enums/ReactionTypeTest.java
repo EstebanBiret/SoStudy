@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Test class for the ReactionType enum
  */
-public class ReactionTypeTest {
+class ReactionTypeTest {
 
     /**
      * Test the getName method
@@ -15,23 +15,23 @@ public class ReactionTypeTest {
     @Test
     void testConstructorWithParameters() {
         // Test LIKE constant
-        assertEquals(ReactionType.LIKE.getName(), "Like");
-        assertEquals(ReactionType.LIKE.getImagePath(), "/images/reactions/like.png");
+        assertEquals("Like", ReactionType.LIKE.getName());
+        assertEquals("/images/reactions/like.png", ReactionType.LIKE.getImagePath());
         
         // Test LOVE constant
-        assertEquals(ReactionType.LOVE.getName(), "Love");
-        assertEquals(ReactionType.LOVE.getImagePath(), "/images/reactions/love.png");
+        assertEquals("Love", ReactionType.LOVE.getName());
+        assertEquals("/images/reactions/love.png", ReactionType.LOVE.getImagePath());
         
         // Test LAUGH constant
-        assertEquals(ReactionType.LAUGH.getName(), "Laugh");
-        assertEquals(ReactionType.LAUGH.getImagePath(), "/images/reactions/laugh.png");
+        assertEquals("Laugh", ReactionType.LAUGH.getName());
+        assertEquals("/images/reactions/laugh.png", ReactionType.LAUGH.getImagePath());
         
         // Test CRY constant
-        assertEquals(ReactionType.CRY.getName(), " Cry");
-        assertEquals(ReactionType.CRY.getImagePath(), "/images/reactions/cry.png");
+        assertEquals("Cry", ReactionType.CRY.getName());
+        assertEquals("/images/reactions/cry.png", ReactionType.CRY.getImagePath());
         
         // Test ANGRY constant
-        assertEquals(ReactionType.ANGRY.getName(), "Angry");
-        assertEquals(ReactionType.ANGRY.getImagePath(), "/images/reactions/angry.png");
+        assertEquals("Angry", ReactionType.ANGRY.getName());
+        assertEquals("/images/reactions/angry.png", ReactionType.ANGRY.getImagePath());
     }
 }

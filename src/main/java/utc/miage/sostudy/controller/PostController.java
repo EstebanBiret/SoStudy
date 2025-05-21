@@ -82,6 +82,21 @@ public class PostController {
     private String uploadDir = "./src/main/resources/static/images/posts_images/";
 
     /**
+     * Redirect to home page
+     */
+    private static final String HOME = "redirect:/";
+
+    /**
+     * Redirect to login page
+     */
+    private static final String LOGIN = "redirect:/auth/login";
+
+    /**
+     * Success litteral
+     */
+    private static final String SUCCESS = "success";
+
+    /**
      * Formats the date of a post without the "a posté" prefix
      * @param postDate the date of the post
      * @return the formatted date of the post
@@ -115,10 +130,8 @@ public class PostController {
                 
                 // Add context to formatted date
                 String context = "commenté";
-                if (comment.getCommentFather() != null) {
-                    if (comment.getCommentFather().getCommentFather() != null) {
-                        context = "répondu";
-                    }
+                if (comment.getCommentFather() != null && comment.getCommentFather().getCommentFather() != null) {
+                    context = "répondu";
                 }
                 String formattedDate = "a " + context + " " + comment.getFormattedDate();
                 comment.setFormattedDate(formattedDate);
@@ -140,14 +153,14 @@ public class PostController {
      * @return redirect to home page
      */
     @GetMapping("")
-    public String getPostEmpty() {return "redirect:/";}
+    public String getPostEmpty() {return HOME;}
 
     /**
      * Redirect to home page if the post id is empty
      * @return redirect to home page
      */
     @GetMapping("/")
-    public String getPostEmpty2() {return "redirect:/";}
+    public String getPostEmpty2() {return HOME;}
 
     /**
      * Get a post by id
@@ -161,13 +174,13 @@ public class PostController {
     public String getPost(@PathVariable Integer id, HttpServletRequest request, Model model, HttpSession session) {
         
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return LOGIN;}
 
         //post not found
-        if(postRepository.findById(id).isEmpty()) {return "redirect:/";}
+        if(postRepository.findById(id).isEmpty()) {return HOME;}
 
         //if the post is a comment, redirect
-        if(postRepository.findById(id).get().getCommentFather() != null) {return "redirect:/";}
+        if(postRepository.findById(id).get().getCommentFather() != null) {return HOME;}
 
         model.addAttribute("currentUri", request.getRequestURI());
 
@@ -263,7 +276,7 @@ public class PostController {
     @GetMapping("/publish")
     public String publishPost(HttpServletRequest request, Model model, HttpSession session) {
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return LOGIN;}
         
         User user = (User) session.getAttribute("user");
 
@@ -291,7 +304,7 @@ public class PostController {
         HttpServletRequest request, HttpSession session) throws IOException {
 
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return LOGIN;}
         
         User user = (User) session.getAttribute("user");
 
@@ -339,7 +352,7 @@ public class PostController {
                                             HttpSession session) {
         User currentUser = (User) session.getAttribute("user");
         if (currentUser == null) {
-            return Map.of("success", false, "error", "User not authenticated");
+            return Map.of(SUCCESS, false, "error", "User not authenticated");
         }
 
         try {
@@ -354,7 +367,7 @@ public class PostController {
             postRepository.save(comment);
 
             return Map.of(
-                "success", true,
+                SUCCESS, true,
                 "commentId", comment.getPostId(),
                 "user", Map.of(
                     "pseudo", currentUser.getPseudo(),
@@ -363,7 +376,7 @@ public class PostController {
                 "formattedDate", comment.getPostPublicationDate()
             );
         } catch (Exception e) {
-            return Map.of("success", false, "error", e.getMessage());
+            return Map.of(SUCCESS, false, "error", e.getMessage());
         }
     }
 
@@ -377,16 +390,16 @@ public class PostController {
     @PostMapping("/delete/{id}")
     public String deletePost(@PathVariable Integer id, HttpServletRequest request, HttpSession session) {
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return LOGIN;}
         
         User currentUser = (User) session.getAttribute("user");
         
         //post not found
-        if(postRepository.findById(id).isEmpty()) {return "redirect:/";}
+        if(postRepository.findById(id).isEmpty()) {return HOME;}
 
         //user is not the owner of the post
-        if (!postRepository.findByUser_IdUser(currentUser.getIdUser()).stream().anyMatch(p -> p.getPostId().equals(id))) {
-            return "redirect:/";
+        if (postRepository.findByUser_IdUser(currentUser.getIdUser()).stream().noneMatch(p -> p.getPostId().equals(id))) {
+            return HOME;
         }
 
         //delete all reposts of the post
@@ -398,7 +411,7 @@ public class PostController {
         //delete post
         postRepository.deleteById(id);
 
-        return "redirect:/";
+        return HOME;
     }
 
     /**

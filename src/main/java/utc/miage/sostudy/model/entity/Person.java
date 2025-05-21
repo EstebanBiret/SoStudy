@@ -56,7 +56,7 @@ public abstract class Person {
      * @param birthDate the date of birth of the person
      * @param personImagePath the path of the image of the person
      */
-    public Person(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath) {
+    protected Person(String name, String firstName, String email, String password, String pseudo, String birthDate, String personImagePath) {
         this.name = name;
         this.firstName = firstName;
         this.email = email;
@@ -70,7 +70,7 @@ public abstract class Person {
      * Default constructor of the Person class
      */
 
-    public Person() {}
+    protected Person() {}
 
     /**
      * Getter for the name of the person

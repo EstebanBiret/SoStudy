@@ -35,6 +35,26 @@ public class AuthController {
     private UserRepository userRepo;
 
     /**
+     * Redirect to home page
+     */
+    private static final String HOME = "redirect:/";
+
+    /**
+     * Redirect to login page
+     */
+    private static final String LOGIN = "auth/login";
+
+    /**
+     * Path for uploading files.
+     */
+    private String uploadDir = "./src/main/resources/static/images/profiles_pictures/";
+
+    /**
+     * Default profile picture path.
+     */
+    private String defaultProfilePic = "/images/profiles_pictures/defaultProfilePic.jpg";
+
+    /**
      * Default path.
      * @param model the model to be used in the view
      * @param session the HTTP session
@@ -42,7 +62,7 @@ public class AuthController {
      * */
     @GetMapping("")
     public String index(Model model, HttpSession session) {
-        return "redirect:/auth/login";
+        return HOME + LOGIN;
     }
 
     /**
@@ -53,13 +73,8 @@ public class AuthController {
      * */
     @GetMapping("/")
     public String indexSecond(Model model, HttpSession session) {
-        return "redirect:/auth/login";
+        return HOME + LOGIN;
     }
-
-    /**
-     * Path for uploading files.
-     */
-    private String uploadDir = "./src/main/resources/static/images/profiles_pictures/";
 
     /**
      * Displays the login page.
@@ -70,9 +85,9 @@ public class AuthController {
     @GetMapping("/login")
     public String login(Model model, HttpSession session) {
         if (session.getAttribute("user") != null) {
-            return"redirect:/";
+            return HOME;
         }
-        return "auth/login";
+        return LOGIN;
     }
 
     /**
@@ -90,16 +105,16 @@ public class AuthController {
             User u = userRepo.findByEmail(email);
             if(checkPassword(password, u.getPassword())) {
                 session.setAttribute("user", u);
-                return "redirect:/";
+                return HOME;
             }else{
                 loginError = true;
                 model.addAttribute("loginError", loginError);
-                return "auth/login";
+                return LOGIN;
             }
         }else {
             loginError = true;
             model.addAttribute("loginError", loginError);
-            return "auth/login";
+            return LOGIN;
         }
     }
 
@@ -112,7 +127,7 @@ public class AuthController {
     @GetMapping("/register")
     public String register(Model model,HttpSession session) {
         if (session.getAttribute("user") != null) {
-            return"redirect:/";
+            return HOME;
         }
         model.addAttribute("niveauxEtude", STUDY_LEVELS);
         return "auth/register";
@@ -153,7 +168,7 @@ public class AuthController {
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/profiles_pictures/" + rawFileName;
         } else {
-            fileName = "/images/profiles_pictures/defaultProfilePic.jpg";
+            fileName = defaultProfilePic;
         }
 
         boolean error = false;
@@ -201,9 +216,8 @@ public class AuthController {
     @PostMapping("/logout")
     public String logout(Model model, HttpSession session) {
         session.removeAttribute("user");
-        return "redirect:/auth/login"; // Redirect to the login page after logout
+        return HOME + LOGIN;
     }
-
 
     /**
      * Hashes the password using BCrypt.

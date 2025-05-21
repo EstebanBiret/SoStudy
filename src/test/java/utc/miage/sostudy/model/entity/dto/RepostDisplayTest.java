@@ -1,16 +1,16 @@
 package utc.miage.sostudy.model.entity.dto;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 import utc.miage.sostudy.model.entity.Post;
 import utc.miage.sostudy.model.entity.Repost;
 
-import org.junit.jupiter.api.Assertions;
-
 /**
  * Class testing the RepostDisplay class
  */
-public class RepostDisplayTest {
+class RepostDisplayTest {
 
     /**
      * Test the getOriginalPost method
@@ -20,7 +20,7 @@ public class RepostDisplayTest {
         RepostDisplay repostDisplay = new RepostDisplay();
         Post post = new Post();
         repostDisplay.setOriginalPost(post);
-        Assertions.assertEquals(post, repostDisplay.getOriginalPost());
+        assertEquals(post, repostDisplay.getOriginalPost());
     }
 
     /**
@@ -31,7 +31,7 @@ public class RepostDisplayTest {
         RepostDisplay repostDisplay = new RepostDisplay();
         Repost repost = new Repost();
         repostDisplay.setRepost(repost);
-        Assertions.assertEquals(repost, repostDisplay.getRepost());
+        assertEquals(repost, repostDisplay.getRepost());
     }
 
     /**
@@ -41,29 +41,7 @@ public class RepostDisplayTest {
     void testEquals() {
         RepostDisplay repostDisplay = new RepostDisplay();
         RepostDisplay repostDisplay2 = new RepostDisplay();
-        Assertions.assertEquals(repostDisplay, repostDisplay2);
-    }
-
-    /**
-     * Test the getOriginalPost method
-     */
-    @Test
-    void testGetOriginalPost2() {
-        RepostDisplay repostDisplay = new RepostDisplay();
-        Post post = new Post();
-        repostDisplay.setOriginalPost(post);
-        Assertions.assertEquals(post, repostDisplay.getOriginalPost());
-    }
-
-    /**
-     * Test the getRepost method
-     */
-    @Test
-    void testGetRepost2() {
-        RepostDisplay repostDisplay = new RepostDisplay();
-        Repost repost = new Repost();
-        repostDisplay.setRepost(repost);
-        Assertions.assertEquals(repost, repostDisplay.getRepost());
+        assertEquals(repostDisplay, repostDisplay2);
     }
 
     /**
@@ -73,7 +51,7 @@ public class RepostDisplayTest {
     void testHashCode() {
         RepostDisplay repostDisplay = new RepostDisplay();
         RepostDisplay repostDisplay2 = new RepostDisplay();
-        Assertions.assertEquals(repostDisplay.hashCode(), repostDisplay2.hashCode());
+        assertEquals(repostDisplay.hashCode(), repostDisplay2.hashCode());
     }
 
     /**
@@ -84,18 +62,7 @@ public class RepostDisplayTest {
         RepostDisplay repostDisplay = new RepostDisplay();
         Post post = new Post();
         repostDisplay.setOriginalPost(post);
-        Assertions.assertEquals(post, repostDisplay.getOriginalPost());
-    }
-
-    /**
-     * Test the setRepost method
-     */
-    @Test
-    void testSetRepost() {
-        RepostDisplay repostDisplay = new RepostDisplay();
-        Repost repost = new Repost();
-        repostDisplay.setRepost(repost);
-        Assertions.assertEquals(repost, repostDisplay.getRepost());
+        assertEquals(post, repostDisplay.getOriginalPost());
     }
 
     /**
@@ -104,6 +71,6 @@ public class RepostDisplayTest {
     @Test
     void testConstructorWithParameters() {
         RepostDisplay repostDisplay = new RepostDisplay(new Repost(), new Post());
-        Assertions.assertNotNull(repostDisplay);
+        assertNotNull(repostDisplay);
     }
 }

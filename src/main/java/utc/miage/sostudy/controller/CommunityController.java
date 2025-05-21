@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 /**
  * Controller for the Community entity
@@ -88,6 +89,31 @@ public class CommunityController {
     private String uploadDir = "./src/main/resources/static/images/community/";
 
     /**
+     * Logger
+     */
+    private static final Logger logger = Logger.getLogger(CommunityController.class.getName());
+
+    /**
+     * Redirect to login
+     */
+    private static final String redirectLogin = "redirect:/auth/login";
+
+    /**
+     * Redirect to community
+     */
+    private static final String redirectCommunity = "redirect:/community";
+
+    /**
+     * Current URI
+     */
+    private static final String currentUri = "currentUri";
+
+    /**
+     * Default community image path
+     */
+    private static final String defaultCommunityImage = "/images/community/defaultCommunityImage.jpg";
+
+    /**
      * Get the name of the month in French
      * @param month the month
      * @return the name of the month in French
@@ -110,7 +136,7 @@ public class CommunityController {
     @GetMapping("")
     public String getAllCommunities(Model model, HttpSession session, HttpServletRequest request) {
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return redirectLogin;}
         
         User user = (User) session.getAttribute("user");
         List<Community> communities = communityRepository.findAllOrderByCreationDate();
@@ -135,7 +161,7 @@ public class CommunityController {
 
         model.addAttribute("communities", communities);
         model.addAttribute("user", user);
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
 
         return "community/list";
     }
@@ -150,7 +176,7 @@ public class CommunityController {
     public String joinCommunity(@PathVariable Integer communityId, HttpSession session) {
 
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
@@ -164,7 +190,7 @@ public class CommunityController {
                 communityRepository.save(community);
             }
         }
-        return "redirect:/community";
+        return redirectCommunity;
     }
 
     /**
@@ -177,7 +203,7 @@ public class CommunityController {
     public String leaveCommunity(@PathVariable Integer communityId, HttpSession session) {
         
         // Check if user is logged in
-        if (session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if (session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
@@ -191,7 +217,7 @@ public class CommunityController {
                 communityRepository.save(community);
             }
         }
-        return "redirect:/community";
+        return redirectCommunity;
     }
 
     /**
@@ -230,7 +256,7 @@ public class CommunityController {
             Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
         } else {
-            fileName = "/images/community/defaultCommunityImage.jpg";
+            fileName = defaultCommunityImage;
         }
         community.setCommunityImagePath(fileName);
 
@@ -289,7 +315,7 @@ public class CommunityController {
                 try {
                     Files.deleteIfExists(oldImageFilePath);
                 } catch (IOException e) {
-                    System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                    logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                 }
             }
             String rawFileName = UUID.randomUUID().toString() + "_" + communityImage.getOriginalFilename();
@@ -325,7 +351,7 @@ public class CommunityController {
     public String deleteCommunity(@PathVariable Integer communityId, Model model, HttpSession session) {
         
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
@@ -358,7 +384,7 @@ public class CommunityController {
                     try {
                         Files.deleteIfExists(imageFilePath);
                     } catch (IOException e) {
-                        System.err.println("Erreur lors de la suppression de l'image : " + e.getMessage());
+                        logger.info("Erreur lors de la suppression de l'image : " + e.getMessage());
                     }
                 }
                 
@@ -372,7 +398,7 @@ public class CommunityController {
             }
         }
 
-        return "redirect:/community";
+        return redirectCommunity;
     }
 
     /**
@@ -387,7 +413,7 @@ public class CommunityController {
     public String getCommunity(@PathVariable Integer communityId, Model model, HttpSession session, HttpServletRequest request) {
         
         //user not logged in
-        if(session.getAttribute("user") == null) {return "redirect:/auth/login";}
+        if(session.getAttribute("user") == null) {return redirectLogin;}
 
         User user = (User) session.getAttribute("user");
         
@@ -398,12 +424,12 @@ public class CommunityController {
         //community doesn't exist
         Optional<Community> optionalCommunity = communityRepository.findById(communityId);
         if (!optionalCommunity.isPresent()) {
-            return "redirect:/community";
+            return redirectCommunity;
         }
 
         //user is not subscribed to the community
         if (!communityRepository.existsByUsers_IdUserAndCommunityId(user.getIdUser(), communityId)) {
-            return "redirect:/community";
+            return redirectCommunity;
         }
 
         List<Post> posts = communityRepository.findById(communityId).get().getPosts();
@@ -412,7 +438,7 @@ public class CommunityController {
         if(posts.isEmpty()) {
             model.addAttribute("posts", new ArrayList<>());
             model.addAttribute("user", user);
-            model.addAttribute("currentUri", request.getRequestURI());
+            model.addAttribute(currentUri, request.getRequestURI());
             return "community/details";
         }
 
@@ -493,7 +519,7 @@ public class CommunityController {
         });
 
         model.addAttribute("user", user);
-        model.addAttribute("currentUri", request.getRequestURI());
+        model.addAttribute(currentUri, request.getRequestURI());
         model.addAttribute("postMediaExistsMap", postMediaExistsMap);
         model.addAttribute("posts", posts);
         model.addAttribute("userReactedPosts", userReactedPosts);
