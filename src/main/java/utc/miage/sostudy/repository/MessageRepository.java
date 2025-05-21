@@ -11,5 +11,11 @@ import java.util.List;
  */
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
+
+    /**
+     * Find all messages by channel id
+     * @param channelId the id of the channel
+     * @return the list of messages
+     */
     List<Message> findByChannel_ChannelIdOrderByDateMessageAsc(int channelId);
 }

@@ -102,10 +102,10 @@ public class Event {
      * @param eventId the id of the event
      * @param eventName the name of the event
      * @param eventPublicationDate the date of publication of the event
-     * @param eventContent the content of the event
+     * @param eventDescription the description of the event
      * @param eventBeginningDate the date of start of the event
      * @param eventEndDate the date of end of the event
-     * @param eventPlace the location of the event
+     * @param eventLocation the location of the event
      */
     public Event(int eventId, String eventName, String eventPublicationDate, String eventDescription, String eventBeginningDate, String eventEndDate, String eventLocation) {
         this.eventId = eventId;
