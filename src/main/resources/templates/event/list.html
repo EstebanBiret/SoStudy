@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>SoStudy | Événements</title>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
+        <link rel="stylesheet" th:href="@{/css/event/list.css}">
+        <link rel="stylesheet" th:href="@{/css/index.css}">
+        <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
+    </head>
+    <body>
+        <!-- Navbar -->
+        <div th:replace="common/navbar :: navbar(${currentUri})"></div>
+
+        <div class="container">
+            <h1 style="text-align: center;">Événements</h1>
+            
+            <div th:if="${events.isEmpty()}">
+                <div class="no-following-container">
+                    <div class="no-following-content">
+                        <h2>Aucun événement</h2>
+                        <p>Il n'y a pas encore d'événement. Soyez le premier à en publier un !</p>
+                        <a onclick="event.preventDefault(); openCreateModal()" class="createEventBtn">
+                            Publier un événement
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div th:unless= "${events.isEmpty()}" class="event-list">
+                <a onclick="event.preventDefault(); openCreateModal()" class="createEventBtn2">
+                    Publier un événement
+                </a>
+
+                <div th:each="event : ${events}" class="event-card" th:data-event-id-card="${event.eventId}">
+                    <div class="event-image">
+                        <img th:src="${event.eventImagePath}" alt="Image de l'événement">
+                    </div>
+                    <div class="event-info">
+                        <h2 th:text="${event.eventName}"></h2>
+                        <p th:text="${event.eventDescription}"></p>
+                        <div class="event-meta">
+                            <span class="creation-info">
+                                <span class="label">Publié par</span>
+                                <a href="" th:href="@{/user/{pseudo}(pseudo=${event.userCreator.pseudo})}" class="creator-link">
+                                    <span th:text="${event.userCreator.pseudo}"></span>
+                                </a>
+                                <span class="label">le</span>
+                                <span class="date" th:text="${event.eventPublicationDate}"></span>
+                            </span>
+                        </div>
+
+                        <div class="event-location-time">
+                            <div class="event-location">
+                                <img th:src="@{/images/logos/location.svg}" alt="Lieu de l'événement">
+                                <span th:text="${event.eventLocation}"></span>
+                            </div>
+                            <div class="event-time">
+                                <img th:src="@{/images/logos/calendar.svg}" alt="Calendrier de l'événement">
+                                <span th:text="${event.eventBeginningDate}"></span>
+                                <span class="label">↣</span>
+                                <span th:text="${event.eventEndDate}"></span>
+                            </div>
+                        </div>
+
+                        <div class="event-stats">
+                            <div class="stat">
+                                <span th:text="${event.numberOfMembers}" th:data-event-id="${event.eventId}">0</span>
+                                <span>participant(s)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="event-actions" th:data-event-id="${event.eventId}">
+                        <!-- Creator actions -->
+                        <a th:if="${user.idUser == event.userCreator.idUser}" href="" class="btn" id="edit"
+                           th:data-user-id="${user.idUser}"
+                           th:data-event-id="${event.eventId}"
+                           th:data-event-name="${event.eventName}"
+                           th:data-event-description="${event.eventDescription}"
+                           onclick="event.preventDefault(); openEditModal(this)">
+                            Modifier
+                        </a>
+                        <a th:if="${user.idUser == event.userCreator.idUser}" href="" class="btn" id="delete"
+                           th:data-user-id="${user.idUser}"
+                           th:data-event-id="${event.eventId}"
+                           th:data-event-name="${event.eventName}"
+                           onclick="event.preventDefault(); openDeleteModal(this)">
+                            Supprimer
+                        </a>
+                        
+                        <!-- Member actions -->
+                        <a th:if="${event.users.contains(user) && user.idUser != event.userCreator.idUser}"
+                           href=""
+                           class="btn"
+                           id="leave"
+                           th:data-event-id="${event.eventId}"
+                           data-is-member="true"
+                           onclick="event.preventDefault(); toggleEventMembership(this)">
+                            Ne plus participer
+                        </a>
+                        
+                        <!-- Not a member actions -->
+                        <a th:if="${!event.users.contains(user) && user.idUser != event.userCreator.idUser}"
+                           href=""
+                           class="btn"
+                           id="join"
+                           th:data-event-id="${event.eventId}"
+                           data-is-member="false"
+                           onclick="event.preventDefault(); toggleEventMembership(this)">
+                            Participer
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de suppression -->
+        <div id="deleteModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="deleteEventName"></h2>
+                <p class="warning">Êtes-vous sûr de vouloir supprimer cet événement ? Cette action est irréversible.</p>
+                <div class="modal-actions">
+                    <button onclick="confirmDelete()" class="btn btn-danger">Supprimer</button>
+                    <button onclick="closeDeleteModal()" class="btn">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de modification -->
+        <div id="editModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="editEventName">Modifier l'événement</h2>
+                <form id="editEventForm" method="post" enctype="multipart/form-data">
+                    <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement" required>
+                    <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement" required>
+                    <input type="file" id="eventImage" name="eventImage" accept="image/*">
+                    <small>Moins de 2 Mo</small>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn editEventBtn">Modifier</button>
+                        <button onclick="closeEditModal()" class="btn btn-danger">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de création -->
+        <div id="createModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="createEventFormTitle">Publier un événement</h2>
+                <form id="createEventForm" method="post" enctype="multipart/form-data">
+                    <input type="text" id="eventName" name="eventName" placeholder="Nom de l'événement" required>
+                    <input type="text" id="eventDescription" name="eventDescription" placeholder="Description de l'événement" required>
+                    <input type="file" id="eventImage" name="eventImage" accept="image/*">
+                    <small>Moins de 2 Mo</small>
+                    <div class="modal-actions">
+                        <button type="submit" class="btn createEventBtn">Publier</button>
+                        <button onclick="closeCreateModal()" class="btn btn-danger">Annuler</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script th:src="@{/js/event/event.js}"></script>
+    </body>
+</html>

@@ -182,6 +182,7 @@ body {
     white-space: pre-line;
     white-space: pre-wrap;
     word-break: break-word;
+    margin-top: 10px;
 }
 
 .buttons {
