@@ -23,13 +23,31 @@ function openModal() {
         console.error("Échec du parsing JSON du channel :", e);
         return;
     }
+    const modalBody = document.querySelector(".modal-body");
+    modalBody.innerHTML= `<div class="channel-name">
+            <p class="p-modal p-group">Nom de la conversation :</p>
+        </div>
+        <div class="share-link">
+            <input type="text" name="channelName" id="channelName" placeholder="Nom du groupe" value="${ parsedData.channelName}" readonly>
+        </div>`
 
-    if (idUser == parsedData.creator.idUser) isCreator = true;
+    if (idUser == parsedData.creator.idUser) {
+        isCreator = true;
+        const modal = document.querySelector(".modal");
+        modal.classList.add("full-height");
+
+        const channelName = document.getElementById("channelName");
+        channelName.setAttribute("readonly", "false");
+    }
 
     const users = parsedData.users || [];
 
-    const modalBody = document.querySelector(".p-modal");
-    modalBody.innerHTML = "Membres du groupe : <br><br>";
+    modalBody.innerHTML+= `<div class="group-container">
+                                <p class="p-modal p-group">Membres du groupe : </p>
+                                <div class="user-group-list"></div>
+                            </div>`;
+
+    const groupList = document.querySelector(".user-group-list");
 
     if (users.length === 0) {
         modalBody.innerHTML += "<em>Aucun membre trouvé</em>";
@@ -69,12 +87,47 @@ function openModal() {
 
         line.classList.add("modal-user");
 
-        const channelName = document.getElementById("channelName");
-        if (channelName) {
-            channelName.value = parsedData.channelName;
-        }
-        modalBody.appendChild(line);
+        groupList.appendChild(line);
     });
+
+    let CreatorForm = "";
+    if (isCreator) {
+        CreatorForm = `    
+                <div class="channel-image">
+                    <p class="p-modal p-group">Image de la conversation :</p>
+                    <input type="file" id="channel-image-input" accept="image/*" style="display: none">
+                        <label for="channel-image-input" class="channel-image-label">
+                            <img src="/images/logos/upload-black.svg" alt="Upload" class="upload-icon">
+                            <img src="/images/logos/upload-purple.svg" alt="Upload" class="upload-icon-hover">
+                            <span class="upload-text">Télécharger une image</span>
+                        </label>
+        
+                </div>
+                <div class="buttons">
+                    <button type="button" class="btn cancel" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn confirm" id="confirmUpdate">Valider</button>
+                </div>`
+        let label = document.querySelector('.channel-image-label');
+        let uploadIcon = document.querySelector('.upload-icon');
+        let uploadIconHover = document.querySelector('.upload-icon-hover');
+        label.addEventListener('mouseover', function() {
+            uploadIcon.style.display = 'none';
+            uploadIconHover.style.display = 'block';
+        });
+        label.addEventListener('mouseout', function() {
+            uploadIcon.style.display = 'block';
+            uploadIconHover.style.display = 'none';
+        });
+    }
+    else {
+        CreatorForm = `
+        <div class="buttons">
+            <button type="button" class="btn cancel" onclick="closeModal()">Quitte le groupe</button>
+        </div>
+        `
+    }
+
+    modalBody.innerHTML += CreatorForm;
 
     document.getElementById("myModal").style.display = "flex";
 }
@@ -92,17 +145,7 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-let label = document.querySelector('.channel-image-label');
-let uploadIcon = document.querySelector('.upload-icon');
-let uploadIconHover = document.querySelector('.upload-icon-hover');
-label.addEventListener('mouseover', function() {
-    uploadIcon.style.display = 'none';
-    uploadIconHover.style.display = 'block';
-});
-label.addEventListener('mouseout', function() {
-    uploadIcon.style.display = 'block';
-    uploadIconHover.style.display = 'none';
-});
+
 
 
 document.getElementById("confirmUpdate").addEventListener("click", async function () {
