@@ -304,3 +304,10 @@ body {
     display: flex;
     justify-content: center;
 }
+
+label {
+    margin-bottom: -18px;
+    font-size: .9rem;
+    color: #a0a0a0;
+    font-weight: 500;
+}

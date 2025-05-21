@@ -43,7 +43,61 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 function toggleDropdown() {
     const menu = document.getElementById("dropdownMenu");
     menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 }
+
+document.getElementById('openFollowersModal').addEventListener('click', function() {
+    document.getElementById('followersModal').style.display = 'flex';
+});
+
+function closeFollowersModal() {
+    document.getElementById('followersModal').style.display = 'none';
+}
+
+document.getElementById('openFollowModal').addEventListener('click', function() {
+    document.getElementById('followModal').style.display = 'flex';
+});
+
+function closeFollowModal() {
+    document.getElementById('followModal').style.display = 'none';
+}
+
+// GESTION DE LA MODAL DE SUPPRESSION
+const deleteBtn = document.getElementById("deleteProfileBtn");
+const deleteModal = document.getElementById("deleteModal");
+
+if (deleteBtn && deleteModal) {
+    deleteBtn.addEventListener("click", function () {
+        deleteModal.style.display = "flex";
+    });
+}
+
+// Fonction appelée par le bouton "Supprimer" dans la modal
+function confirmDelete() {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/user/delete"; // Peut être remplacé par `th:action` côté Thymeleaf
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Fonction appelée par le bouton "Annuler"
+function closeDeleteModal() {
+    deleteModal.style.display = "none";
+}
+
+// Close modal when clicking outside
+window.addEventListener('click', (event) => {
+    ["followersModal", "followModal", "deleteModal"].forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (event.target === modal) {
+            if (modalId === "followersModal") closeFollowersModal();
+            else if (modalId === "followModal") closeFollowModal();
+            else if (modalId === "deleteModal") closeDeleteModal();
+        }
+    });
+});

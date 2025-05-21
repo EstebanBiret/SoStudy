@@ -5,6 +5,7 @@
         <title>SoStudy | Profil</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/navbar.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/common/post-stats.css}">
+        <link rel="stylesheet" th:href="@{/css/common/common.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/profile/profile.css}">
         <link rel="stylesheet" type="text/css" th:href="@{/css/reaction/reaction.css}">
         <link rel="icon" type="image/png" th:href="@{/images/logos/logo_only.png}">
@@ -35,8 +36,14 @@
                         <div class="profile-stats">
                             <p>
                                 <span id="user-posts-count" th:text="${posts.size() + reposts.size()}"></span>post(s)
-                                <span id="user-followers-count" th:text="${userProfile.followers.size()}"></span>abonné(s)
-                                <span th:text="${userProfile.following.size()}"></span>abonnement(s)
+
+                                <button id="openFollowersModal" class="link-like" th:disabled="${userProfile.followers.size() == 0}">
+                                    <span th:text="${userProfile.followers.size()}"></span> abonné(s)
+                                </button>
+
+                                <button id="openFollowModal" class="link-like" th:disabled="${userProfile.following.size() == 0}">
+                                    <span th:text="${userProfile.following.size()}"></span> abonnement(s)
+                                </button>
                             </p>
                         </div>
                     </div>
@@ -55,9 +62,8 @@
                                 <form th:action="@{'/user/edit'}" method="get">
                                     <button type="submit">Modifier</button>
                                 </form>
-                                <form th:action="@{'/profile/delete/' + ${userProfile.pseudo}}" method="post">
-                                    <button type="submit" onclick="return confirm('Supprimer ce profil ?')">Supprimer</button>
-                                </form>
+                                <button id="deleteProfileBtn">Supprimer</button>
+
                             </div>
                         </div>
                     </div>
@@ -83,12 +89,12 @@
                 <!-- Section des posts -->
 
                 <!-- Si 0 post sur le profil d'un autre utilisateur -->
-                <div th:if="${posts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
+                <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo != session.user.pseudo}" class="no-posts">
                     <p>Cet utilisateur n'a pas encore posté, revenez plus tard !</p>
                 </div>
 
                 <!-- Si 0 post sur mon profil -->
-                <div th:if="${posts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
+                <div th:if="${posts.size() + reposts.size() == 0 and userProfile.pseudo == session.user.pseudo}" class="no-posts">
                     <div class="no-following-content">
                         <h2>Vous n'avez pas encore posté !</h2>
                         <p>Vous pouvez créer un post pour partager vos idées ou tout ce qui vous passionne.</p>
@@ -128,12 +134,20 @@
                             <img th:src="@{/images/logos/unrepost.png}" alt="Unrepost" class="repost-icon">
                             Ne plus reposter
                         </button>
-
                     </div>
+                    
                     <div class="post-content">
                         <p th:text="${post.postContent}">Contenu du post</p>
                         <div th:if="${postMediaExistsMap[post.postId]}" class="post-media">
-                            <img th:src="@{${post.postMediaPath}}" alt="Media du post" class="post-media-image">
+                            <div class="media-wrapper">
+                                <img th:src="@{${post.postMediaPath}}"
+                                     alt="Media du post"
+                                     class="post-media-image"
+                                     onclick="openImageModal(this.src)">
+                            </div>
+                            <button class="expand-button" th:attr="data-src=${post.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                            </button>
                         </div>
                     </div>
                     <div class="post-actions">
@@ -232,7 +246,15 @@
                             <div class="post-content">
                                 <p th:text="${repostDisplay.originalPost.postContent}"></p>
                                 <div th:if="${postMediaExistsMap[repostDisplay.originalPost.postId]}" class="post-media">
-                                    <img th:src="@{${repostDisplay.originalPost.postMediaPath}}" alt="Media du post" class="post-media-image">
+                                    <div class="media-wrapper">
+                                        <img th:src="@{${repostDisplay.originalPost.postMediaPath}}"
+                                             alt="Media du post"
+                                             class="post-media-image"
+                                             onclick="openImageModal(this.src)">
+                                    </div>
+                                    <button class="expand-button" th:attr="data-src=${repostDisplay.originalPost.postMediaPath}" onclick="openImageModal(this.getAttribute('data-src'))">
+                                        <img th:src="@{/images/logos/extend.svg}" alt="Expand" class="expand-icon">
+                                    </button>
                                 </div>
                             </div>
                             <div class="post-actions">
@@ -301,10 +323,70 @@
                 </form>
             </div>
         </div>
+      
+        <!-- Modale d'image -->
+        <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImage">
+        </div>
+
+        <!-- Followers modal -->
+        <div id="followersModal" class="modal-overlay" style="display: none;">
+            <div class="modal followers-modal">
+                <h2 class="modal-title">Liste des abonnés</h2>
+                <ul class="followers-list">
+                    <li class="follower-item" th:each="follower : ${userProfile.followers}">
+                        <a class="follower-link" th:href="@{/user/{pseudo}(pseudo=${follower.pseudo})}">
+                            <img th:src="@{${follower.personImagePath}}" alt="Avatar" class="avatar-small follower-avatar">
+                            <span class="follower-name" th:text="${follower.pseudo}"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel" onclick="closeFollowersModal()">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Following modal -->
+        <div id="followModal" class="modal-overlay" style="display: none;">
+            <div class="modal followers-modal">
+                <h2 class="modal-title">Liste des abonnements</h2>
+                <ul class="followers-list">
+                    <li class="follower-item" th:each="follow : ${userProfile.following}">
+                        <a class="follower-link" th:href="@{/user/{pseudo}(pseudo=${follow.pseudo})}">
+                            <img th:src="@{${follow.personImagePath}}" alt="Avatar" class="avatar-small follower-avatar">
+                            <span class="follower-name" th:text="${follow.pseudo}"></span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="modal-buttons">
+                    <button type="button" class="cancel" onclick="closeFollowModal()">Fermer</button>
+                </div>
+            </div>
+      </div>
+
+        <!-- Modal de suppression -->
+        <div id="deleteModal" class="modal-overlay" style="display:none;">
+            <div class="modal">
+                <h2 id="deleteCommunityName"></h2>
+                <p class="warning">Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.</p>
+                <div class="modal-actions">
+                    <button id="deleteBouton" onclick="confirmDelete()" class="btn btn-danger">Supprimer</button>
+                    <button onclick="closeDeleteModal()" class="btn">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+
+
+
 
         <script th:src="@{/js/repost/repost.js}"></script>
         <script th:src="@{/js/reaction/reaction.js}"></script>
         <script th:src="@{/js/profile/profile.js}"></script>
+        <script th:src="@{/js/common/common.js}"></script>
+
     </body>
 
 </html>
