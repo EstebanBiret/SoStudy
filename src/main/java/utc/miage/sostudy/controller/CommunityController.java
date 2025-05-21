@@ -209,6 +209,8 @@ public class CommunityController {
                                                  @RequestParam String communityDescription,
                                                  @RequestParam MultipartFile communityImage,
                                                  HttpSession session) throws IOException {
+        
+        //user not logged in
         if(session.getAttribute("user") == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -228,7 +230,7 @@ public class CommunityController {
             Files.copy(communityImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/community/" + rawFileName;
         } else {
-            fileName = "/images/community/defaultCommunity.png";
+            fileName = "/images/community/defaultCommunityImage.jpg";
         }
         community.setCommunityImagePath(fileName);
 

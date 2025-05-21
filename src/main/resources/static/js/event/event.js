@@ -36,8 +36,14 @@ function openEditModal(button) {
     currentEventId = button.getAttribute("data-event-id");
     const eventName = button.getAttribute("data-event-name");
     const eventDescription = button.getAttribute("data-event-description");
+    const eventLocation = button.getAttribute("data-event-location");
+    const eventBeginningDate = button.getAttribute("data-event-beginning-date");
+    const eventEndDate = button.getAttribute("data-event-end-date");
     document.getElementById("eventName").value = eventName;
     document.getElementById("eventDescription").value = eventDescription;
+    document.getElementById("eventLocation").value = eventLocation;
+    document.getElementById("eventBeginningDate").value = eventBeginningDate;
+    document.getElementById("eventEndDate").value = eventEndDate;
     openModal("editModal");
 }
 
@@ -53,7 +59,7 @@ window.addEventListener('click', (event) => {
     });
 });
 
-// --- Delete community ---
+// --- Delete event ---
 function confirmDelete() {
     if (!currentEventId) return;
 
@@ -95,6 +101,14 @@ document.getElementById("createEventForm").addEventListener("submit", function(e
     const form = event.target;
     const formData = new FormData(form);
 
+    const startDate = new Date(formData.get("eventBeginningDate"));
+    const endDate = new Date(formData.get("eventEndDate"));
+
+    if (endDate < startDate) {
+        alert("La date de fin doit être supérieure ou égale à la date de début.");
+        return;
+    }
+
     fetch("/event/new", {
         method: "POST",
         body: formData
@@ -120,6 +134,14 @@ document.getElementById("editEventForm").addEventListener("submit", function(eve
     const form = event.target;
     const formData = new FormData(form);
 
+    const startDate = new Date(formData.get("eventBeginningDate"));
+    const endDate = new Date(formData.get("eventEndDate"));
+
+    if (endDate < startDate) {
+        alert("La date de fin doit être supérieure ou égale à la date de début.");
+        return;
+    }
+
     fetch(`/event/edit/${currentEventId}`, {
         method: "POST",
         body: formData
@@ -135,12 +157,21 @@ document.getElementById("editEventForm").addEventListener("submit", function(eve
         eventCard.querySelector(".event-info h2").textContent = event.eventName;
         eventCard.querySelector(".event-info p").textContent = event.eventDescription;
         eventCard.querySelector(".event-image img").src = event.eventImagePath;
+        eventCard.querySelector(".event-location").textContent = event.eventLocation;
+        eventCard.querySelector(".event-time").textContent = event.eventBeginningDate + " ↣ " + event.eventEndDate;
 
         //edit data-id
         eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-name", event.eventName);
         eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-description", event.eventDescription);
+        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-location", event.eventLocation);
+        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-beginning-date", event.eventBeginningDate);
+        eventCard.querySelector(".event-actions a#edit").setAttribute("data-event-end-date", event.eventEndDate);
+        
         eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-name", event.eventName);
         eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-description", event.eventDescription);
+        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-location", event.eventLocation);
+        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-beginning-date", event.eventBeginningDate);
+        eventCard.querySelector(".event-actions a#delete").setAttribute("data-event-end-date", event.eventEndDate);
         
         closeEditModal();
     })
@@ -166,6 +197,7 @@ function formatDate(dateString) {
 // Add event card
 function addEventCard(event) {
     const newCard = document.createElement('div');
+    console.log(event.eventImagePath);
     newCard.className = 'event-card';
     newCard.setAttribute('data-event-id-card', event.eventId);
     newCard.innerHTML = `
@@ -177,20 +209,28 @@ function addEventCard(event) {
             <p>${event.eventDescription}</p>
             <div class="event-meta">
                 <span class="creation-info">
-                    <span class="label">Créée par</span>
+                    <span class="label">Publié par</span>
                     <a href="/user/${event.userCreator.pseudo}" class="creator-link">${event.userCreator.pseudo}</a>
                     <span class="label">le</span>
-                    <span class="date">${formatDate(event.eventCreationDate)}</span>
+                    <span class="date">${formatDate(event.eventPublicationDate)}</span>
                 </span>
+            </div>
+            <div class="event-location-time">
+                <div class="event-location">
+                    <img src="images/logos/location.svg">
+                    <span>${event.eventLocation}</span>
+                </div>
+                <div class="event-time">
+                    <img src="images/logos/calendar.svg">
+                    <span>${formatDate(event.eventBeginningDate)}</span>
+                    <span class="label">↣</span>
+                    <span>${formatDate(event.eventEndDate)}</span>
+                </div>
             </div>
             <div class="event-stats">
                 <div class="stat">
                     <span data-event-id="${event.eventId}">1</span>
                     <span>participant(s)</span>
-                </div>
-                <div class="stat">
-                    <span>0</span>
-                    post(s)
                 </div>
             </div>
         </div>
@@ -201,6 +241,9 @@ function addEventCard(event) {
                 data-event-id="${event.eventId}"
                 data-event-name="${event.eventName}"
                 data-event-description="${event.eventDescription}"
+                data-event-location="${event.eventLocation}"
+                data-event-beginning-date="${event.eventBeginningDate}"
+                data-event-end-date="${event.eventEndDate}"
                 onclick="event.preventDefault(); openEditModal(this)">
                 Modifier
             </a>
@@ -235,7 +278,7 @@ function addEventCard(event) {
         const createButton = document.createElement('a');
         createButton.className = 'createEventBtn2';
         createButton.href = '#';
-        createButton.textContent = 'Créer une communauté';
+        createButton.textContent = 'Publier un événement';
         createButton.onclick = function(e) {
             e.preventDefault();
             openCreateModal();
