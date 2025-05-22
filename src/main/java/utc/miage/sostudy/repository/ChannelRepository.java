@@ -71,9 +71,12 @@ public interface ChannelRepository extends JpaRepository<Channel, Integer> {
     @Query("""
     SELECT c FROM User u
     JOIN u.subscribedChannels c
+    LEFT JOIN Message m ON m.channel.channelId = c.channelId
     WHERE u.idUser = :userID
+    GROUP BY c
+    ORDER BY MAX(m.dateMessage) DESC
 """)
-    List<Channel> findByUsers(@Param("userID") int userID);
+    List<Channel> findChannelsByUserOrderByLastMessageDate(@Param("userID") int userID);
 
     /**
      * Find the last message of a channel.

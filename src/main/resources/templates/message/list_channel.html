@@ -19,7 +19,7 @@
     <div class="full-chat-page">
         <div class="list-chan-box">
 
-            <input type="text" placeholder="Rechercher..." class="search-bar full">
+            <h4>Vos conversations :</h4><br>
 
             <ul class="full-card">
                 <li class="user-card"
@@ -78,35 +78,19 @@
 
 
     <div class="modal-overlay" id="myModal">
-        <div class="modal full-height" >
+        <div class="modal" >
             <button class="modal-close" id="closeModal" onclick="closeModal()">
                 <img src="/images/logos/close-black.svg" alt="close" class="close-btn-modal">
             </button>
-            <div class="settings-container">
-                <img src="/images/logos/settings_grey.svg" alt="Settings" class="settings-icon bigger" >
-            </div>
-            <h2 class="h2-modal">Informations du groupe</h2>
-            <p class="p-modal p-group" style="height: 30vh">Membres du groupe : </p>
-            <div class="channel-name">
-                <p class="p-modal p-group">Nom de la conversation :</p>
-                <div class="share-link">
-                    <input type="text" name="channelName" id="channelName" placeholder="Nom du groupe">
-                    <div class="copy-icon">💬</div>
-                </div>            </div>
-            <div class="channel-image">
-                <p class="p-modal p-group">Image de la conversation :</p>
-                <input type="file" id="channel-image-input" accept="image/*" style="display: none">
-                <label for="channel-image-input" class="channel-image-label">
-                    <img src="/images/logos/upload-black.svg" alt="Upload" class="upload-icon">
-                    <img src="/images/logos/upload-purple.svg" alt="Upload" class="upload-icon-hover">
-                    <span class="upload-text">Télécharger une image</span>
-                </label>
+            <div class="modal-body">
+                <div class="settings-container">
+                    <img src="/images/logos/settings_grey.svg" alt="Settings" class="settings-icon bigger" >
+                </div>
+
 
             </div>
-            <div class="buttons">
-                <button type="button" class="btn cancel" onclick="closeModal()">Annuler</button>
-                <button type="submit" class="btn confirm" id="confirmUpdate">Valider</button>
-            </div>
+
+
         </div>
     </div>
 

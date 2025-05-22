@@ -146,7 +146,7 @@ function showMessage(sender, message, date) {
     bubble.addEventListener('mousedown', () => {
         pressTimer = setTimeout(() => {
             bubble.classList.add('show-date');
-        }, 500);
+        }, 100);
     });
 
     bubble.addEventListener('mouseup', () => {
@@ -162,7 +162,7 @@ function showMessage(sender, message, date) {
     bubble.addEventListener('touchstart', () => {
         pressTimer = setTimeout(() => {
             bubble.classList.add('show-date');
-        }, 500);
+        }, 100);
     });
 
     bubble.addEventListener('touchend', () => {
