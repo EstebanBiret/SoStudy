@@ -234,9 +234,9 @@ public class ChannelController {
             }
         }
 
-        Channel channel = new Channel();
-        channel.setChannelImagePath(fileName);
-        channel.setChannelName(
+        Channel c = new Channel();
+        c.setChannelImagePath(fileName);
+        c.setChannelName(
                 (selectedUserIds.size() > 1 && (channelName == null || channelName.isBlank()))
                         ? sessionUser.getPseudo()+", " + selectedUsersList.stream()
                         .map(User::getPseudo)
@@ -245,32 +245,32 @@ public class ChannelController {
                         ? selectedUsersList.get(0).getPseudo() + " - " + sessionUser.getPseudo()
                         : channelName
         );
-        channel.setCreator(sessionUser);
+        c.setCreator(sessionUser);
 
-        channel = channelRepository.save(channel);
+        c = channelRepository.save(c);
 
         for (User user : selectedUsersList) {
-            channel.addUser(user);
-            user.getSubscribedChannels().add(channel);
+            c.addUser(user);
+            user.getSubscribedChannels().add(c);
             userRepository.save(user);
         }
 
-        channel.addUser(sessionUser);
-        sessionUser.getSubscribedChannels().add(channel);
+        c.addUser(sessionUser);
+        sessionUser.getSubscribedChannels().add(c);
         userRepository.save(sessionUser);
 
-        channel = channelRepository.save(channel);
+        c = channelRepository.save(c);
 
-        Message message = new Message();
-        message.setContent(firstMessage);
-        message.setDateMessage(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        message.setChannel(channel);
-        message.setSender(sessionUser);
+        Message m = new Message();
+        m.setContent(firstMessage);
+        m.setDateMessage(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        m.setChannel(c);
+        m.setSender(sessionUser);
 
-        message = messageRepository.save(message);
+        m = messageRepository.save(m);
 
-        channel.addMessage(message);
-        channelRepository.save(channel);
+        c.addMessage(m);
+        channelRepository.save(c);
 
         session.setAttribute("user", sessionUser);
 
@@ -312,8 +312,8 @@ public class ChannelController {
             deletedIds = mapper.readValue(deletedUserIdsJson, new TypeReference<List<Integer>>() {});
         }
 
-        Channel channel = channelRepository.findById(channelId);
-        channel.setChannelName(channelName);
+        Channel c = channelRepository.findById(channelId);
+        c.setChannelName(channelName);
 
         String fileName = null;
         if (channelImage !=null && !channelImage.isEmpty()) {
@@ -323,26 +323,26 @@ public class ChannelController {
             Files.copy(channelImage.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             fileName = "/images/channel/" + rawFileName;
 
-            channel.setChannelImagePath(fileName);
+            c.setChannelImagePath(fileName);
         }
 
         if (!deletedIds.isEmpty()) {
             User deletedUser = userRepository.findByPseudo("utilisateurSupprime");
-            deletedUser.addSubscribedChannel(channel);
+            deletedUser.addSubscribedChannel(c);
         }
 
         for (Integer userId : deletedIds) {
             User user = userRepository.findById(userId).orElse(null);
-            if (user != null && channel.getCreator().getIdUser() != user.getIdUser()) {
-                channel.getUsers().remove(user);
+            if (user != null && c.getCreator().getIdUser() != user.getIdUser()) {
+                c.getUsers().remove(user);
             }
             if (user != null) {
-                user.getSubscribedChannels().remove(channel);
+                user.getSubscribedChannels().remove(c);
                 userRepository.save(user);
             }
         }
 
-        channelRepository.save(channel);
+        channelRepository.save(c);
 
         return ResponseEntity.ok(Map.of(message, "Canal mis à jour"));
     }
@@ -354,27 +354,27 @@ public class ChannelController {
      */
     @PostMapping("/delete")
     public ResponseEntity<?> deleteChannel(@RequestParam int channelId, HttpSession session) {
-        Channel channel = channelRepository.findById(channelId);
+        Channel c = channelRepository.findById(channelId);
 
         User sessionUserTemp = (User) session.getAttribute("user");
 
         User sessionUser = userRepository.findById(sessionUserTemp.getIdUser()).orElse(null);
 
-        if (channel == null) {
+        if (c == null) {
             return ResponseEntity.badRequest().body(Map.of(message, "Canal introuvable"));
         }
 
-        if (channel.getCreator().getIdUser() != sessionUser.getIdUser()) {
+        if (c.getCreator().getIdUser() != sessionUser.getIdUser()) {
             return ResponseEntity.status(403).body(Map.of(message, "Vous n'êtes pas autorisé à supprimer ce canal"));
         }
 
         // Remove the channel from all users
-        for (User user : channel.getUsers()) {
-            user.getSubscribedChannels().remove(channel);
+        for (User user : c.getUsers()) {
+            user.getSubscribedChannels().remove(c);
             userRepository.save(user);
         }
         // Delete the channel
-        channelRepository.delete(channel);
+        channelRepository.delete(c);
         return ResponseEntity.ok(Map.of(message, "Canal supprimé"));
     }
 
@@ -389,7 +389,7 @@ public class ChannelController {
     public ResponseEntity<?> leaveChannel(@RequestBody Map<String, Object> data, HttpSession session) {
         int channelId = (Integer) data.get("channelId");
 
-        Channel channel = channelRepository.findById(channelId);
+        Channel c = channelRepository.findById(channelId);
 
         User sessionUserTemp = (User) session.getAttribute("user");
 
@@ -397,28 +397,28 @@ public class ChannelController {
 
         User deletedUser = userRepository.findByPseudo("utilisateurSupprime");
 
-        if (channel == null) {
+        if (c == null) {
             return ResponseEntity.badRequest().body(Map.of(message, "Canal introuvable"));
         }
 
-        if (channel.getCreator().getIdUser() == sessionUser.getIdUser()) {
+        if (c.getCreator().getIdUser() == sessionUser.getIdUser()) {
             return ResponseEntity.status(403).body(Map.of(message, "Vous ne pouvez pas quitter le canal que vous avez créé"));
         }
 
-        if (!channel.getUsers().contains(sessionUser)) {
+        if (!c.getUsers().contains(sessionUser)) {
             return ResponseEntity.status(403).body(Map.of(message, "Vous ne faites pas partie de ce canal"));
         }
         // Remove the channel from the user
 
 
         // Remove the user from the channel
-        sessionUser.removeSubscribedChannel(channel);
-        deletedUser.addSubscribedChannel(channel);
+        sessionUser.removeSubscribedChannel(c);
+        deletedUser.addSubscribedChannel(c);
 
-        channel.removeUser(sessionUser);
+        c.removeUser(sessionUser);
 
         userRepository.save(sessionUser);
-        channelRepository.save(channel);
+        channelRepository.save(c);
 
         return ResponseEntity.ok(Map.of(message, "Vous avez quitté le canal"));
     }
