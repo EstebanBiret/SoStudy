@@ -186,8 +186,11 @@ public class ChannelController {
      */
     @PostMapping("/new")
     public String saveChannel(@RequestParam String selectedUsers, @RequestParam MultipartFile channelImage, @RequestParam String firstMessage, @RequestParam(required = false) String channelName, HttpSession session, Model model, RedirectAttributes redirectAttributes) throws IOException {
-        User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null) return redirectLogin;
+        User sessionUserTemp = (User) session.getAttribute("user");
+        if (sessionUserTemp == null) return redirectLogin;
+
+        User sessionUser = userRepository.findById(sessionUserTemp.getIdUser())
+                .orElseThrow(() -> new RuntimeException(userNotFound));
 
         String fileName = null;
         if (!channelImage.isEmpty()) {
@@ -352,7 +355,9 @@ public class ChannelController {
     public ResponseEntity<?> deleteChannel(@RequestParam int channelId, HttpSession session) {
         Channel channel = channelRepository.findById(channelId);
 
-        User sessionUser = (User) session.getAttribute("user");
+        User sessionUserTemp = (User) session.getAttribute("user");
+
+        User sessionUser = userRepository.findById(sessionUserTemp.getIdUser()).orElse(null);
 
         if (channel == null) {
             return ResponseEntity.badRequest().body(Map.of("message", "Canal introuvable"));
