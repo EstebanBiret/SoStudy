@@ -76,6 +76,22 @@ public class ChannelController {
     private String redirectLogin = "redirect:/auth/login";
 
     /**
+     * Message key for JSON responses.
+     */
+    private String message = "message";
+
+    /**
+     * Checks if the user already has a channel.
+     * @param user the user to check
+     * @param user2 the other user to check
+     * @return true if the user has a channel, false otherwise
+     */
+    public boolean hasACanalAlready(User user, User user2) {
+        List<Channel> existing = channelRepository.findPrivateChannelBetween(user.getIdUser(), user2.getIdUser());
+        return !existing.isEmpty();
+    }
+
+    /**
      * Displays the list of all channels.
      * @param model the model to be used in the view
      * @param request the HTTP request
@@ -124,9 +140,6 @@ public class ChannelController {
             lastMessageMap.put(channel, lastMessage);
         }
 
-
-
-
         model.addAttribute("currentUser", sessionUser);
         model.addAttribute("channels", chans);
 
@@ -144,7 +157,6 @@ public class ChannelController {
         }
 
         model.addAttribute("jsonChannelMap", jsonChannelMap);
-
 
         return "message/list_channel";
     }
@@ -279,18 +291,7 @@ public class ChannelController {
     }
 
     /**
-     * Displays the correct channel.
-     *
-     * @return the name of the view to be rendered
-     */
-    @GetMapping("/{id}")
-    public String getChannelById() {
-        // Logic to retrieve a channel by its ID
-        return "channel"; // Return the name of the view (e.g., Thymeleaf template)
-    }
-
-    /**
-     * Updates a channel.
+     * Updates channels.
      * @param channelId the ID of the channel to update
      * @param channelName the new name of the channel
      * @param deletedUserIdsJson the JSON string containing the IDs of users to delete from the channel
@@ -343,7 +344,7 @@ public class ChannelController {
 
         channelRepository.save(channel);
 
-        return ResponseEntity.ok(Map.of("message", "Canal mis à jour")); // ou retourne une 200 JSON si tu veux
+        return ResponseEntity.ok(Map.of(message, "Canal mis à jour"));
     }
 
     /**
@@ -360,11 +361,11 @@ public class ChannelController {
         User sessionUser = userRepository.findById(sessionUserTemp.getIdUser()).orElse(null);
 
         if (channel == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Canal introuvable"));
+            return ResponseEntity.badRequest().body(Map.of(message, "Canal introuvable"));
         }
 
         if (channel.getCreator().getIdUser() != sessionUser.getIdUser()) {
-            return ResponseEntity.status(403).body(Map.of("message", "Vous n'êtes pas autorisé à supprimer ce canal"));
+            return ResponseEntity.status(403).body(Map.of(message, "Vous n'êtes pas autorisé à supprimer ce canal"));
         }
 
         // Remove the channel from all users
@@ -374,7 +375,7 @@ public class ChannelController {
         }
         // Delete the channel
         channelRepository.delete(channel);
-        return ResponseEntity.ok(Map.of("message", "Canal supprimé"));
+        return ResponseEntity.ok(Map.of(message, "Canal supprimé"));
     }
 
 
@@ -397,15 +398,15 @@ public class ChannelController {
         User deletedUser = userRepository.findByPseudo("utilisateurSupprime");
 
         if (channel == null) {
-            return ResponseEntity.badRequest().body(Map.of("message", "Canal introuvable"));
+            return ResponseEntity.badRequest().body(Map.of(message, "Canal introuvable"));
         }
 
         if (channel.getCreator().getIdUser() == sessionUser.getIdUser()) {
-            return ResponseEntity.status(403).body(Map.of("message", "Vous ne pouvez pas quitter le canal que vous avez créé"));
+            return ResponseEntity.status(403).body(Map.of(message, "Vous ne pouvez pas quitter le canal que vous avez créé"));
         }
 
         if (!channel.getUsers().contains(sessionUser)) {
-            return ResponseEntity.status(403).body(Map.of("message", "Vous ne faites pas partie de ce canal"));
+            return ResponseEntity.status(403).body(Map.of(message, "Vous ne faites pas partie de ce canal"));
         }
         // Remove the channel from the user
 
@@ -419,18 +420,7 @@ public class ChannelController {
         userRepository.save(sessionUser);
         channelRepository.save(channel);
 
-        return ResponseEntity.ok(Map.of("message", "Vous avez quitté le canal"));
-    }
-
-    /**
-     * Checks if the user already has a channel.
-     * @param user the user to check
-     * @param user2 the other user to check
-     * @return true if the user has a channel, false otherwise
-     */
-    public boolean hasACanalAlready(User user, User user2) {
-        List<Channel> existing = channelRepository.findPrivateChannelBetween(user.getIdUser(), user2.getIdUser());
-        return !existing.isEmpty();
+        return ResponseEntity.ok(Map.of(message, "Vous avez quitté le canal"));
     }
 
 }

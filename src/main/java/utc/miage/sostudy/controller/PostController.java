@@ -246,7 +246,6 @@ public class PostController {
         
         model.addAttribute("userReactedPosts", userReactedPosts);
 
-
         // Add all data to model
         model.addAttribute("post", post);
         model.addAttribute("comments", allComments);

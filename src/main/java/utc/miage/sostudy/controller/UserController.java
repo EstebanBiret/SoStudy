@@ -335,7 +335,6 @@ public class UserController {
         return "profile/profile";
     }
 
-
     /**
      * Displays the edit user page.
      * @param model the model to be used in the view
@@ -435,7 +434,7 @@ public class UserController {
     }
 
     /**
-     * Displays the delete user page.
+     * Handles the deletion of the user.
      * @param model the model to be used in the view
      * @param session the HTTP session
      * @return the name of the delete user view
@@ -581,7 +580,7 @@ public class UserController {
     }
 
     /**
-     * Displays the follow user page for a specific user identified by their pseudo.
+     * Handles the follow user action for a specific user identified by their pseudo.
      *
      * @param model the model to be used in the view
      * @param session the HTTP session
@@ -617,7 +616,7 @@ public class UserController {
     }
 
     /**
-     * Displays the unfollow user page for a specific user identified by their pseudo.
+     * Handles the unfollow user action for a specific user identified by their pseudo.
      * @param model the model to be used in the view
      * @param session the HTTP session
      * @param pseudo the pseudo of the user to unfollow

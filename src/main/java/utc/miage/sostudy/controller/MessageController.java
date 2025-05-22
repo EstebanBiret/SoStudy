@@ -43,7 +43,7 @@ public class MessageController {
     private UserRepository userRepository;
 
     /**
-     * send a message
+     * Send a message
      * @param idchannel the id of the channel
      * @return the name of the view to be rendered
      */

@@ -55,14 +55,46 @@ public class AuthController {
     private String defaultProfilePic = "/images/profiles_pictures/defaultProfilePic.jpg";
 
     /**
-     * Default path.
-     * @param model the model to be used in the view
-     * @param session the HTTP session
-     * @return a redirect to the login page
-     * */
-    @GetMapping("")
-    public String index(Model model, HttpSession session) {
-        return HOME + LOGIN;
+     * Hashes the password using BCrypt.
+     *
+     * @param password the password to hash
+     * @return the hashed password
+     */
+    public static String hashPassword(String password) {
+        // Hash the password using BCrypt
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    /**
+     * Checks if the provided password matches the hashed password.
+     *
+     * @param password the password to check
+     * @param hashed   the hashed password
+     * @return true if the password matches, false otherwise
+     */
+    public boolean checkPassword(String password, String hashed) {
+        // Check if the password matches the hashed password
+        return BCrypt.checkpw(password, hashed);
+    }
+
+    /**
+     * Check if the email already exists in the database.
+     * @param email the email to check
+     * @return true if the email exists, false otherwise
+     */
+    public boolean checkEmailExists(String email) {
+        // Check if the email already exists in the database
+        return userRepo.findByEmail(email) != null;
+    }
+
+    /**
+     * Check if the pseudo already exists in the database.
+     * @param pseudo the pseudo to check
+     * @return true if the pseudo exists, false otherwise
+     */
+    public boolean checkPseudoExists(String pseudo) {
+        // Check if the pseudo already exists in the database
+        return userRepo.findByPseudo(pseudo) != null;
     }
 
     /**
@@ -71,8 +103,8 @@ public class AuthController {
      * @param session the HTTP session
      * @return a redirect to the login page
      * */
-    @GetMapping("/")
-    public String indexSecond(Model model, HttpSession session) {
+    @GetMapping({"", "/"})
+    public String index(Model model, HttpSession session) {
         return HOME + LOGIN;
     }
 
@@ -220,59 +252,15 @@ public class AuthController {
     }
 
     /**
-     * Hashes the password using BCrypt.
-     *
-     * @param password the password to hash
-     * @return the hashed password
-     */
-    public static String hashPassword(String password) {
-        // Hash the password using BCrypt
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
-    /**
-     * Checks if the provided password matches the hashed password.
-     *
-     * @param password the password to check
-     * @param hashed   the hashed password
-     * @return true if the password matches, false otherwise
-     */
-    public boolean checkPassword(String password, String hashed) {
-        // Check if the password matches the hashed password
-        return BCrypt.checkpw(password, hashed);
-    }
-
-    /**
-     * Check if the email already exists in the database.
-     * @param email the email to check
-     * @return true if the email exists, false otherwise
-     */
-    public boolean checkEmailExists(String email) {
-        // Check if the email already exists in the database
-        return userRepo.findByEmail(email) != null;
-    }
-
-    /**
-     * Check if the pseudo already exists in the database.
-     * @param pseudo the pseudo to check
-     * @return true if the pseudo exists, false otherwise
-     */
-    public boolean checkPseudoExists(String pseudo) {
-        // Check if the pseudo already exists in the database
-        return userRepo.findByPseudo(pseudo) != null;
-    }
-
-    /**
      * Check if the email is already taken.
      * @param email the email to check
      * @return true if the email is taken, false otherwise
      */
     @GetMapping("/check-email")
     @ResponseBody
-    public boolean checkEmail(@RequestParam("email") String email) {
-        return !checkEmailExists(email); // true si email est libre
+    public boolean checkEmail(@RequestParam String email) {
+        return !checkEmailExists(email); // true if email is available
     }
-
 
     /**
      * Check if the pseudo is already taken.
@@ -281,9 +269,8 @@ public class AuthController {
      */
     @GetMapping("/check-pseudo")
     @ResponseBody
-    public boolean checkPseudo(@RequestParam("pseudo") String pseudo) {
-        return !checkPseudoExists(pseudo); // true si pseudo est libre
+    public boolean checkPseudo(@RequestParam String pseudo) {
+        return !checkPseudoExists(pseudo); // true if pseudo is available
     }
-
 
 }
