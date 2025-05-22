@@ -91,7 +91,7 @@ public class IndexController {
     
         long daysBetween = ChronoUnit.DAYS.between(postDate, today);
         if (daysBetween == 1) {
-            return "a posté il y a 1 jour";
+            return "a posté hier";
         } else {
             return "a posté il y a " + daysBetween + " jours";
         }
@@ -110,7 +110,7 @@ public class IndexController {
     
         long daysBetween = ChronoUnit.DAYS.between(postDate, today);
         if (daysBetween == 1) {
-            return "a reposté il y a 1 jour";
+            return "a reposté hier";
         } else {
             return "a reposté il y a " + daysBetween + " jours";
         }

@@ -109,7 +109,7 @@ public class PostController {
     
         long daysBetween = ChronoUnit.DAYS.between(postDate, today);
         if (daysBetween == 1) {
-            return "il y a 1 jour";
+            return "hier";
         } else {
             return "il y a " + daysBetween + " jours";
         }
