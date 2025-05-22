@@ -53,7 +53,7 @@ function confirmDeletePost() {
                 <div class="no-following-content">
                     <h2>Vous n'avez pas encore posté !</h2>
                     <p>Vous pouvez créer un post pour partager vos idées ou tout ce qui vous passionne.</p>
-                    <a th:href="@{/post/publish}" id="createPostBtn">
+                    <a href="post/publish" id="createPostBtn">
                         Créer un post
                     </a>
                 </div>`;
