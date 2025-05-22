@@ -44,7 +44,7 @@
                                 <span id="user-posts-count" th:text="${posts.size() + reposts.size()}"></span>post(s)
 
                                 <button id="openFollowersModal" class="link-like" th:disabled="${userProfile.followers.size() == 0}">
-                                    <span th:text="${userProfile.followers.size()}"></span> abonné(s)
+                                    <span id="user-followers-count" th:text="${userProfile.followers.size()}"></span> abonné(s)
                                 </button>
 
                                 <button id="openFollowModal" class="link-like" th:disabled="${userProfile.following.size() == 0}">

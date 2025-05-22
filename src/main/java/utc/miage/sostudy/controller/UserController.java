@@ -595,6 +595,7 @@ public class UserController {
 
         User user = (User) session.getAttribute("user");
         User userToFollow = userRepository.findByPseudo(pseudo);
+        user = userRepository.findByPseudo(user.getPseudo());
         if (userToFollow == null || userRepository.findByPseudo(pseudo) == null) {
             return redirectHome;
         }
