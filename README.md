@@ -6,6 +6,7 @@
 - **Maxime SEGOT**
 - **Esteban BIRET-TOSCANO**
 
+
 ## 🔗 Ressources
 
 - 📈 **Analyse SonarCloud** :  
@@ -16,6 +17,18 @@
 
 - 🎨 **Figma** :  
   [Voir le Figma](https://www.figma.com/design/KRBjK7Laxs0rU8Vn5zHDmb/Untitled?node-id=0-1&t=f5O5uSsJ3pU7vAxe-1)
+
+
+## 🚀 Lancer l'application
+
+Ouvrir le projet dans un IDE (comme IntelliJ ou Eclipse).
+
+Lancer la classe SoStudyApplication.
+
+Accéder à l'application sur : http://localhost:8080
+
+La base de données est déjà remplie avec des quelques données (utilisateurs, posts, communautés, réactions, etc.) pour pouvoir tester directement l’application.
+
 
 ## 🛣️ Routes
 
